@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>0xb0rn3 | Cybersecurity Specialist</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="profile-card">
+            <div class="profile-pic">
+                <img src="profile.jpg" alt="Christian Isaac" class="profile-img">
+            </div>
+            
+            <h1>Christian Isaac</h1>
+            <p class="alias">@0xb0rn3</p>
+
+            <div class="terminal-box">
+                <div class="terminal-header">
+                    <div class="terminal-controls">
+                        <span class="control red"></span>
+                        <span class="control yellow"></span>
+                        <span class="control green"></span>
+                    </div>
+                    <span class="terminal-title">visitor-info — zsh</span>
+                </div>
+                <div class="terminal-body" id="visitorInfo">
+                    <div class="terminal-line">
+                        <span class="prompt">$</span> Welcome to 0xb0rn3's portfolio
+                    </div>
+                    <div class="terminal-line">
+                        <span class="prompt">$</span> Scanning connection...
+                    </div>
+                </div>
+            </div>
+
+            <div class="social-links">
+                <button class="gruv-button" onclick="toggleSection('projects')">
+                    <i class="fas fa-code"></i> Projects
+                </button>
+                <button class="gruv-button" onclick="window.open('https://coursera.org/share/bedd7cd691ed9f95ebf697d8735d7af4', '_blank')">
+                    <i class="fas fa-certificate"></i> Certification
+                </button>
+                <button class="gruv-button" onclick="toggleSection('ctf')">
+                    <i class="fas fa-flag"></i> CTF
+                </button>
+                <button class="gruv-button" onclick="toggleSection('contact')">
+                    <i class="fas fa-address-card"></i> Contact
+                </button>
+            </div>
+
+            <!-- Projects Section -->
+            <div id="projectsSection" class="hidden-section">
+                <h3 class="section-header">Security Projects</h3>
+                <div class="projects-grid" id="github-projects"></div>
+            </div>
+
+            <!-- CTF Section -->
+            <div id="ctfSection" class="hidden-section">
+                <h3 class="section-header">CTF Challenges</h3>
+                <div class="ctf-grid" id="ctf-challenges"></div>
+            </div>
+
+            <!-- Contact Section -->
+            <div id="contactSection" class="hidden-section">
+                <h3 class="section-header">Contact Information</h3>
+                <div class="contact-info">
+                    <p><i class="fas fa-envelope gruv-blue"></i> q4n0@proton.me</p>
+                    <p><i class="fas fa-phone gruv-green"></i> +255 753 066 570</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
