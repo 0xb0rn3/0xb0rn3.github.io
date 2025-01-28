@@ -1,6 +1,49 @@
 let storedIpData = null;
 let storedGeoData = null;
 
+// Typing Bio Animation
+async function typeBio() {
+    const bioElement = document.getElementById('typingBio');
+    const bioText = [
+        "Welcome to my portfolio, highlighting my expertise in",
+        "Network security and professional achievements."
+    ];
+
+    // Add cursor initially
+    bioElement.innerHTML = '<span class="typing-cursor"></span>';
+
+    for (let i = 0; i < bioText.length; i++) {
+        const line = document.createElement('div');
+        line.className = 'bio-line';
+        line.textContent = bioText[i];
+        
+        // Add cursor to line
+        line.innerHTML += '<span class="typing-cursor"></span>';
+        
+        bioElement.appendChild(line);
+        
+        // Start animation
+        await new Promise(resolve => {
+            setTimeout(() => {
+                line.style.animation = `typing 3.5s steps(${bioText[i].length}, end) forwards`;
+                resolve();
+            }, i * 3500);
+        });
+    }
+
+    // Fade out and remove after delay
+    setTimeout(() => {
+        const lines = document.querySelectorAll('.bio-line');
+        lines.forEach(line => {
+            line.style.animation = 'fadeOut 1s forwards';
+        });
+        
+        setTimeout(() => {
+            bioElement.remove();
+        }, 1000);
+    }, (bioText.length * 3500) + 3000);
+}
+
 // Section Toggling
 function toggleSection(sectionId) {
     const sections = ['projects', 'ctf', 'contact'];
@@ -64,7 +107,7 @@ async function detectVisitorInfo() {
         storedGeoData = await geoResponse.json();
 
         updateTerminal();
-        setInterval(updateTerminal, 60000); // Update every minute
+        setInterval(updateTerminal, 60000);
 
     } catch (error) {
         terminal.innerHTML = `
@@ -185,4 +228,5 @@ document.addEventListener('DOMContentLoaded', () => {
     detectVisitorInfo();
     loadProjects();
     loadCTFChallenges();
+    typeBio();
 });
