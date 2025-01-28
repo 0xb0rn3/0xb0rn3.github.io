@@ -5,8 +5,8 @@ let storedGeoData = null;
 async function typeBio() {
     const bioElement = document.getElementById('typingBio');
     const bioText = [
-        "Welcome to my portfolio, highlighting my expertise in",
-        "Network security and professional achievements."
+    "Welcome to my cybersecurity portfolio",
+    "Ethical Hacking | Pen Testing | Security Research"
     ];
 
     // Add cursor initially
