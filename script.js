@@ -5,24 +5,19 @@ let storedGeoData = null;
 async function typeBio() {
     const bioElement = document.getElementById('typingBio');
     const bioText = [
-    "Welcome to my cybersecurity portfolio",
-    "Ethical Hacking | Pen Testing | Security Research"
+        "Cybersecurity Portfolio",
+        "Ethical Hacker | Pentester | Researcher"
     ];
 
-    // Add cursor initially
     bioElement.innerHTML = '<span class="typing-cursor"></span>';
 
     for (let i = 0; i < bioText.length; i++) {
         const line = document.createElement('div');
         line.className = 'bio-line';
         line.textContent = bioText[i];
-        
-        // Add cursor to line
         line.innerHTML += '<span class="typing-cursor"></span>';
-        
         bioElement.appendChild(line);
         
-        // Start animation
         await new Promise(resolve => {
             setTimeout(() => {
                 line.style.animation = `typing 3.5s steps(${bioText[i].length}, end) forwards`;
@@ -31,7 +26,6 @@ async function typeBio() {
         });
     }
 
-    // Fade out and remove after delay
     setTimeout(() => {
         const lines = document.querySelectorAll('.bio-line');
         lines.forEach(line => {
@@ -47,6 +41,15 @@ async function typeBio() {
 // Section Toggling
 function toggleSection(sectionId) {
     const sections = ['projects', 'ctf', 'contact'];
+    const buttons = document.querySelectorAll('.gruv-button');
+    
+    buttons.forEach(button => {
+        button.classList.remove('active');
+        if (button.onclick && button.onclick.toString().includes(sectionId)) {
+            button.classList.add('active');
+        }
+    });
+
     sections.forEach(section => {
         const element = document.getElementById(`${section}Section`);
         element.style.display = section === sectionId ? 'block' : 'none';
@@ -89,7 +92,6 @@ function updateTerminal() {
 async function detectVisitorInfo() {
     const terminal = document.getElementById('visitorInfo');
     
-    // Initial greeting
     terminal.innerHTML = `
         <div class="terminal-line">
             <span class="prompt">$</span> ${getGreeting()}, Welcome to 0xb0rn3's portfolio
@@ -130,9 +132,13 @@ async function loadProjects() {
         const response = await fetch('https://api.github.com/users/0xb0rn3/repos');
         const repos = await response.json();
 
+        const filteredRepos = repos.filter(repo => 
+            !["0xb0rn3.github.io", "b0urn3"].includes(repo.name)
+        );
+
         projectsContainer.innerHTML = '';
         
-        repos.forEach(repo => {
+        filteredRepos.forEach(repo => {
             const projectCard = document.createElement('div');
             projectCard.className = 'project-card';
             projectCard.innerHTML = `
