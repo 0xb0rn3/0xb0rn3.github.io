@@ -72,6 +72,59 @@ h1 {
     font-size: 1.2rem;
 }
 
+/* Typing Bio Styles */
+.typing-bio-container {
+    margin: 1rem auto;
+    max-width: 600px;
+    min-height: 60px;
+}
+
+.typing-bio {
+    color: var(--gruv-fg);
+    font-size: 1.1rem;
+    line-height: 1.5;
+    text-align: center;
+}
+
+.bio-line {
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    margin: 0 auto;
+    opacity: 0;
+    animation: 
+        typing 3.5s steps(40, end) forwards,
+        fadeOut 1s forwards 7s;
+}
+
+@keyframes typing {
+    from { 
+        width: 0;
+        opacity: 1;
+    }
+    to { 
+        width: 100%;
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+.typing-cursor {
+    display: inline-block;
+    width: 3px;
+    background: var(--gruv-green);
+    animation: blink 1s step-end infinite;
+    opacity: 0;
+}
+
+@keyframes blink {
+    50% { background: transparent; }
+}
+
 .social-links {
     display: flex;
     flex-wrap: wrap;
@@ -247,6 +300,12 @@ h1 {
     display: flex;
     justify-content: space-between;
     font-size: 0.85em;
+}
+
+.contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
 }
 
 @media (max-width: 768px) {
