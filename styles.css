@@ -72,7 +72,6 @@ h1 {
     font-size: 1.2rem;
 }
 
-/* Typing Bio Styles */
 .typing-bio-container {
     margin: 1rem auto;
     max-width: 600px;
@@ -81,9 +80,11 @@ h1 {
 
 .typing-bio {
     color: var(--gruv-fg);
-    font-size: 1.1rem;
+    font-size: 1rem;
     line-height: 1.5;
     text-align: center;
+    max-width: 100%;
+    overflow: hidden;
 }
 
 .bio-line {
@@ -111,6 +112,12 @@ h1 {
 @keyframes fadeOut {
     from { opacity: 1; }
     to { opacity: 0; }
+}
+
+@keyframes glow {
+    0% { text-shadow: 0 0 5px var(--gruv-green); }
+    50% { text-shadow: 0 0 15px var(--gruv-green); }
+    100% { text-shadow: 0 0 5px var(--gruv-green); }
 }
 
 .typing-cursor {
@@ -154,6 +161,11 @@ h1 {
     box-shadow: 0 5px 15px rgba(152, 151, 26, 0.3);
 }
 
+.gruv-button.active {
+    animation: glow 1s infinite;
+    border-color: var(--gruv-blue);
+}
+
 .hidden-section {
     display: none;
     margin-top: 1.5rem;
@@ -184,6 +196,16 @@ h1 {
 
 .project-card:hover {
     transform: translateY(-5px);
+}
+
+.project-title {
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.project-title:hover {
+    color: var(--gruv-blue);
+    animation: glow 1s infinite;
 }
 
 .terminal-box {
@@ -342,5 +364,9 @@ h1 {
     
     .terminal-line {
         font-size: 0.8rem;
+    }
+    
+    .typing-bio {
+        font-size: 0.9rem;
     }
 }
