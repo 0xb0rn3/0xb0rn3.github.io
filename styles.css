@@ -50,14 +50,49 @@ body {
     margin: 0 auto 1.5rem;
     border-radius: 50%;
     border: 3px solid var(--gruv-green);
-    overflow: hidden;
+    overflow: visible;
     transition: transform 0.3s ease;
+    position: relative;
+    z-index: 1;
+}
+
+.profile-pic::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: -8px;
+    right: -8px;
+    bottom: -8px;
+    border-radius: 50%;
+    border: 2px solid var(--gruv-green);
+    animation: wave 12s infinite linear;
+    opacity: 0.7;
+    box-shadow: 
+        0 0 15px var(--gruv-green),
+        0 0 30px var(--gruv-green);
+    z-index: -1;
+}
+
+.profile-pic::after {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    right: -5px;
+    bottom: -5px;
+    border-radius: 50%;
+    animation: pulse-glow 4s infinite ease-in-out;
+    border: 1px solid var(--gruv-green);
+    opacity: 0.3;
+    z-index: -1;
 }
 
 .profile-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    position: relative;
+    border-radius: 50%;
 }
 
 .profile-pic:hover {
@@ -122,6 +157,30 @@ h1 {
     0% { text-shadow: 0 0 5px var(--gruv-green); }
     50% { text-shadow: 0 0 15px var(--gruv-green); }
     100% { text-shadow: 0 0 5px var(--gruv-green); }
+}
+
+@keyframes wave {
+    0%, 100% {
+        transform: translateY(0) rotate(0deg);
+        clip-path: circle(50% at 50% 50%);
+    }
+    25% {
+        transform: translateY(-3px) rotate(1deg);
+        clip-path: circle(49% at 50% 51%);
+    }
+    50% {
+        transform: translateY(3px) rotate(-1deg);
+        clip-path: circle(51% at 49% 50%);
+    }
+    75% {
+        transform: translateY(1px) rotate(0.5deg);
+        clip-path: circle(50% at 51% 49%);
+    }
+}
+
+@keyframes pulse-glow {
+    0%, 100% { opacity: 0.7; }
+    50% { opacity: 0.4; }
 }
 
 .typing-cursor {
