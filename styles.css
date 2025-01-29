@@ -44,6 +44,7 @@ body {
     overflow: hidden;
 }
 
+/* Animated Profile Picture Glow */
 .profile-pic {
     width: 150px;
     height: 150px;
@@ -99,10 +100,31 @@ body {
     transform: scale(1.05);
 }
 
+/* Animated Name Glow */
 h1 {
     color: var(--gruv-green);
     margin-bottom: 0.5rem;
     font-size: 2rem;
+    position: relative;
+    animation: name-glow 3s ease-in-out infinite;
+    text-shadow: 
+        0 0 10px var(--gruv-green),
+        0 0 20px var(--gruv-green);
+}
+
+@keyframes name-glow {
+    0%, 100% {
+        text-shadow: 
+            0 0 10px var(--gruv-green),
+            0 0 20px var(--gruv-green);
+        transform: scale(1);
+    }
+    50% {
+        text-shadow: 
+            0 0 20px var(--gruv-green),
+            0 0 40px var(--gruv-green);
+        transform: scale(1.02);
+    }
 }
 
 .alias {
@@ -151,12 +173,6 @@ h1 {
 @keyframes fadeOut {
     from { opacity: 1; }
     to { opacity: 0; }
-}
-
-@keyframes glow {
-    0% { text-shadow: 0 0 5px var(--gruv-green); }
-    50% { text-shadow: 0 0 15px var(--gruv-green); }
-    100% { text-shadow: 0 0 5px var(--gruv-green); }
 }
 
 @keyframes wave {
