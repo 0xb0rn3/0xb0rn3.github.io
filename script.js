@@ -26,17 +26,8 @@ async function typeBio() {
         });
     }
 
-    setTimeout(() => {
-        const lines = document.querySelectorAll('.bio-line');
-        lines.forEach(line => {
-            line.style.animation = 'fadeOut 1s forwards';
-        });
-        
-        setTimeout(() => {
-            bioElement.remove();
-        }, 1000);
-    }, (bioText.length * 3500) + 3000);
 }
+
 
 // Section Toggling
 function toggleSection(sectionId) {
