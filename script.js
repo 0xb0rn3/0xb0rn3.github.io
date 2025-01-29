@@ -1,5 +1,6 @@
 let storedIpData = null;
 let storedGeoData = null;
+let isCliMode = false;
 
 // Typing Bio Animation
 async function typeBio() {
@@ -25,9 +26,7 @@ async function typeBio() {
             }, i * 3500);
         });
     }
-
 }
-
 
 // Section Toggling
 function toggleSection(sectionId) {
@@ -220,10 +219,96 @@ function loadCTFChallenges() {
     }
 }
 
+// CLI Mode Functionality
+function toggleCliMode() {
+    isCliMode = !isCliMode;
+    document.getElementById('cliContainer').classList.toggle('hidden');
+    document.getElementById('bunnyTrigger').classList.toggle('hidden');
+    document.querySelector('.container').classList.toggle('hidden');
+    
+    if (isCliMode) {
+        document.getElementById('cliCommand').focus();
+        printCliWelcome();
+    }
+}
+
+function printCliWelcome() {
+    const output = document.getElementById('cliOutput');
+    output.innerHTML = `
+        <div class="terminal-line">0xb0rn3's Portfolio CLI v1.0.0</div>
+        <div class="terminal-line">Type "help" for available commands</div>
+        <div class="terminal-line">-----------------------------------</div>
+    `;
+}
+
+const cliCommands = {
+    help: () => `
+        Available commands:<br>
+        - help: Show this help<br>
+        - about: Show profile information<br>
+        - projects: List security projects<br>
+        - ctf: Show CTF challenges<br>
+        - contact: Display contact information<br>
+        - clear: Clear the terminal<br>
+        - exit: Return to GUI mode
+    `,
+    about: () => `
+        Christian Isaac (@0xb0rn3)<br>
+        Cybersecurity Specialist<br>
+        Ethical Hacker | Pentester | Researcher
+    `,
+    projects: () => {
+        loadProjects();
+        return `Loading projects... (GUI projects view will be shown)`;
+    },
+    ctf: () => {
+        loadCTFChallenges();
+        return `Loading CTF challenges... (GUI CTF view will be shown)`;
+    },
+    contact: () => `
+        Email: q4n0@proton.me<br>
+        Phone: +255 753 066 570
+    `,
+    clear: () => {
+        document.getElementById('cliOutput').innerHTML = '';
+        return '';
+    }
+};
+
+function handleCommand(command) {
+    const output = document.getElementById('cliOutput');
+    const cmd = command.toLowerCase().trim();
+    
+    output.innerHTML += `<div class="terminal-line"><span class="prompt">$</span> ${command}</div>`;
+    
+    if (cmd === 'exit') {
+        toggleCliMode();
+        return;
+    }
+    
+    const response = cliCommands[cmd] ? cliCommands[cmd]() 
+        : `Command not found: ${command}. Type "help" for available commands`;
+    
+    output.innerHTML += `<div class="terminal-line">${response}</div>`;
+    output.scrollTop = output.scrollHeight;
+}
+
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
     detectVisitorInfo();
     loadProjects();
     loadCTFChallenges();
     typeBio();
+    
+    document.getElementById('bunnyTrigger').addEventListener('click', toggleCliMode);
+    document.getElementById('cliCommand').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            handleCommand(e.target.value);
+            e.target.value = '';
+        }
+    });
+    
+    document.getElementById('cliCommand').addEventListener('focus', function() {
+        this.scrollIntoView(false);
+    });
 });
