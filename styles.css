@@ -526,8 +526,8 @@ h1 {
     }
     
     .profile-pic {
-        width: 113px;
-        height: 200px;
+        width: 120px;
+        height: 120px; /* Changed from 200px to match width */
     }
     
     h1 {
@@ -549,4 +549,14 @@ h1 {
     .typing-bio {
         font-size: 0.9rem;
     }
+}
+
+.bio-line {
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    margin: 0 auto;
+    opacity: 1; /* Changed from 0 */
+    animation: 
+        typing 3.5s steps(40, end) forwards;
 }
