@@ -17,13 +17,15 @@
 
 body {
     font-family: 'JetBrains Mono', monospace;
-    background: var(--gruv-bg-dark);
     color: var(--gruv-fg);
     min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 1rem;
+    background: var(--gruv-bg-dark);
+    position: relative;
+    overflow-x: hidden;
 }
 
 .container {
@@ -38,6 +40,8 @@ body {
     border-radius: 12px;
     box-shadow: 0 0 20px rgba(0,0,0,0.3);
     text-align: center;
+    position: relative;
+    overflow: hidden;
 }
 
 .profile-pic {
@@ -152,6 +156,25 @@ h1 {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.gruv-button::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+        45deg,
+        transparent,
+        rgba(152, 151, 26, 0.2),
+        transparent
+    );
+    transform: rotate(45deg);
+    transition: 0.5s;
 }
 
 .gruv-button:hover {
@@ -159,6 +182,15 @@ h1 {
     color: var(--gruv-bg-dark);
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(152, 151, 26, 0.3);
+}
+
+.gruv-button:hover::before {
+    animation: buttonGlow 1.5s;
+}
+
+@keyframes buttonGlow {
+    0% { left: -50%; }
+    100% { left: 150%; }
 }
 
 .gruv-button.active {
@@ -173,6 +205,16 @@ h1 {
     background: var(--gruv-bg-dark);
     border-radius: 8px;
     border: 1px solid var(--gruv-purple);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: 
+        opacity 0.4s ease,
+        transform 0.4s ease;
+}
+
+.hidden-section[style*="block"] {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .section-header {
@@ -187,11 +229,33 @@ h1 {
 }
 
 .project-card {
-    background: var(--gruv-bg-dark);
+    background: linear-gradient(
+        145deg,
+        var(--gruv-bg-dark) 60%,
+        var(--gruv-purple) 150%
+    );
     padding: 1rem;
     border-radius: 8px;
-    border: 1px solid var(--gruv-purple);
     transition: transform 0.3s ease;
+    position: relative;
+}
+
+.project-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 8px;
+    padding: 2px;
+    background: linear-gradient(
+        45deg,
+        var(--gruv-green),
+        var(--gruv-blue)
+    );
+    -webkit-mask: 
+        linear-gradient(#000 0 0) content-box, 
+        linear-gradient(#000 0 0);
+    mask-composite: exclude;
+    opacity: 0.3;
 }
 
 .project-card:hover {
@@ -215,6 +279,26 @@ h1 {
     overflow: hidden;
     border: 1px solid var(--gruv-green);
     max-width: 600px;
+    position: relative;
+    overflow: visible;
+}
+
+.terminal-box::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 8px;
+    box-shadow: 0 0 15px var(--gruv-green);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: -1;
+}
+
+.terminal-box:hover::after {
+    opacity: 0.3;
 }
 
 .terminal-header {
@@ -282,13 +366,34 @@ h1 {
 }
 
 .ctf-card {
-    background: var(--gruv-bg-dark);
+    background: linear-gradient(
+        145deg,
+        var(--gruv-bg-dark) 60%,
+        var(--gruv-red) 150%
+    );
     padding: 1rem;
     border-radius: 8px;
-    border: 1px solid var(--gruv-red);
     position: relative;
     overflow: hidden;
     transition: transform 0.3s ease;
+}
+
+.ctf-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 8px;
+    padding: 2px;
+    background: linear-gradient(
+        45deg,
+        var(--gruv-yellow),
+        var(--gruv-red)
+    );
+    -webkit-mask: 
+        linear-gradient(#000 0 0) content-box, 
+        linear-gradient(#000 0 0);
+    mask-composite: exclude;
+    opacity: 0.3;
 }
 
 .ctf-card:hover {
@@ -346,8 +451,8 @@ h1 {
     }
     
     .profile-pic {
-        width: 120px;
-        height: 120px;
+        width: 113px;
+        height: 200px;
     }
     
     h1 {
