@@ -44,7 +44,6 @@ body {
     overflow: hidden;
 }
 
-/* Animated Profile Picture Glow */
 .profile-pic {
     width: 150px;
     height: 150px;
@@ -100,7 +99,6 @@ body {
     transform: scale(1.05);
 }
 
-/* Animated Name Glow */
 h1 {
     color: var(--gruv-green);
     margin-bottom: 0.5rem;
@@ -153,10 +151,8 @@ h1 {
     overflow: hidden;
     white-space: nowrap;
     margin: 0 auto;
-    opacity: 0;
-    animation: 
-        typing 3.5s steps(40, end) forwards,
-        fadeOut 1s forwards 7s;
+    opacity: 1;
+    animation: typing 3.5s steps(40, end) forwards;
 }
 
 @keyframes typing {
@@ -168,11 +164,6 @@ h1 {
         width: 100%;
         opacity: 1;
     }
-}
-
-@keyframes fadeOut {
-    from { opacity: 1; }
-    to { opacity: 0; }
 }
 
 @keyframes wave {
@@ -337,16 +328,6 @@ h1 {
     transform: translateY(-5px);
 }
 
-.project-title {
-    transition: all 0.3s ease;
-    position: relative;
-}
-
-.project-title:hover {
-    color: var(--gruv-blue);
-    animation: glow 1s infinite;
-}
-
 .terminal-box {
     background: var(--gruv-bg-dark);
     border-radius: 8px;
@@ -429,11 +410,6 @@ h1 {
     to { opacity: 1; }
 }
 
-.terminal-line:nth-child(1) { animation-delay: 0.5s; }
-.terminal-line:nth-child(2) { animation-delay: 1s; }
-.terminal-line:nth-child(3) { animation-delay: 1.5s; }
-.terminal-line:nth-child(4) { animation-delay: 2s; }
-
 .ctf-grid {
     display: grid;
     gap: 1rem;
@@ -488,26 +464,96 @@ h1 {
 .medium { background: var(--gruv-yellow); color: var(--gruv-bg-dark); }
 .hard { background: var(--gruv-red); color: var(--gruv-fg); }
 
-.ctf-title {
-    color: var(--gruv-blue);
-    margin-bottom: 0.5rem;
-}
-
-.ctf-description {
-    font-size: 0.9em;
-    margin-bottom: 1rem;
-}
-
-.ctf-stats {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.85em;
-}
-
 .contact-info {
     display: flex;
     flex-direction: column;
     gap: 1rem;
+}
+
+/* CLI Mode Styles */
+.cli-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: var(--gruv-bg-dark);
+    z-index: 999;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.cli-output {
+    flex-grow: 1;
+    overflow-y: auto;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--gruv-green);
+    padding-bottom: 1rem;
+}
+
+.cli-input {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 1rem 0;
+    border-top: 1px solid var(--gruv-green);
+}
+
+#cliCommand {
+    background: transparent;
+    border: none;
+    color: var(--gruv-green);
+    font-family: 'JetBrains Mono', monospace;
+    width: 100%;
+    font-size: 1rem;
+    caret-shape: block;
+}
+
+#cliCommand:focus {
+    outline: none;
+}
+
+.bunny-trigger {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    cursor: pointer;
+    font-size: 1.5rem;
+    opacity: 0.5;
+    transition: all 0.3s ease;
+    z-index: 1000;
+    background: var(--gruv-bg-dark);
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid var(--gruv-green);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.bunny-trigger:hover {
+    opacity: 1;
+    transform: rotate(5deg);
+}
+
+.try-me {
+    font-size: 0.8rem;
+    color: var(--gruv-green);
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.hidden {
+    display: none !important;
+}
+
+@keyframes caret-blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+#cliCommand {
+    animation: caret-blink 1s infinite;
 }
 
 @media (max-width: 768px) {
@@ -527,7 +573,7 @@ h1 {
     
     .profile-pic {
         width: 120px;
-        height: 120px; /* Changed from 200px to match width */
+        height: 120px;
     }
     
     h1 {
@@ -549,14 +595,14 @@ h1 {
     .typing-bio {
         font-size: 0.9rem;
     }
-}
 
-.bio-line {
-    display: inline-block;
-    overflow: hidden;
-    white-space: nowrap;
-    margin: 0 auto;
-    opacity: 1; /* Changed from 0 */
-    animation: 
-        typing 3.5s steps(40, end) forwards;
+    .bunny-trigger {
+        bottom: 10px;
+        right: 10px;
+        font-size: 1.2rem;
+    }
+    
+    .try-me {
+        display: none;
+    }
 }
