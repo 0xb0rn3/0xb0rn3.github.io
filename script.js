@@ -18,7 +18,7 @@ async function typeBio() {
         line.textContent = bioText[i];
         line.innerHTML += '<span class="typing-cursor"></span>';
         bioElement.appendChild(line);
-        
+
         await new Promise(resolve => {
             setTimeout(() => {
                 line.style.animation = `typing 3.5s steps(${bioText[i].length}, end) forwards`;
@@ -32,7 +32,7 @@ async function typeBio() {
 function toggleSection(sectionId) {
     const sections = ['projects', 'ctf', 'contact'];
     const buttons = document.querySelectorAll('.gruv-button');
-    
+
     buttons.forEach(button => {
         button.classList.remove('active');
         if (button.onclick && button.onclick.toString().includes(sectionId)) {
@@ -59,7 +59,7 @@ function getGreeting() {
 function updateTerminal() {
     const terminal = document.getElementById('visitorInfo');
     const greeting = getGreeting();
-    
+
     if (storedIpData && storedGeoData) {
         terminal.innerHTML = `
             <div class="terminal-line">
@@ -81,7 +81,7 @@ function updateTerminal() {
 // Visitor Detection
 async function detectVisitorInfo() {
     const terminal = document.getElementById('visitorInfo');
-    
+
     terminal.innerHTML = `
         <div class="terminal-line">
             <span class="prompt">$</span> ${getGreeting()}, Welcome to 0xb0rn3's portfolio
@@ -94,7 +94,7 @@ async function detectVisitorInfo() {
     try {
         const ipResponse = await fetch('https://api.ipify.org?format=json');
         storedIpData = await ipResponse.json();
-        
+
         const geoResponse = await fetch(`https://ipapi.co/${storedIpData.ip}/json/`);
         storedGeoData = await geoResponse.json();
 
@@ -122,12 +122,12 @@ async function loadProjects() {
         const response = await fetch('https://api.github.com/users/0xb0rn3/repos');
         const repos = await response.json();
 
-        const filteredRepos = repos.filter(repo => 
+        const filteredRepos = repos.filter(repo =>
             !["0xb0rn3.github.io", "b0urn3"].includes(repo.name)
         );
 
         projectsContainer.innerHTML = '';
-        
+
         filteredRepos.forEach(repo => {
             const projectCard = document.createElement('div');
             projectCard.className = 'project-card';
@@ -184,31 +184,27 @@ const ctfChallenges = [
 
 function loadCTFChallenges() {
     const ctfContainer = document.getElementById('ctf-challenges');
-    ctfContainer.innerHTML = '<div class="terminal-line">Loading challenges...</div>';
-
+    
     try {
-        ctfContainer.innerHTML = '';
+        // Create the CTF card with TryHackMe badge
+        const ctfCard = document.createElement('div');
+        ctfCard.className = 'ctf-card animate-fade-in';
         
-        ctfChallenges.forEach(challenge => {
-            const ctfCard = document.createElement('div');
-            ctfCard.className = 'ctf-card';
-            ctfCard.innerHTML = `
-                <div class="ctf-difficulty ${challenge.difficulty}">${challenge.difficulty.toUpperCase()}</div>
-                <h4 class="ctf-title">${challenge.title}</h4>
-                <p class="ctf-description">${challenge.description}</p>
-                <div class="ctf-stats">
-                    <span>Category: ${challenge.category}</span>
-                    <span>${challenge.points}pts</span>
+        ctfCard.innerHTML = `
+            <div class="ctf-header">
+                <h4 class="ctf-title">CTFs (Challenges)</h4>
+                <div class="ctf-badge-container animate-slide-up">
+                    <iframe 
+                        src="https://tryhackme.com/api/v2/badges/public-profile?userPublicId=4139197" 
+                        style="border:none; width:100%; height:300px; margin: 1rem 0; background: transparent;"
+                        title="TryHackMe Progress"
+                    ></iframe>
                 </div>
-                <div class="ctf-stats">
-                    <span>Solves: ${challenge.solves}</span>
-                    <button class="gruv-button" style="margin-top: 0.5rem; padding: 0.3rem 0.8rem;" disabled>
-                        <i class="fas fa-lock"></i> Coming Soon
-                    </button>
-                </div>
-            `;
-            ctfContainer.appendChild(ctfCard);
-        });
+            </div>
+        `;
+        
+        ctfContainer.innerHTML = ''; // Clear existing content
+        ctfContainer.appendChild(ctfCard);
 
     } catch (error) {
         ctfContainer.innerHTML = `
@@ -225,7 +221,7 @@ function toggleCliMode() {
     document.getElementById('cliContainer').classList.toggle('hidden');
     document.getElementById('bunnyTrigger').classList.toggle('hidden');
     document.querySelector('.container').classList.toggle('hidden');
-    
+
     if (isCliMode) {
         document.getElementById('cliCommand').focus();
         printCliWelcome();
@@ -278,17 +274,17 @@ const cliCommands = {
 function handleCommand(command) {
     const output = document.getElementById('cliOutput');
     const cmd = command.toLowerCase().trim();
-    
+
     output.innerHTML += `<div class="terminal-line"><span class="prompt">$</span> ${command}</div>`;
-    
+
     if (cmd === 'exit') {
         toggleCliMode();
         return;
     }
-    
-    const response = cliCommands[cmd] ? cliCommands[cmd]() 
+
+    const response = cliCommands[cmd] ? cliCommands[cmd]()
         : `Command not found: ${command}. Type "help" for available commands`;
-    
+
     output.innerHTML += `<div class="terminal-line">${response}</div>`;
     output.scrollTop = output.scrollHeight;
 }
@@ -299,7 +295,7 @@ document.addEventListener('DOMContentLoaded', () => {
     loadProjects();
     loadCTFChallenges();
     typeBio();
-    
+
     document.getElementById('bunnyTrigger').addEventListener('click', toggleCliMode);
     document.getElementById('cliCommand').addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
@@ -307,7 +303,7 @@ document.addEventListener('DOMContentLoaded', () => {
             e.target.value = '';
         }
     });
-    
+
     document.getElementById('cliCommand').addEventListener('focus', function() {
         this.scrollIntoView(false);
     });
