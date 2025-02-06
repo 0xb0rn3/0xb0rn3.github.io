@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>0xb0rn3 | Cybersecurity Specialist</title>
+    <!-- External resources -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
@@ -11,6 +12,7 @@
 <body>
     <div class="container">
         <div class="profile-card">
+            <!-- Profile Section -->
             <div class="profile-pic">
                 <img src="profile.jpg" alt="Christian Isaac" class="profile-img">
             </div>
@@ -21,6 +23,7 @@
                 <div id="typingBio" class="typing-bio"></div>
             </div>
 
+            <!-- Terminal Information Box -->
             <div class="terminal-box">
                 <div class="terminal-header">
                     <div class="terminal-controls">
@@ -40,6 +43,7 @@
                 </div>
             </div>
 
+            <!-- Navigation Buttons -->
             <div class="social-links">
                 <button class="gruv-button" onclick="toggleSection('projects')">
                     <i class="fas fa-code"></i> Projects
@@ -58,16 +62,21 @@
                 </button>
             </div>
 
+            <!-- Projects Section -->
             <div id="projectsSection" class="hidden-section">
                 <h3 class="section-header">Security Projects</h3>
                 <div class="projects-grid" id="github-projects"></div>
             </div>
 
+            <!-- Updated CTF Section -->
             <div id="ctfSection" class="hidden-section">
-                <h3 class="section-header">CTF Challenges</h3>
-                <div class="ctf-grid" id="ctf-challenges"></div>
+                <h3 class="section-header">Capture The Flag</h3>
+                <div class="ctf-grid" id="ctf-challenges">
+                    <!-- Content will be dynamically loaded by JavaScript -->
+                </div>
             </div>
 
+            <!-- Contact Section -->
             <div id="contactSection" class="hidden-section">
                 <h3 class="section-header">Contact Information</h3>
                 <div class="contact-info">
@@ -87,10 +96,12 @@
         </div>
     </div>
 
+    <!-- Easter Egg Trigger -->
     <div id="bunnyTrigger" class="bunny-trigger" title="Try me!">
         🐇 <span class="try-me">Try me!</span>
     </div>
 
+    <!-- Scripts -->
     <script src="script.js"></script>
 </body>
 </html>
