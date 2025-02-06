@@ -416,53 +416,85 @@ h1 {
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
 }
 
+/* CTF Card Styles */
 .ctf-card {
     background: linear-gradient(
         145deg,
         var(--gruv-bg-dark) 60%,
-        var(--gruv-red) 150%
+        var(--gruv-purple) 150%
     );
-    padding: 1rem;
-    border-radius: 8px;
+    padding: 2rem;
+    border-radius: 12px;
     position: relative;
     overflow: hidden;
     transition: transform 0.3s ease;
-}
-
-.ctf-card::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: 8px;
-    padding: 2px;
-    background: linear-gradient(
-        45deg,
-        var(--gruv-yellow),
-        var(--gruv-red)
-    );
-    -webkit-mask: 
-        linear-gradient(#000 0 0) content-box, 
-        linear-gradient(#000 0 0);
-    mask-composite: exclude;
-    opacity: 0.3;
+    border: 1px solid var(--gruv-purple);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .ctf-card:hover {
     transform: translateY(-5px);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
 }
 
-.ctf-difficulty {
-    position: absolute;
-    top: 0;
-    right: 0;
-    padding: 0.3rem 0.8rem;
-    border-radius: 0 8px 0 8px;
-    font-size: 0.8em;
+.ctf-header {
+    text-align: center;
+    margin-bottom: 1.5rem;
 }
 
-.easy { background: var(--gruv-green); color: var(--gruv-bg-dark); }
-.medium { background: var(--gruv-yellow); color: var(--gruv-bg-dark); }
-.hard { background: var(--gruv-red); color: var(--gruv-fg); }
+.ctf-title {
+    color: var(--gruv-yellow);
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.ctf-badge-container {
+    position: relative;
+    padding: 1rem;
+    background: rgba(40, 40, 40, 0.5);
+    border-radius: 8px;
+    border: 1px solid var(--gruv-blue);
+}
+
+/* Animation Classes */
+.animate-fade-in {
+    opacity: 0;
+    animation: fadeIn 0.8s ease-out forwards;
+}
+
+.animate-slide-up {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: slideUp 0.8s ease-out 0.2s forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Add a subtle glow effect on hover */
+.ctf-badge-container:hover {
+    box-shadow: 0 0 15px var(--gruv-blue);
+    transition: box-shadow 0.3s ease;
+}
 
 .contact-info {
     display: flex;
