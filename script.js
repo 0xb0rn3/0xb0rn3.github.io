@@ -6,8 +6,8 @@ let isCliMode = false;
 async function typeBio() {
     const bioElement = document.getElementById('typingBio');
     const bioText = [
-        "Cybersecurity Portfolio",
-        "Ethical Hacker | Pentester | Researcher"
+        "CyberSecurity Portfolio",
+        "JR.Pentester | Security Researcher"
     ];
 
     bioElement.innerHTML = '<span class="typing-cursor"></span>';
