@@ -231,7 +231,7 @@ function toggleCliMode() {
 function printCliWelcome() {
     const output = document.getElementById('cliOutput');
     output.innerHTML = `
-        <div class="terminal-line">0xb0rn3's Portfolio CLI v1.0.0</div>
+        <div class="terminal-line">0xb0rn3's Portfolio CLI v0.0.1</div>
         <div class="terminal-line">Type "help" for available commands</div>
         <div class="terminal-line">-----------------------------------</div>
     `;
@@ -251,7 +251,7 @@ const cliCommands = {
     about: () => `
         Christian Isaac (@0xb0rn3)<br>
         Cybersecurity Specialist<br>
-        Ethical Hacker | Pentester | Researcher
+        Junior Penetration Tester | Security Researcher
     `,
     projects: () => {
         loadProjects();
