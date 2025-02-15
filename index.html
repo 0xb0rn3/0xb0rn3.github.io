@@ -4,19 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>0xb0rn3 | Cybersecurity Specialist</title>
-    <!-- External resources -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <!-- Main Container -->
     <div class="container">
         <div class="profile-card">
             <!-- Profile Section -->
             <div class="profile-pic">
                 <img src="profile.jpg" alt="Christian Isaac" class="profile-img">
             </div>
-            
+
+            <!-- Profile Information -->
             <h1>Christian Isaac</h1>
             <p class="alias">@0xb0rn3</p>
             <div class="typing-bio-container">
@@ -48,7 +49,7 @@
                 <button class="gruv-button" onclick="toggleSection('projects')">
                     <i class="fas fa-code"></i> Projects
                 </button>
-                <button class="gruv-button" onclick="window.open('https://coursera.org/share/bedd7cd691ed9f95ebf697d8735d7af4', '_blank')">
+                <button class="gruv-button" onclick="toggleSection('certificates')">
                     <i class="fas fa-certificate"></i> Certification
                 </button>
                 <button class="gruv-button" onclick="toggleSection('ctf')">
@@ -68,11 +69,66 @@
                 <div class="projects-grid" id="github-projects"></div>
             </div>
 
-            <!-- Updated CTF Section -->
+            <!-- Certificates Section -->
+            <div id="certificatesSection" class="hidden-section">
+                <h3 class="section-header">Certifications</h3>
+                <div class="certificates-grid">
+                    <!-- TryHackMe Certificate Card -->
+                    <div class="certificate-card animate-fade-in">
+                        <div class="certificate-header">
+                            <i class="fas fa-award certificate-icon"></i>
+                            <h4>TryHackMe Certificate</h4>
+                        </div>
+                        <div class="certificate-image">
+                            <img src="https://tryhackme-certificates.s3-eu-west-1.amazonaws.com/THM-JB3HSWBUVV.png"
+                                 alt="TryHackMe Certificate"
+                                 class="cert-img">
+                        </div>
+                        <div class="certificate-footer">
+                            <a href="https://tryhackme-certificates.s3-eu-west-1.amazonaws.com/THM-JB3HSWBUVV.png"
+                               target="_blank"
+                               class="gruv-button">
+                                <i class="fas fa-external-link-alt"></i> View Certificate
+                            </a>
+                        </div>
+                    </div>
+                    <!-- Coursera Certificate Card -->
+                    <div class="certificate-card animate-fade-in">
+                        <div class="certificate-header">
+                            <i class="fas fa-award certificate-icon"></i>
+                            <h4>Coursera Certificate</h4>
+                        </div>
+                        <div class="certificate-content">
+                            <p class="certificate-description">Google Cybersecurity Professional Certificate</p>
+                        </div>
+                        <div class="certificate-footer">
+                            <a href="https://coursera.org/share/bedd7cd691ed9f95ebf697d8735d7af4"
+                               target="_blank"
+                               class="gruv-button">
+                                <i class="fas fa-external-link-alt"></i> Verify Certificate
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CTF Section -->
             <div id="ctfSection" class="hidden-section">
                 <h3 class="section-header">Capture The Flag</h3>
                 <div class="ctf-grid" id="ctf-challenges">
-                    <!-- Content will be dynamically loaded by JavaScript -->
+                    <!-- TryHackMe CTF Card -->
+                    <div class="ctf-card animate-fade-in">
+                        <div class="ctf-header">
+                            <h4 class="ctf-title">TryHackMe CTF</h4>
+                        </div>
+                        <div class="ctf-badge-container animate-slide-up">
+                            <iframe
+                                src="https://tryhackme.com/api/v2/badges/public-profile?userPublicId=4139197"
+                                style="border:none; width:100%; height:300px; margin: 1rem 0; background: transparent;"
+                                title="TryHackMe Progress"
+                            ></iframe>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -98,7 +154,7 @@
 
     <!-- Easter Egg Trigger -->
     <div id="bunnyTrigger" class="bunny-trigger" title="Try me!">
-        🐇 <span class="try-me">Try me!</span>
+        🐇 <span class="try-me">Cli Me!</span>
     </div>
 
     <!-- Scripts -->
