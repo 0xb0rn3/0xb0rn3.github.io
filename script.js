@@ -6,8 +6,8 @@ let isCliMode = false;
 async function typeBio() {
     const bioElement = document.getElementById('typingBio');
     const bioText = [
-        "  My CyberSecurity Portfolio i am: ",
-        "A Jr.Pentester & An IT-Security Researcher"
+        "  Hello friend, who am i? I am : ",
+        "A Jr.Pentester & IT-Security Researcher"
     ];
 
     bioElement.innerHTML = '<span class="typing-cursor"></span>';
@@ -63,7 +63,7 @@ function updateTerminal() {
     if (storedIpData && storedGeoData) {
         terminal.innerHTML = `
             <div class="terminal-line">
-                <span class="prompt">$</span> ${greeting}, Welcome glad you stopped by! 
+                <span class="prompt">$</span> ${greeting}, So i know this about you(check below)! 
             </div>
             <div class="terminal-line">
                 <span class="prompt">$</span> Your IP is: <span class="gruv-yellow">${storedIpData.ip}</span>
