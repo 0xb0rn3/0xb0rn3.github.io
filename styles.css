@@ -67,7 +67,7 @@ body {
     border: 2px solid var(--gruv-green);
     animation: wave 12s infinite linear;
     opacity: 0.7;
-    box-shadow: 
+    box-shadow:
         0 0 15px var(--gruv-green),
         0 0 30px var(--gruv-green);
     z-index: -1;
@@ -105,20 +105,20 @@ h1 {
     font-size: 2rem;
     position: relative;
     animation: name-glow 3s ease-in-out infinite;
-    text-shadow: 
+    text-shadow:
         0 0 10px var(--gruv-green),
         0 0 20px var(--gruv-green);
 }
 
 @keyframes name-glow {
     0%, 100% {
-        text-shadow: 
+        text-shadow:
             0 0 10px var(--gruv-green),
             0 0 20px var(--gruv-green);
         transform: scale(1);
     }
     50% {
-        text-shadow: 
+        text-shadow:
             0 0 20px var(--gruv-green),
             0 0 40px var(--gruv-green);
         transform: scale(1.02);
@@ -156,11 +156,11 @@ h1 {
 }
 
 @keyframes typing {
-    from { 
+    from {
         width: 0;
         opacity: 1;
     }
-    to { 
+    to {
         width: 100%;
         opacity: 1;
     }
@@ -273,7 +273,7 @@ h1 {
     border: 1px solid var(--gruv-purple);
     opacity: 0;
     transform: translateY(20px);
-    transition: 
+    transition:
         opacity 0.4s ease,
         transform 0.4s ease;
 }
@@ -317,8 +317,8 @@ h1 {
         var(--gruv-green),
         var(--gruv-blue)
     );
-    -webkit-mask: 
-        linear-gradient(#000 0 0) content-box, 
+    -webkit-mask:
+        linear-gradient(#000 0 0) content-box,
         linear-gradient(#000 0 0);
     mask-composite: exclude;
     opacity: 0.3;
@@ -592,38 +592,38 @@ h1 {
     .profile-card {
         padding: 1.5rem;
     }
-    
+
     .social-links {
         flex-direction: column;
         width: 100%;
     }
-    
+
     .gruv-button {
         width: 100%;
         justify-content: center;
     }
-    
+
     .profile-pic {
         width: 120px;
         height: 120px;
     }
-    
+
     h1 {
         font-size: 1.5rem;
     }
-    
+
     .alias {
         font-size: 1rem;
     }
-    
+
     .terminal-box {
         margin: 1rem auto;
     }
-    
+
     .terminal-line {
         font-size: 0.8rem;
     }
-    
+
     .typing-bio {
         font-size: 0.9rem;
     }
@@ -633,8 +633,104 @@ h1 {
         right: 10px;
         font-size: 1.2rem;
     }
-    
-    .try-me {
+
+    .CLI.ME {
         display: none;
     }
+}
+
+/* Certificate Card Styles */
+.certificate-card {
+    display: inline-block;
+    width: 300px;
+    margin: 20px;
+    border: 1px solid var(--gruv-purple);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+    background: var(--gruv-bg-dark);
+    text-align: center;
+    padding: 1rem;
+}
+
+.certificate-card:hover {
+    transform: scale(1.05);
+}
+
+.certificate-header {
+    margin-bottom: 1rem;
+}
+
+.certificate-header i {
+    font-size: 2rem;
+    color: var(--gruv-yellow);
+    margin-bottom: 0.5rem;
+}
+
+.certificate-header h4 {
+    color: var(--gruv-green);
+    font-size: 1.2rem;
+}
+
+.certificate-image img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+.certificate-footer {
+    margin-top: 1rem;
+}
+
+.certificate-footer .gruv-button {
+    width: 100%;
+    padding: 0.6rem;
+    font-size: 0.9rem;
+}
+
+/* TryHackMe CTF Card Styles */
+.ctf-card {
+    display: inline-block;
+    width: 300px;
+    margin: 20px;
+    border: 1px solid var(--gruv-purple);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+    background: var(--gruv-bg-dark);
+    text-align: center;
+    padding: 1rem;
+}
+
+.ctf-card:hover {
+    transform: scale(1.05);
+}
+
+.ctf-header {
+    margin-bottom: 1rem;
+}
+
+.ctf-title {
+    color: var(--gruv-yellow);
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.ctf-badge-container {
+    position: relative;
+    padding: 1rem;
+    background: rgba(40, 40, 40, 0.5);
+    border-radius: 8px;
+    border: 1px solid var(--gruv-blue);
+}
+
+.ctf-badge-container iframe {
+    width: 100%;
+    height: 300px;
+    border: none;
+    background: transparent;
 }
