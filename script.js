@@ -63,7 +63,7 @@ function updateTerminal() {
     if (storedIpData && storedGeoData) {
         terminal.innerHTML = `
             <div class="terminal-line">
-                <span class="prompt">$</span> ${greeting}, So i know this about you(check below)! 
+                <span class="prompt">$</span> ${greeting}, Your connection info(below)! 
             </div>
             <div class="terminal-line">
                 <span class="prompt">$</span> Your IP is: <span class="gruv-yellow">${storedIpData.ip}</span>
