@@ -6,7 +6,7 @@ let isCliMode = false;
 async function typeBio() {
     const bioElement = document.getElementById('typingBio');
     const bioText = [
-        "  Hello friend, who am i? I am : ",
+        "  Hello friend, Who am i? I am: ",
         "A Jr.Pentester & IT-Security Researcher"
     ];
 
