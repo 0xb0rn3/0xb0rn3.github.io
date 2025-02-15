@@ -69,10 +69,10 @@ function updateTerminal() {
                 <span class="prompt">$</span> Visitor's IP is: <span class="gruv-yellow">${storedIpData.ip}</span>
             </div>
             <div class="terminal-line">
-                <span class="prompt">$</span> Visitor's Location(not accurate): ${storedGeoData.city}, ${storedGeoData.country_name}
+                <span class="prompt">$</span> Location(not accurate): ${storedGeoData.city}, ${storedGeoData.country_name}
             </div>
             <div class="terminal-line">
-                <span class="prompt">$</span> Status: <span class="gruv-green"> Your connection is secure</span>
+                <span class="prompt">$</span> Visitor's status: <span class="gruv-green"> Connection is secure</span>
             </div>
         `;
     }
