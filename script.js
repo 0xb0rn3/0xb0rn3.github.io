@@ -6,7 +6,7 @@ let isCliMode = false;
 async function typeBio() {
     const bioElement = document.getElementById('typingBio');
     const bioText = [
-        "  Hello friend, Who am i? I am: ",
+        " Hello friend, Who am i? I am: ",
         "A Jr.Pentester & IT-Security Researcher"
     ];
 
@@ -63,13 +63,13 @@ function updateTerminal() {
     if (storedIpData && storedGeoData) {
         terminal.innerHTML = `
             <div class="terminal-line">
-                <span class="prompt">$</span> ${greeting}, Your connection info(below)! 
+                <span class="prompt">$</span> ${greeting}, Visitor detected! 
             </div>
             <div class="terminal-line">
-                <span class="prompt">$</span> Your IP is: <span class="gruv-yellow">${storedIpData.ip}</span>
+                <span class="prompt">$</span> Visitor's IP is: <span class="gruv-yellow">${storedIpData.ip}</span>
             </div>
             <div class="terminal-line">
-                <span class="prompt">$</span> Possible Location: ${storedGeoData.city}, ${storedGeoData.country_name}
+                <span class="prompt">$</span> Visitor's Location(not accurate): ${storedGeoData.city}, ${storedGeoData.country_name}
             </div>
             <div class="terminal-line">
                 <span class="prompt">$</span> Status: <span class="gruv-green"> Your connection is secure</span>
