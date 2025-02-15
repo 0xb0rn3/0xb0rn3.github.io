@@ -30,7 +30,7 @@ async function typeBio() {
 
 // Section Toggling
 function toggleSection(sectionId) {
-    const sections = ['projects', 'ctf', 'contact'];
+    const sections = ['projects', 'certificates', 'ctf', 'contact'];
     const buttons = document.querySelectorAll('.gruv-button');
 
     buttons.forEach(button => {
@@ -184,25 +184,25 @@ const ctfChallenges = [
 
 function loadCTFChallenges() {
     const ctfContainer = document.getElementById('ctf-challenges');
-    
+
     try {
         // Create the CTF card with TryHackMe badge
         const ctfCard = document.createElement('div');
         ctfCard.className = 'ctf-card animate-fade-in';
-        
+
         ctfCard.innerHTML = `
             <div class="ctf-header">
                 <h4 class="ctf-title">CTFs (Challenges)</h4>
                 <div class="ctf-badge-container animate-slide-up">
-                    <iframe 
-                        src="https://tryhackme.com/api/v2/badges/public-profile?userPublicId=4139197" 
+                    <iframe
+                        src="https://tryhackme.com/api/v2/badges/public-profile?userPublicId=4139197"
                         style="border:none; width:100%; height:300px; margin: 1rem 0; background: transparent;"
                         title="TryHackMe Progress"
                     ></iframe>
                 </div>
             </div>
         `;
-        
+
         ctfContainer.innerHTML = ''; // Clear existing content
         ctfContainer.appendChild(ctfCard);
 
@@ -243,6 +243,7 @@ const cliCommands = {
         - help: Show this help<br>
         - about: Show profile information<br>
         - projects: List security projects<br>
+        - certificates: Show certifications<br>
         - ctf: Show CTF challenges<br>
         - contact: Display contact information<br>
         - clear: Clear the terminal<br>
@@ -256,6 +257,10 @@ const cliCommands = {
     projects: () => {
         loadProjects();
         return `Loading projects... (GUI projects view will be shown)`;
+    },
+    certificates: () => {
+        toggleSection('certificates');
+        return `Displaying certifications... (GUI certificates view will be shown)`;
     },
     ctf: () => {
         loadCTFChallenges();
