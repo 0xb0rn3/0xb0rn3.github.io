@@ -1,3 +1,4 @@
+/* Root Variables for Dark Theme */
 :root {
     --thm-bg: #111827;
     --thm-bg-dark: #0f172a;
@@ -12,6 +13,7 @@
     --thm-gray: #6b7280;
 }
 
+/* Light Theme Variables */
 body.light-theme {
     --thm-bg: #ffffff;
     --thm-bg-dark: #f0f0f0;
@@ -26,6 +28,7 @@ body.light-theme {
     --thm-gray: #4b5563;
 }
 
+/* Base Styles */
 body {
     background: var(--thm-bg);
     color: var(--thm-fg);
@@ -39,12 +42,14 @@ body {
     transition: background 0.3s, color 0.3s;
 }
 
+/* Container */
 .container {
     max-width: 900px;
     width: 100%;
     padding: 1rem;
 }
 
+/* Profile Card */
 .profile-card {
     background: var(--thm-bg-dark);
     border-radius: 8px;
@@ -52,6 +57,7 @@ body {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+/* Profile Picture */
 .profile-pic {
     display: flex;
     justify-content: center;
@@ -64,8 +70,10 @@ body {
     border-radius: 50%;
     border: 3px solid var(--thm-green);
     object-fit: cover;
+    box-shadow: 0 0 10px 5px rgba(16, 185, 129, 0.5); /* Glow effect */
 }
 
+/* Headings and Alias */
 h1 {
     font-size: 2rem;
     text-align: center;
@@ -80,6 +88,7 @@ h1 {
     margin-bottom: 1rem;
 }
 
+/* Typing Bio */
 .typing-bio-container {
     min-height: 3rem;
     display: flex;
@@ -117,6 +126,7 @@ h1 {
     50% { opacity: 0; }
 }
 
+/* Terminal Box */
 .terminal-box {
     background: #1e293b;
     border-radius: 8px;
@@ -166,12 +176,14 @@ h1 {
     margin-right: 0.5rem;
 }
 
+/* Gruvbox Colors */
 .gruv-yellow { color: var(--thm-yellow); }
 .gruv-green { color: var(--thm-green); }
 .gruv-purple { color: var(--thm-purple); }
 .gruv-red { color: var(--thm-red); }
 .gruv-blue { color: var(--thm-blue); }
 
+/* Buttons */
 .social-links {
     display: flex;
     flex-wrap: wrap;
@@ -203,6 +215,7 @@ h1 {
     color: var(--thm-bg-dark);
 }
 
+/* Sections */
 .section {
     display: none;
     margin-top: 1rem;
@@ -219,26 +232,55 @@ h1 {
     text-align: center;
 }
 
-.projects-grid, .certificates-grid, .ctf-grid {
+/* Filter Buttons */
+.filter-buttons {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    justify-content: center;
+}
+
+.filter-btn {
+    background: var(--thm-bg-dark);
+    color: var(--thm-fg);
+    border: 1px solid var(--thm-gray);
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s, color 0.3s;
+}
+
+.filter-btn:hover {
+    background: var(--thm-gray);
+    color: var(--thm-bg);
+}
+
+.filter-btn.active {
+    background: var(--thm-green);
+    color: var(--thm-bg-dark);
+}
+
+/* Projects Grid */
+.projects-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 1rem;
 }
 
-.project-card, .certificate-card, .ctf-card {
+.project-card {
     background: var(--thm-bg-dark);
     border-radius: 8px;
     padding: 1rem;
     border: 1px solid var(--thm-gray);
 }
 
-.project-title, .certificate-header h4, .ctf-title {
+.project-title {
     font-size: 1.2rem;
     color: var(--thm-fg);
     margin: 0 0 0.5rem 0;
 }
 
-.project-description, .certificate-description {
+.project-description {
     color: var(--thm-gray);
     font-size: 0.9rem;
     margin-bottom: 0.5rem;
@@ -256,14 +298,34 @@ h1 {
     margin-right: 0.3rem;
 }
 
+/* Certificates Grid */
+.certificates-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+}
+
+.certificate-card {
+    background: var(--thm-bg-dark);
+    border-radius: 8px;
+    padding: 1rem;
+    border: 1px solid var(--thm-gray);
+}
+
 .certificate-header {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    margin-bottom: 0.5rem;
 }
 
 .certificate-icon {
     color: var(--thm-yellow);
+}
+
+.certificate-card h4 {
+    font-size: 1.2rem;
+    color: var(--thm-fg);
 }
 
 .certificate-image img {
@@ -272,10 +334,47 @@ h1 {
     margin: 0.5rem 0;
 }
 
-.certificate-footer, .ctf-footer {
+.certificate-content {
+    margin-bottom: 0.5rem;
+}
+
+.certificate-description {
+    font-size: 0.9rem;
+    color: var(--thm-gray);
+}
+
+.certificate-footer {
     margin-top: 0.5rem;
 }
 
+/* CTF Grid */
+.ctf-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+}
+
+.ctf-card {
+    background: var(--thm-bg-dark);
+    border-radius: 8px;
+    padding: 1rem;
+    border: 1px solid var(--thm-gray);
+}
+
+.ctf-header {
+    margin-bottom: 0.5rem;
+}
+
+.ctf-title {
+    font-size: 1.2rem;
+    color: var(--thm-fg);
+}
+
+.ctf-badge-container {
+    margin-top: 1rem;
+}
+
+/* Contact Info */
 .contact-info p {
     margin: 0.5rem 0;
     display: flex;
@@ -292,6 +391,7 @@ h1 {
     text-decoration: underline;
 }
 
+/* CLI Container */
 .cli-container {
     position: fixed;
     top: 0;
@@ -329,10 +429,12 @@ h1 {
     outline: none;
 }
 
+/* Hidden Class */
 .hidden {
     display: none;
 }
 
+/* Bunny Trigger */
 .bunny-trigger {
     position: fixed;
     bottom: 1rem;
@@ -356,6 +458,7 @@ h1 {
     font-size: 0.9rem;
 }
 
+/* Loading Animation */
 .loading {
     text-align: center;
     color: var(--thm-gray);
@@ -377,11 +480,4 @@ h1 {
 
 .animate-slide-up {
     animation: slideUp 0.5s ease-in;
-}
-
-.filter-buttons {
-    display: flex;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
-    justify-content: center;
 }
