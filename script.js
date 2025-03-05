@@ -98,7 +98,7 @@ async function detectVisitorInfo() {
 
     terminal.innerHTML = `
         <div class="terminal-line">
-            <span class="prompt">$</span> ${getGreeting()}, Welcome to 0xb1rn3's portfolio
+            <span class="prompt">$</span> ${getGreeting()}, Welcome to 0xb0rn3's portfolio
         </div>
         <div class="terminal-line">
             <span class="prompt">$</span> Scanning connection...
@@ -133,11 +133,11 @@ async function loadProjects() {
     projectsContainer.innerHTML = '<div class="terminal-line loading">Loading projects...</div>';
 
     try {
-        const response = await fetch('https://api.github.com/users/0xb1rn3/repos');
+        const response = await fetch('https://api.github.com/users/0xb0rn3/repos');
         const repos = await response.json();
 
         const filteredRepos = repos.filter(repo =>
-            !["0xb1rn3.github.io", "b0urn3"].includes(repo.name)
+            !["0xb0rn3.github.io", "0xb0rn3", "b0urn3"].includes(repo.name)
         );
 
         projectsContainer.innerHTML = '';
