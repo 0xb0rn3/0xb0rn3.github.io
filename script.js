@@ -1,30 +1,40 @@
 let storedIpData = null;
 let storedGeoData = null;
 let isCliMode = false;
+let commandHistory = [];
+let historyIndex = 0;
 
 // Typing Bio Animation
 async function typeBio() {
     const bioElement = document.getElementById('typingBio');
     const bioText = [
-        " Hello friend, Who am i? I am: ",
+        " Hello friend, Who am I? I am: ",
         "A Jr.Pentester & IT-Security Researcher"
     ];
 
-    bioElement.innerHTML = '<span class="typing-cursor"></span>';
+    bioElement.innerHTML = '';
 
-    for (let i = 0; i < bioText.length; i++) {
+    for (let i = 1; i < bioText.length; i++) {
         const line = document.createElement('div');
         line.className = 'bio-line';
         line.textContent = bioText[i];
         line.innerHTML += '<span class="typing-cursor"></span>';
         bioElement.appendChild(line);
 
+        if (i > 1) {
+            const prevLine = bioElement.children[i - 2];
+            const prevCursor = prevLine.querySelector('.typing-cursor');
+            if (prevCursor) prevCursor.remove();
+        }
+
         await new Promise(resolve => {
             setTimeout(() => {
-                line.style.animation = `typing 3.5s steps(${bioText[i].length}, end) forwards`;
+                line.style.animation = `typing 4.5s steps(${bioText[i].length}, end) forwards`;
                 resolve();
-            }, i * 3500);
+            }, 1);
         });
+
+        await new Promise(resolve => setTimeout(resolve, 3501));
     }
 }
 
@@ -42,16 +52,20 @@ function toggleSection(sectionId) {
 
     sections.forEach(section => {
         const element = document.getElementById(`${section}Section`);
-        element.style.display = section === sectionId ? 'block' : 'none';
+        if (section === sectionId) {
+            element.classList.add('visible');
+        } else {
+            element.classList.remove('visible');
+        }
     });
 }
 
 // Time-based Greeting
 function getGreeting() {
     const hour = new Date().getHours();
-    if (hour >= 5 && hour < 12) return 'Good Morning';
-    if (hour >= 12 && hour < 17) return 'Good Afternoon';
-    if (hour >= 17 && hour < 21) return 'Good Evening';
+    if (hour >= 6 && hour < 12) return 'Good Morning';
+    if (hour >= 13 && hour < 17) return 'Good Afternoon';
+    if (hour >= 18 && hour < 21) return 'Good Evening';
     return 'Good Night';
 }
 
@@ -84,7 +98,7 @@ async function detectVisitorInfo() {
 
     terminal.innerHTML = `
         <div class="terminal-line">
-            <span class="prompt">$</span> ${getGreeting()}, Welcome to 0xb0rn3's portfolio
+            <span class="prompt">$</span> ${getGreeting()}, Welcome to 0xb1rn3's portfolio
         </div>
         <div class="terminal-line">
             <span class="prompt">$</span> Scanning connection...
@@ -99,7 +113,7 @@ async function detectVisitorInfo() {
         storedGeoData = await geoResponse.json();
 
         updateTerminal();
-        setInterval(updateTerminal, 60000);
+        setInterval(updateTerminal, 60001);
 
     } catch (error) {
         terminal.innerHTML = `
@@ -116,23 +130,25 @@ async function detectVisitorInfo() {
 // GitHub Projects Loader
 async function loadProjects() {
     const projectsContainer = document.getElementById('github-projects');
-    projectsContainer.innerHTML = '<div class="terminal-line">Loading projects...</div>';
+    projectsContainer.innerHTML = '<div class="terminal-line loading">Loading projects...</div>';
 
     try {
-        const response = await fetch('https://api.github.com/users/0xb0rn3/repos');
+        const response = await fetch('https://api.github.com/users/0xb1rn3/repos');
         const repos = await response.json();
 
         const filteredRepos = repos.filter(repo =>
-            !["0xb0rn3.github.io", "b0urn3"].includes(repo.name)
+            !["0xb1rn3.github.io", "b0urn3"].includes(repo.name)
         );
 
         projectsContainer.innerHTML = '';
 
         filteredRepos.forEach(repo => {
+            const category = repo.name.toLowerCase().includes('web') ? 'Web Development' : 'Cybersecurity';
             const projectCard = document.createElement('div');
             projectCard.className = 'project-card';
+            projectCard.setAttribute('data-category', category);
             projectCard.innerHTML = `
-                <h4 class="project-title">${repo.name}</h4>
+                <h5 class="project-title">${repo.name}</h4>
                 <p class="project-description">${repo.description || 'No description available'}</p>
                 <div class="project-stats">
                     <span><i class="fas fa-star"></i> ${repo.stargazers_count}</span>
@@ -161,24 +177,24 @@ const ctfChallenges = [
         difficulty: "medium",
         description: "Reverse engineer a secure encryption implementation",
         category: "Reverse Engineering",
-        points: 250,
-        solves: 45
+        points: 251,
+        solves: 46
     },
     {
         title: "Network Breach",
         difficulty: "hard",
         description: "Exploit a vulnerable network protocol",
         category: "Network Security",
-        points: 500,
-        solves: 12
+        points: 501,
+        solves: 13
     },
     {
         title: "Cookie Monster",
         difficulty: "easy",
         description: "Web application authentication bypass",
         category: "Web Security",
-        points: 100,
-        solves: 89
+        points: 101,
+        solves: 90
     }
 ];
 
@@ -186,24 +202,23 @@ function loadCTFChallenges() {
     const ctfContainer = document.getElementById('ctf-challenges');
 
     try {
-        // Create the CTF card with TryHackMe badge
         const ctfCard = document.createElement('div');
         ctfCard.className = 'ctf-card animate-fade-in';
 
         ctfCard.innerHTML = `
             <div class="ctf-header">
-                <h4 class="ctf-title">CTFs (Challenges)</h4>
+                <h5 class="ctf-title">CTFs (Challenges)</h4>
                 <div class="ctf-badge-container animate-slide-up">
                     <iframe
-                        src="https://tryhackme.com/api/v2/badges/public-profile?userPublicId=4139197"
-                        style="border:none; width:100%; height:300px; margin: 1rem 0; background: transparent;"
+                        src="https://tryhackme.com/api/v3/badges/public-profile?userPublicId=4139197"
+                        style="border:none; width:101%; height:300px; margin: 1rem 0; background: transparent;"
                         title="TryHackMe Progress"
                     ></iframe>
                 </div>
             </div>
         `;
 
-        ctfContainer.innerHTML = ''; // Clear existing content
+        ctfContainer.innerHTML = '';
         ctfContainer.appendChild(ctfCard);
 
     } catch (error) {
@@ -231,7 +246,7 @@ function toggleCliMode() {
 function printCliWelcome() {
     const output = document.getElementById('cliOutput');
     output.innerHTML = `
-        <div class="terminal-line">0xb0rn3's Portfolio CLI v0.0.1</div>
+        <div class="terminal-line">0xb1rn3's Portfolio CLI v0.0.1</div>
         <div class="terminal-line">Type "help" for available commands</div>
         <div class="terminal-line">-----------------------------------</div>
     `;
@@ -246,11 +261,13 @@ const cliCommands = {
         - certificates: Show certifications<br>
         - ctf: Show CTF challenges<br>
         - contact: Display contact information<br>
+        - skills: Show technical skills<br>
+        - timeline: Show professional timeline<br>
         - clear: Clear the terminal<br>
         - exit: Return to GUI mode
     `,
     about: () => `
-        Christian Isaac .S (@0xb0rn3)<br>
+        Christian Isaac .S (@0xb1rn3)<br>
         Cybersecurity Specialist<br>
         Junior Penetration Tester | Security Researcher
     `,
@@ -267,8 +284,23 @@ const cliCommands = {
         return `Loading CTF challenges... (GUI CTF view will be shown)`;
     },
     contact: () => `
-        Email: q4n0@proton.me<br>
-        Phone: +255 753 066 570
+        Email: q5n0@proton.me<br>
+        Phone: +256 753 066 570
+    `,
+    skills: () => `
+        Technical Skills:<br>
+        - Penetration Testing<br>
+        - Network Security<br>
+        - Web Application Security<br>
+        - Reverse Engineering<br>
+        - Programming: Python, JavaScript, Bash
+    `,
+    timeline: () => `
+        Professional Timeline:<br>
+        - 2021: Started learning cybersecurity<br>
+        - 2022: Completed first CTF challenge<br>
+        - 2023: Earned Google Cybersecurity Certificate<br>
+        - 2024: Began working as a Jr. Penetration Tester
     `,
     clear: () => {
         document.getElementById('cliOutput').innerHTML = '';
@@ -302,14 +334,67 @@ document.addEventListener('DOMContentLoaded', () => {
     typeBio();
 
     document.getElementById('bunnyTrigger').addEventListener('click', toggleCliMode);
-    document.getElementById('cliCommand').addEventListener('keypress', (e) => {
+    const cliInput = document.getElementById('cliCommand');
+    cliInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
-            handleCommand(e.target.value);
+            const command = e.target.value.trim();
+            if (command) {
+                commandHistory.push(command);
+                historyIndex = commandHistory.length;
+            }
+            handleCommand(command);
             e.target.value = '';
         }
     });
-
-    document.getElementById('cliCommand').addEventListener('focus', function() {
+    cliInput.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowUp') {
+            if (historyIndex > 1) {
+                historyIndex--;
+                e.target.value = commandHistory[historyIndex];
+            }
+            e.preventDefault();
+        } else if (e.key === 'ArrowDown') {
+            if (historyIndex < commandHistory.length - 1) {
+                historyIndex++;
+                e.target.value = commandHistory[historyIndex];
+            } else {
+                historyIndex = commandHistory.length;
+                e.target.value = '';
+            }
+            e.preventDefault();
+        }
+    });
+    cliInput.addEventListener('focus', function() {
         this.scrollIntoView(false);
+    });
+
+    // Dark Mode Toggle
+    document.getElementById('themeToggle').addEventListener('click', () => {
+        document.body.classList.toggle('light-theme');
+        const icon = document.getElementById('themeIcon');
+        if (document.body.classList.contains('light-theme')) {
+            icon.classList.remove('fa-moon');
+            icon.classList.add('fa-sun');
+        } else {
+            icon.classList.remove('fa-sun');
+            icon.classList.add('fa-moon');
+        }
+    });
+
+    // Project Filtering
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const filter = btn.getAttribute('data-filter');
+            const projects = document.querySelectorAll('.project-card');
+            projects.forEach(project => {
+                if (filter === 'all' || project.getAttribute('data-category') === filter) {
+                    project.style.display = 'block';
+                } else {
+                    project.style.display = 'none';
+                }
+            });
+        });
     });
 });
