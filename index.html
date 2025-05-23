@@ -6,6 +6,7 @@
     <title>0xb0rn3 | Portfolio</title>
     <link rel="stylesheet" href="styles.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -52,10 +53,13 @@
                 <h2 class="section-header">Security Projects</h2>
                 <div class="filter-buttons">
                     <button class="filter-btn active" data-filter="all">All</button>
-                    <button class="filter-btn" data-filter="Web Development">Web Dev</button>
+                    <button class="filter-btn" data-filter="Web Development">Web Dev</button>,
                     <button class="filter-btn" data-filter="Cybersecurity">Cybersecurity</button>
+                    <button class="filter-btn" data-filter="Scripting">Scripting</button>
+                    <button class="filter-btn" data-filter="Tools">Tools</button>
                 </div>
-                <div class="projects-grid" id="github-projects"></div>
+                <div class="projects-grid" id="github-projects">
+                    </div>
             </div>
             <div id="certificatesSection" class="section">
                 <h2 class="section-header">Certifications</h2>
@@ -63,22 +67,46 @@
                     <div class="certificate-card">
                         <div class="certificate-header">
                             <i class="fas fa-certificate certificate-icon"></i>
-                            <h4>TryHackMe Certification</h4>
+                            <h4>Pre Security</h4>
                         </div>
                         <div class="certificate-content">
-                            <p class="certificate-description">Cybersecurity Fundamentals</p>
+                            <p class="certificate-description">TryHackMe Pre Security Pathway</p>
                         </div>
                         <div class="certificate-footer">
-                            <a href="https://tryhackme.com" target="_blank" class="gruv-button"><i class="fas fa-external-link-alt"></i> View Certificate</a>
+                            <a href="https://tryhackme-certificates.s3-eu-west-1.amazonaws.com/THM-JB3HSWBUVV.pdf" target="_blank" class="gruv-button"><i class="fas fa-external-link-alt"></i> View Certificate</a>
                         </div>
                     </div>
                     <div class="certificate-card">
                         <div class="certificate-header">
                             <i class="fas fa-certificate certificate-icon"></i>
-                            <h4>Coursera Certification</h4>
+                            <h4>Intro to Cyber Security</h4>
                         </div>
                         <div class="certificate-content">
-                            <p class="certificate-description">Google Cybersecurity Professional Certificate</p>
+                            <p class="certificate-description">TryHackMe Intro to Cyber Security Pathway</p>
+                        </div>
+                        <div class="certificate-footer">
+                            <a href="https://tryhackme-certificates.s3-eu-west-1.amazonaws.com/THM-9BUCQG36LU.pdf" target="_blank" class="gruv-button"><i class="fas fa-external-link-alt"></i> View Certificate</a>
+                        </div>
+                    </div>
+                    <div class="certificate-card">
+                        <div class="certificate-header">
+                            <i class="fas fa-certificate certificate-icon"></i>
+                            <h4>Cybersecurity Fundamentals</h4>
+                        </div>
+                        <div class="certificate-content">
+                            <p class="certificate-description">TryHackMe Path</p>
+                        </div>
+                        <div class="certificate-footer">
+                            <a href="https://tryhackme.com" target="_blank" class="gruv-button"><i class="fas fa-external-link-alt"></i> View Details</a>
+                        </div>
+                    </div>
+                    <div class="certificate-card">
+                        <div class="certificate-header">
+                            <i class="fas fa-certificate certificate-icon"></i>
+                            <h4>Google Cybersecurity Professional</h4>
+                        </div>
+                        <div class="certificate-content">
+                            <p class="certificate-description">Coursera Certificate</p>
                         </div>
                         <div class="certificate-footer">
                             <a href="https://coursera.org" target="_blank" class="gruv-button"><i class="fas fa-external-link-alt"></i> Verify Certificate</a>
@@ -89,15 +117,7 @@
             <div id="ctfSection" class="section">
                 <h2 class="section-header">Capture The Flag Stats</h2>
                 <div class="ctf-grid" id="ctf-challenges">
-                    <div class="ctf-card">
-                        <div class="ctf-header">
-                            <h4 class="ctf-title">CTFs (Challenges)</h4>
-                            <div class="ctf-badge-container">
-                                <iframe src="https://tryhackme.com/api/v2/badges/public-profile?userPublicId=4139197" style="border:none; width:100%; height:300px; margin: 1rem 0; background: transparent;" title="TryHackMe Progress"></iframe>
-                            </div>
-                        </div>
                     </div>
-                </div>
             </div>
             <div id="contactSection" class="section">
                 <h2 class="section-header">Contact Information</h2>
@@ -108,6 +128,7 @@
             </div>
         </div>
     </div>
+
     <div id="cliContainer" class="cli-container hidden">
         <div class="cli-output" id="cliOutput"></div>
         <div class="cli-input">
@@ -115,10 +136,16 @@
             <input type="text" id="cliCommand" autocomplete="off">
         </div>
     </div>
+
     <div id="bunnyTrigger" class="bunny-trigger">
         <i class="fas fa-terminal"></i>
         <span class="try-me">Cli Me!</span>
     </div>
+
+    <button id="scrollToTopBtn" class="scroll-to-top-btn hidden">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
     <script src="script.min.js"></script>
 </body>
 </html>
