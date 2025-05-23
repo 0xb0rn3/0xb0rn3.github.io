@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>0xb0rn3's Portfolio</title>
+    <link rel="stylesheet" href="styles.min.css">
+    <!-- Font Awesome CDN for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="profile-card animate-fade-in">
+            <div class="profile-pic">
+                <!-- Profile picture in root directory -->
+                <img src="profile.jpg" alt="Profile Picture" class="profile-img">
+            </div>
+            <h1>Christian Isaac.S</h1>
+            <div class="alias">Digital alias: 0xb0rn3 | 0xbv1</div>
+            <div class="typing-bio-container">
+                <div id="typingBio" class="typing-bio"></div>
+            </div>
+            <div class="terminal-box">
+                <div class="terminal-header">
+                    <div class="terminal-controls">
+                        <div class="control red"></div>
+                        <div class="control yellow"></div>
+                        <div class="control green"></div>
+                    </div>
+                    <div class="terminal-title">visitor-info — zsh</div>
+                </div>
+                <div class="terminal-body" id="visitorInfo">
+                    <div class="terminal-line">
+                        <span class="prompt">$</span> Welcome to my portfolio (0xb0rn3 | 0xbv1)
+                    </div>
+                    <div class="terminal-line">
+                        <span class="prompt">$</span> Scanning connection...
+                    </div>
+                </div>
+            </div>
+            <div class="social-links">
+                <button class="gruv-button" onclick="toggleSection('projects')">
+                    <i class="fas fa-project-diagram"></i> Projects
+                </button>
+                <button class="gruv-button" onclick="toggleSection('certificates')">
+                    <i class="fas fa-certificate"></i> Certification
+                </button>
+                <button class="gruv-button" onclick="toggleSection('ctf')">
+                    <i class="fas fa-flag"></i> CTF
+                </button>
+                <button class="gruv-button" onclick="toggleSection('contact')">
+                    <i class="fas fa-envelope"></i> Contact
+                </button>
+                <a href="https://x.com/0xbv1" target="_blank" class="gruv-button">
+                    <i class="fab fa-twitter"></i> X
+                </a>
+                <a href="https://discord.com/users/0xbv1" target="_blank" class="gruv-button">
+                    <i class="fab fa-discord"></i> Discord
+                </a>
+                <a href="https://github.com/0xb0rn3" target="_blank" class="gruv-button">
+                    <i class="fab fa-github"></i> GitHub
+                </a>
+                <a href="https://linkedin.com/in/yourprofile" target="_blank" class="gruv-button">
+                    <i class="fab fa-linkedin"></i> LinkedIn
+                </a>
+                <a href="https://instagram.com/theehiv3" target="_blank" class="gruv-button">
+                    <i class="fab fa-instagram"></i> Instagram
+                </a>
+                <button id="themeToggle" class="gruv-button">
+                    <i id="themeIcon" class="fas fa-moon"></i> Toggle Theme
+                </button>
+            </div>
+            <div id="projectsSection" class="section">
+                <div class="section-header">Security Projects</div>
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="Web Development">Web Dev</button>
+                    <button class="filter-btn" data-filter="Cybersecurity">Cybersecurity</button>
+                </div>
+                <div id="github-projects" class="projects-grid"></div>
+            </div>
+            <div id="certificatesSection" class="section">
+                <div class="section-header">Certifications</div>
+                <div class="certificates-grid">
+                    <div class="certificate-card">
+                        <div class="certificate-header">
+                            <i class="fas fa-certificate certificate-icon"></i>
+                            <h4>TryHackMe Certification</h4>
+                        </div>
+                        <div class="certificate-content">
+                            <p class="certificate-description">Cybersecurity Fundamentals</p>
+                        </div>
+                        <div class="certificate-footer">
+                            <a href="#" target="_blank" class="gruv-button">
+                                <i class="fas fa-external-link-alt"></i> View Certificate
+                            </a>
+                        </div>
+                    </div>
+                    <div class="certificate-card">
+                        <div class="certificate-header">
+                            <i class="fas fa-certificate certificate-icon"></i>
+                            <h4>Coursera Certification</h4>
+                        </div>
+                        <div class="certificate-content">
+                            <p class="certificate-description">Google Cybersecurity Professional Certificate</p>
+                        </div>
+                        <div class="certificate-footer">
+                            <a href="#" target="_blank" class="gruv-button">
+                                <i class="fas fa-external-link-alt"></i> Verify Certificate
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="ctfSection" class="section">
+                <div class="section-header">Capture The Flag Stats</div>
+                <div id="ctf-challenges" class="ctf-grid"></div>
+            </div>
+            <div id="contactSection" class="section">
+                <div class="section-header">Contact Information</div>
+                <div class="contact-info">
+                    <p><i class="fas fa-envelope"></i> <a href="mailto:q4n0@proton.me">q4n0@proton.me</a></p>
+                    <p><i class="fas fa-phone"></i> +255 753 066 570</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="cliContainer" class="cli-container hidden">
+        <div id="cliOutput" class="cli-output"></div>
+        <div class="cli-input">
+            <span class="prompt">$</span>
+            <input type="text" id="cliCommand" placeholder="Type a command...">
+        </div>
+    </div>
+    <div id="bunnyTrigger" class="bunny-trigger">
+        <i class="fas fa-terminal"></i>
+        <span class="try-me">🐇 Cli Me!</span>
+    </div>
+    <script src="script.min.js"></script>
+</body>
+</html>
