@@ -1,4 +1,3 @@
-/* Root Variables for Dark Theme (Inspired by Grok AI) */
 :root {
     --thm-bg: #0a0a0a; /* Dark background */
     --thm-bg-dark: #1a1a1a; /* Darker background for cards */
@@ -13,11 +12,11 @@
     --thm-gray: #a0a0a0; /* Gray for secondary text */
 }
 
-/* Light Theme Variables (Inspired by Grok AI) */
+/* Light Theme Variables 
 body.light-theme {
     --thm-bg: #f5f5f5; /* Light background */
-    --thm-bg-dark: #e0e0e0; /* Light card background */
-    --thm-fg: #1a1a1a; /* Dark text */
+    --thm-bg-dark: #d0d0d0; /* Darker card background for contrast */
+    --thm-fg: #333333; /* Darker text for better readability */
     --thm-green: #00cc7a; /* Softer green */
     --thm-yellow: #ccac00; /* Softer gold */
     --thm-blue: #0099cc; /* Softer blue */
@@ -25,7 +24,7 @@ body.light-theme {
     --thm-red: #cc3d3d; /* Softer red */
     --thm-pink: #cc0066; /* Softer pink */
     --thm-orange: #cc7a00; /* Softer orange */
-    --thm-gray: #666666; /* Darker gray for text */
+    --thm-gray: #555555; /* Darker gray for secondary text */
 }
 
 /* Base Styles */
@@ -72,11 +71,19 @@ body {
     border: 3px solid var(--thm-green);
     object-fit: cover;
     box-shadow: 0 0 10px 5px rgba(0, 255, 157, 0.5); /* Glow effect */
-    transition: transform 0.3s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .profile-img:hover {
     transform: scale(1.05);
+    box-shadow: 0 0 15px 7px rgba(0, 255, 157, 0.7);
+}
+
+.profile-img[alt] {
+    font-size: 0.9rem;
+    color: var(--thm-gray);
+    text-align: center;
+    line-height: 150px; /* Center vertically */
 }
 
 /* Headings and Alias */
@@ -141,7 +148,6 @@ h1 {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
-/* Terminal Header */
 .terminal-header {
     background: #2a2a2a;
     padding: 0.5rem;
@@ -403,6 +409,17 @@ h1 {
 
 .ctf-badge-container {
     margin-top: 1rem;
+    overflow: hidden;
+}
+
+.ctf-badge-container iframe {
+    transform: scale(0.9);
+    transform-origin: top left;
+    transition: transform 0.3s ease;
+}
+
+.ctf-badge-container:hover iframe {
+    transform: scale(0.95);
 }
 
 /* Contact Info */
@@ -471,6 +488,7 @@ h1 {
     bottom: 1rem;
     right: 1rem;
     background: var(--thm-bg-dark);
+    color: var(--thm-fg);
     padding: 0.5rem 1rem;
     border-radius: 20px;
     cursor: pointer;
@@ -478,11 +496,13 @@ h1 {
     align-items: center;
     gap: 0.5rem;
     border: 1px solid var(--thm-gray);
-    transition: transform 0.3s ease;
+    transition: transform 0.3s ease, background 0.3s, color 0.3s;
 }
 
 .bunny-trigger:hover {
     transform: scale(1.05);
+    background: var(--thm-gray);
+    color: var(--thm-bg);
 }
 
 .bunny-trigger:hover .try-me {
