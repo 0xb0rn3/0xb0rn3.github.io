@@ -1,4 +1,779 @@
-<!DOCTYPE html>
+<body>
+    <!-- Animated background -->
+    <div class="cyber-grid"></div>
+    <div class="particles" id="particles"></div>
+    <canvas class="matrix-rain" id="matrixCanvas"></canvas>
+
+    <!-- Visitor Info Display -->
+    <div class="visitor-info" id="visitorInfo">
+        <div class="info-line">
+            <span class="label">IP:</span>
+            <span id="visitorIP">Detecting...</span>
+        </div>
+        <div class="info-line">
+            <span class="label">Device:</span>
+            <span id="visitorDevice">Analyzing...</span>
+        </div>
+        <div class="info-line">
+            <span class="label">OS:</span>
+            <span id="visitorOS">Scanning...</span>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="nav" id="navbar">
+        <div class="nav-content">
+            <a href="#" class="logo">0xb0rn3</a>
+            <ul class="nav-links">
+                <li><a href="#about" class="nav-link">About</a></li>
+                <li><a href="#certifications" class="nav-link">Certifications</a></li>
+                <li><a href="#projects" class="nav-link">Projects</a></li>
+                <li><a href="#skills" class="nav-link">Skills</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
+            </ul>
+            <button class="theme-toggle" id="themeToggle">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <!-- Hero Section -->
+        <section class="hero" id="hero">
+            <div class="hero-content fade-in">
+                <h1 class="hero-title glitch neon-glow">Christian Isaac.S</h1>
+                <div class="hero-subtitle">0xb0rn3 | 0xbv1 | シェルショック</div>
+                <div class="typing-animation" id="typingText">
+                    <span id="typewriter"></span>
+                    <span class="cursor" id="cursor"></span>
+                </div>
+                
+                <!-- Achievement Badges -->
+                <div class="achievement-badges">
+                    <div class="achievement-badge">
+                        <i class="fas fa-shield-alt"></i>
+                        Security Researcher
+                    </div>
+                    <div class="achievement-badge">
+                        <i class="fas fa-flag"></i>
+                        CTF Player
+                    </div>
+                    <div class="achievement-badge">
+                        <i class="fab fa-linux"></i>
+                        Linux Advocate
+                    </div>
+                </div>
+                
+                <div class="profile-section">
+                    <div class="profile-card slide-up">
+                        <img src="profile.jpg" alt="Christian Isaac .S" class="profile-image">
+                        
+                        <!-- GitHub Statistics -->
+                        <div class="github-stats">
+                            <div class="stat-card slide-up">
+                                <img src="https://github-readme-stats.vercel.app/api?username=0xb0rn3&show_icons=true&theme=tokyonight&hide_border=true&bg_color=0D1117&title_color=58A6FF&icon_color=58A6FF&text_color=C9D1D9&count_private=true&include_all_commits=true&custom_title=Security%20Engineering%20Metrics" alt="GitHub Stats" />
+                            </div>
+                            <div class="stat-card slide-up">
+                                <img src="https://github-readme-streak-stats.herokuapp.com/?user=0xb0rn3&theme=tokyonight&hide_border=true&background=0D1117&stroke=58A6FF&ring=58A6FF&fire=FFD700&currStreakLabel=58A6FF&sideLabels=C9D1D9&currStreakNum=C9D1D9&sideNums=C9D1D9" alt="GitHub Streak" />
+                            </div>
+                            <div class="stat-card slide-up">
+                                <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=0xb0rn3&layout=donut&theme=tokyonight&hide_border=true&bg_color=0D1117&title_color=58A6FF&text_color=C9D1D9&langs_count=8&custom_title=Technology%20Arsenal&hide=html,css,scss" alt="Top Languages" />
+                            </div>
+                            <div class="stat-card slide-up">
+                                <img src="https://github-profile-summary-cards.vercel.app/api/cards/productive-time?username=0xb0rn3&theme=tokyonight&utcOffset=3" alt="Productive Time" />
+                            </div>
+                        </div>
+
+                        <!-- Skills Grid -->
+                        <div class="skills-grid">
+                            <div class="skill-card slide-up">
+                                <div class="skill-icon"><i class="fas fa-shield-alt"></i></div>
+                                <h3 class="skill-title">Penetration Testing</h3>
+                                <p class="skill-description">Web application security, network penetration testing, and vulnerability assessment with advanced exploitation techniques</p>
+                            </div>
+                            <div class="skill-card slide-up">
+                                <div class="skill-icon"><i class="fas fa-flag"></i></div>
+                                <h3 class="skill-title">CTF Player</h3>
+                                <p class="skill-description">Active in capture the flag competitions, specializing in binary exploitation, reverse engineering, and cryptography</p>
+                            </div>
+                            <div class="skill-card slide-up">
+                                <div class="skill-icon"><i class="fas fa-tools"></i></div>
+                                <h3 class="skill-title">Tool Development</h3>
+                                <p class="skill-description">Creating cybersecurity tools and automation scripts for security testing, OSINT, and penetration testing workflows</p>
+                            </div>
+                            <div class="skill-card slide-up">
+                                <div class="skill-icon"><i class="fab fa-linux"></i></div>
+                                <h3 class="skill-title">Linux Enthusiast</h3>
+                                <p class="skill-description">Deep system administration knowledge, open source contribution, and advanced shell scripting expertise</p>
+                            </div>
+                        </div>
+
+                        <div class="action-buttons">
+                            <a href="#certifications" class="btn btn-primary">
+                                <i class="fas fa-certificate"></i>
+                                View Certifications
+                            </a>
+                            <a href="#projects" class="btn btn-primary">
+                                <i class="fas fa-code"></i>
+                                View Projects
+                            </a>
+                            <a href="#contact" class="btn btn-secondary">
+                                <i class="fas fa-envelope"></i>
+                                Get In Touch
+                            </a>
+                            <a href="https://github.com/0xb0rn3" target="_blank" class="btn btn-secondary">
+                                <i class="fab fa-github"></i>
+                                GitHub
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Terminal Section -->
+        <section class="section" id="about">
+            <h2 class="section-title">About Me</h2>
+            <div class="terminal fade-in">
+                <div class="terminal-header">
+                    <div class="terminal-dots">
+                        <div class="dot red"></div>
+                        <div class="dot yellow"></div>
+                        <div class="dot green"></div>
+                    </div>
+                    <div class="terminal-title">visitor@0xb0rn3:~$</div>
+                </div>
+                <div class="terminal-body" id="terminalContent">
+                    <div class="terminal-line">
+                        <span class="prompt">$</span>
+                        <span class="command">whoami</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="output">Christian Isaac .S (0xb0rn3)</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="prompt">$</span>
+                        <span class="command">cat about.txt</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="output">Security Engineer & Threat Researcher</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="output">Cybersecurity Automation Architect</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="output">Red Team Tool Developer</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="output">OSINT & Reconnaissance Specialist</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="output">Open Source Security Advocate</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="prompt">$</span>
+                        <span class="command">cat mission.txt</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="output">Building battle-tested security tools that bridge</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="output">the gap between theory and real-world application</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="prompt">$</span>
+                        <span class="command">cat skills.txt</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="output">• Advanced Web Scraping & OSINT</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="output">• Network Penetration Testing</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="output">• Binary Exploitation & Reverse Engineering</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="output">• Python/Go/Rust/Bash Development</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="output">• Linux System Administration</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="output">• Incident Response & Threat Intelligence</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="output">• Docker/Kubernetes Security</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="output">• Cloud Security (AWS)</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Technology Stack Section -->
+        <section class="section" id="tech-stack">
+            <div class="tech-stack fade-in">
+                <h2 class="section-title">🛠️ Technology Stack & Expertise</h2>
+                <div class="tech-categories">
+                    <div class="tech-category">
+                        <h3>Core Languages & Frameworks</h3>
+                        <div class="tech-badges">
+                            <div class="tech-badge">Python</div>
+                            <div class="tech-badge">Go</div>
+                            <div class="tech-badge">Rust</div>
+                            <div class="tech-badge">Bash</div>
+                            <div class="tech-badge">C</div>
+                            <div class="tech-badge">JavaScript</div>
+                        </div>
+                    </div>
+                    <div class="tech-category">
+                        <h3>Security & Infrastructure</h3>
+                        <div class="tech-badges">
+                            <div class="tech-badge">Linux</div>
+                            <div class="tech-badge">Docker</div>
+                            <div class="tech-badge">Kubernetes</div>
+                            <div class="tech-badge">AWS</div>
+                            <div class="tech-badge">Wireshark</div>
+                            <div class="tech-badge">Nmap</div>
+                        </div>
+                    </div>
+                    <div class="tech-category">
+                        <h3>Specialized Tools</h3>
+                        <div class="tech-badges">
+                            <div class="tech-badge">Burp Suite</div>
+                            <div class="tech-badge">Metasploit</div>
+                            <div class="tech-badge">Kali Linux</div>
+                            <div class="tech-badge">OWASP ZAP</div>
+                            <div class="tech-badge">Ghidra</div>
+                            <div class="tech-badge">IDA Pro</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Certifications Section -->
+        <section class="section" id="certifications">
+            <h2 class="section-title">🏆 Certifications & Achievements</h2>
+            
+            <div class="certifications-section fade-in">
+                <div class="certifications-grid">
+                    <div class="cert-card slide-up">
+                        <div class="cert-icon">
+                            <i class="fab fa-google"></i>
+                        </div>
+                        <h3 class="cert-title">Google Cybersecurity Certificate</h3>
+                        <div class="cert-issuer">Google via Coursera</div>
+                        <p class="cert-description">
+                            Comprehensive cybersecurity program covering incident response, network security, 
+                            vulnerability assessment, and security frameworks. Gained expertise in Python automation, 
+                            Linux administration, and security analysis tools.
+                        </p>
+                        <a href="https://coursera.org/share/bedd7cd691ed9f95ebf697d8735d7af4" target="_blank" class="cert-link">
+                            <i class="fas fa-external-link-alt"></i>
+                            Verify Certificate
+                        </a>
+                    </div>
+
+                    <div class="cert-card slide-up">
+                        <div class="cert-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3 class="cert-title">Pre Security Certification</h3>
+                        <div class="cert-issuer">TryHackMe</div>
+                        <p class="cert-description">
+                            Foundational cybersecurity knowledge covering network fundamentals, web application security, 
+                            Linux basics, and Windows security. Essential preparation for advanced security roles.
+                        </p>
+                        <a href="https://tryhackme-certificates.s3-eu-west-1.amazonaws.com/THM-JB3HSWBUVV.pdf" target="_blank" class="cert-link">
+                            <i class="fas fa-external-link-alt"></i>
+                            View Certificate
+                        </a>
+                    </div>
+
+                    <div class="cert-card slide-up">
+                        <div class="cert-icon">
+                            <i class="fas fa-user-secret"></i>
+                        </div>
+                        <h3 class="cert-title">Introduction to Cyber Security</h3>
+                        <div class="cert-issuer">TryHackMe</div>
+                        <p class="cert-description">
+                            Introduction to offensive and defensive cybersecurity, covering web application security, 
+                            network security, and careers in cybersecurity. Foundation for ethical hacking journey.
+                        </p>
+                        <a href="https://tryhackme-certificates.s3-eu-west-1.amazonaws.com/THM-9BUCQG36LU.pdf" target="_blank" class="cert-link">
+                            <i class="fas fa-external-link-alt"></i>
+                            View Certificate
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- HackTheBox Badges -->
+            <div class="htb-badges-container fade-in">
+                <div class="htb-badge-card slide-up">
+                    <div class="htb-badge-icon">
+                        <i class="fas fa-cube"></i>
+                    </div>
+                    <h3 class="htb-badge-title">HackTheBox Profile</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+                        Username: 0xb0rn3 - Active CTF Player & Security Researcher
+                    </p>
+                    <a href="https://app.hackthebox.com/users/0xb0rn3" target="_blank" class="htb-badge-link">
+                        <i class="fas fa-external-link-alt"></i>
+                        View Profile
+                    </a>
+                </div>
+            </div>
+
+            <!-- TryHackMe Live Badge -->
+            <div class="thm-badge-container fade-in">
+                <iframe src="https://tryhackme.com/api/v2/badges/public-profile?userPublicId=4139197" style='border:none;'></iframe>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section class="section" id="projects">
+            <h2 class="section-title">🚀 Featured Security Projects</h2>
+            <div class="projects-grid" id="projectsGrid">
+                <!-- Projects will be loaded dynamically -->
+            </div>
+        </section>
+
+        <!-- Quote Section -->
+        <section class="section" id="quotes">
+            <div class="quote-container fade-in">
+                <div class="quote-card">
+                    <div class="quote-icon">
+                        <i class="fas fa-quote-left"></i>
+                    </div>
+                    <div class="quote-text" id="quoteText">
+                        "Security is not a product, but a process"
+                    </div>
+                    <div class="quote-author" id="quoteAuthor">
+                        — Bruce Schneier
+                    </div>
+                    <button class="quote-btn" id="newQuoteBtn">
+                        <i class="fas fa-sync-alt"></i>
+                        New Quote
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section class="section" id="contact">
+            <h2 class="section-title">🌐 Get In Touch</h2>
+            <div class="contact-grid">
+                <div class="contact-card fade-in">
+                    <div class="contact-icon"><i class="fas fa-envelope"></i></div>
+                    <h3 class="contact-title">Email</h3>
+                    <div class="contact-info">
+                        <a href="mailto:0xb0rn3@proton.me">0xb0rn3@proton.me</a>
+                    </div>
+                </div>
+
+                <div class="contact-card fade-in">
+                    <div class="contact-icon"><i class="fab fa-github"></i></div>
+                    <h3 class="contact-title">GitHub</h3>
+                    <div class="contact-info">
+                        <a href="https://github.com/0xb0rn3" target="_blank">github.com/0xb0rn3</a>
+                    </div>
+                </div>
+
+                <div class="contact-card fade-in">
+                    <div class="contact-icon"><i class="fab fa-linkedin"></i></div>
+                    <h3 class="contact-title">LinkedIn</h3>
+                    <div class="contact-info">
+                        <a href="https://linkedin.com/in/0xb0rn3" target="_blank">linkedin.com/in/0xb0rn3</a>
+                    </div>
+                </div>
+
+                <div class="contact-card fade-in">
+                    <div class="contact-icon"><i class="fab fa-discord"></i></div>
+                    <h3 class="contact-title">Discord</h3>
+                    <div class="contact-info">0xb0rn3</div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Visitor Information Detection
+        async function detectVisitorInfo() {
+            try {
+                // Get IP address
+                const ipResponse = await fetch('https://api.ipify.org?format=json');
+                const ipData = await ipResponse.json();
+                document.getElementById('visitorIP').textContent = ipData.ip;
+
+                // Detect device type
+                const userAgent = navigator.userAgent;
+                let deviceType = 'Unknown';
+                
+                if (/Mobile|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent)) {
+                    deviceType = 'Mobile';
+                } else if (/Tablet|iPad/i.test(userAgent)) {
+                    deviceType = 'Tablet';
+                } else {
+                    deviceType = 'Desktop';
+                }
+                
+                document.getElementById('visitorDevice').textContent = deviceType;
+
+                // Detect OS
+                let os = 'Unknown';
+                if (userAgent.indexOf('Windows') !== -1) os = 'Windows';
+                else if (userAgent.indexOf('Mac') !== -1) os = 'macOS';
+                else if (userAgent.indexOf('Linux') !== -1) os = 'Linux';
+                else if (userAgent.indexOf('Android') !== -1) os = 'Android';
+                else if (userAgent.indexOf('iPhone') !== -1 || userAgent.indexOf('iPad') !== -1) os = 'iOS';
+                
+                document.getElementById('visitorOS').textContent = os;
+
+            } catch (error) {
+                console.error('Error detecting visitor info:', error);
+                document.getElementById('visitorIP').textContent = 'Hidden';
+                document.getElementById('visitorDevice').textContent = 'Unknown';
+                document.getElementById('visitorOS').textContent = 'Unknown';
+            }
+        }
+
+        // GitHub Projects Loader
+        async function loadGitHubProjects() {
+            const projectsGrid = document.getElementById('projectsGrid');
+            
+            try {
+                const response = await fetch('https://api.github.com/users/0xb0rn3/repos?sort=updated&per_page=20');
+                const repos = await response.json();
+                
+                // Filter and prioritize security-related repositories
+                const securityKeywords = ['security', 'pentest', 'exploit', 'vulnerability', 'scanner', 'recon', 'osint', 'tool', 'hack', 'cyber'];
+                
+                const filteredRepos = repos.filter(repo => 
+                    !repo.fork && 
+                    repo.description && 
+                    (securityKeywords.some(keyword => 
+                        repo.name.toLowerCase().includes(keyword) || 
+                        repo.description.toLowerCase().includes(keyword)
+                    ) || repo.stargazers_count > 0)
+                ).slice(0, 6);
+
+                if (filteredRepos.length === 0) {
+                    // Fallback to top repositories if no security-related ones found
+                    filteredRepos.push(...repos.filter(repo => !repo.fork).slice(0, 6));
+                }
+
+                const projectsHTML = filteredRepos.map(repo => {
+                    const languages = getProjectLanguages(repo.language);
+                    const tags = getProjectTags(repo.name, repo.description);
+                    
+                    return `
+                        <div class="project-card slide-up">
+                            <h3 class="project-title">${repo.name}</h3>
+                            <p class="project-description">${repo.description || 'Security tool and automation project'}</p>
+                            <div class="project-tags">
+                                ${tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                            </div>
+                            <div class="project-links">
+                                <div style="display: flex; gap: 1rem;">
+                                    ${repo.homepage ? `<a href="${repo.homepage}" target="_blank" class="project-link" title="Live Demo"><i class="fas fa-external-link-alt"></i></a>` : ''}
+                                    <a href="${repo.html_url}" target="_blank" class="project-link" title="Source Code"><i class="fab fa-github"></i></a>
+                                </div>
+                                <a href="${repo.html_url}" target="_blank" class="project-repo-btn">
+                                    <i class="fab fa-github"></i>
+                                    View Repository
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                projectsGrid.innerHTML = projectsHTML;
+
+            } catch (error) {
+                console.error('Error loading GitHub projects:', error);
+                projectsGrid.innerHTML = `
+                    <div class="project-card">
+                        <h3 class="project-title">Projects Loading...</h3>
+                        <p class="project-description">Please visit my <a href="https://github.com/0xb0rn3" target="_blank" style="color: var(--accent-primary);">GitHub profile</a> to view my latest security projects and tools.</p>
+                    </div>
+                `;
+            }
+        }
+
+        function getProjectLanguages(language) {
+            const languageMap = {
+                'Python': '#3776ab',
+                'JavaScript': '#f1e05a',
+                'Go': '#00ADD8',
+                'Rust': '#dea584',
+                'C': '#555555',
+                'Shell': '#89e051',
+                'HTML': '#e34c26'
+            };
+            return language ? [language] : ['Security'];
+        }
+
+        function getProjectTags(name, description) {
+            const text = `${name} ${description}`.toLowerCase();
+            const tags = [];
+            
+            if (text.includes('python')) tags.push('Python');
+            if (text.includes('security') || text.includes('pentest')) tags.push('Security');
+            if (text.includes('web') || text.includes('http')) tags.push('Web');
+            if (text.includes('tool') || text.includes('scanner')) tags.push('Tool');
+            if (text.includes('api')) tags.push('API');
+            if (text.includes('automation')) tags.push('Automation');
+            if (text.includes('osint')) tags.push('OSINT');
+            if (text.includes('recon')) tags.push('Reconnaissance');
+            if (text.includes('exploit')) tags.push('Exploit');
+            if (text.includes('vulnerability')) tags.push('Vulnerability');
+            
+            return tags.length > 0 ? tags.slice(0, 4) : ['Security', 'Tool'];
+        }
+
+        // Typewriter effect
+        const phrases = [
+            "Security Engineer & Threat Researcher",
+            "Cybersecurity Tool Developer", 
+            "Open Source Security Advocate",
+            "Red Team Specialist",
+            "OSINT & Reconnaissance Expert",
+            "Binary Exploitation Enthusiast",
+            "Linux System Administrator",
+            "CTF Player & Security Researcher"
+        ];
+
+        let phraseIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+
+        function typeWriter() {
+            const typewriterElement = document.getElementById('typewriter');
+            const currentPhrase = phrases[phraseIndex];
+            
+            if (isDeleting) {
+                typewriterElement.textContent = currentPhrase.substring(0, charIndex - 1);
+                charIndex--;
+            } else {
+                typewriterElement.textContent = currentPhrase.substring(0, charIndex + 1);
+                charIndex++;
+            }
+
+            let typeSpeed = isDeleting ? 50 : 100;
+
+            if (!isDeleting && charIndex === currentPhrase.length) {
+                typeSpeed = 2000;
+                isDeleting = true;
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                phraseIndex = (phraseIndex + 1) % phrases.length;
+            }
+
+            setTimeout(typeWriter, typeSpeed);
+        }
+
+        // Matrix rain effect
+        function createMatrixRain() {
+            const canvas = document.getElementById('matrixCanvas');
+            const ctx = canvas.getContext('2d');
+
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const katakana = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン';
+            const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            const nums = '0123456789';
+            const alphabet = katakana + latin + nums;
+
+            const fontSize = 16;
+            const columns = canvas.width / fontSize;
+
+            const rainDrops = [];
+
+            for (let x = 0; x < columns; x++) {
+                rainDrops[x] = 1;
+            }
+
+            function draw() {
+                ctx.fillStyle = 'rgba(10, 10, 15, 0.04)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                ctx.fillStyle = '#00ff41';
+                ctx.font = fontSize + 'px monospace';
+
+                for (let i = 0; i < rainDrops.length; i++) {
+                    const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+                    ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
+
+                    if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                        rainDrops[i] = 0;
+                    }
+                    rainDrops[i]++;
+                }
+            }
+
+            setInterval(draw, 35);
+        }
+
+        // Floating particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                particle.style.animationDelay = Math.random() * 10 + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Security quotes
+        const securityQuotes = [
+            {
+                text: "Security is not a product, but a process",
+                author: "Bruce Schneier"
+            },
+            {
+                text: "The weakest link in the security chain is the strongest link in the attacker's chain",
+                author: "Bruce Schneier"
+            },
+            {
+                text: "There are two types of companies: those that have been hacked, and those that will be",
+                author: "Robert Mueller"
+            },
+            {
+                text: "Hackers don't break in, they log in",
+                author: "Unknown"
+            },
+            {
+                text: "The best defense against the hacker is to think like one",
+                author: "Unknown"
+            },
+            {
+                text: "Security is a process, not a destination",
+                author: "Bruce Schneier"
+            },
+            {
+                text: "To know your enemy, you must become your enemy",
+                author: "Sun Tzu"
+            },
+            {
+                text: "Privacy is not something that I'm merely entitled to, it's an absolute prerequisite",
+                author: "Marlon Brando"
+            }
+        ];
+
+        function getRandomQuote() {
+            return securityQuotes[Math.floor(Math.random() * securityQuotes.length)];
+        }
+
+        function updateQuote() {
+            const quoteText = document.getElementById('quoteText');
+            const quoteAuthor = document.getElementById('quoteAuthor');
+            const quoteCard = document.querySelector('.quote-card');
+            
+            quoteCard.classList.add('quote-loading');
+            
+            setTimeout(() => {
+                const newQuote = getRandomQuote();
+                quoteText.textContent = `"${newQuote.text}"`;
+                quoteAuthor.textContent = `— ${newQuote.author}`;
+                quoteCard.classList.remove('quote-loading');
+            }, 500);
+        }
+
+        // Smooth scrolling
+        function smoothScroll() {
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+        }
+
+        // Navbar scroll effect
+        function handleNavbarScroll() {
+            const navbar = document.getElementById('navbar');
+            let lastScrollTop = 0;
+
+            window.addEventListener('scroll', function() {
+                let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                
+                if (scrollTop > lastScrollTop && scrollTop > 100) {
+                    navbar.style.transform = 'translateY(-100%)';
+                } else {
+                    navbar.style.transform = 'translateY(0)';
+                }
+                
+                lastScrollTop = scrollTop;
+            });
+        }
+
+        // Initialize everything when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize all functions
+            detectVisitorInfo();
+            loadGitHubProjects();
+            typeWriter();
+            createMatrixRain();
+            createParticles();
+            smoothScroll();
+            handleNavbarScroll();
+            
+            // Event listeners
+            document.getElementById('newQuoteBtn').addEventListener('click', updateQuote);
+            
+            // Handle window resize for matrix rain
+            window.addEventListener('resize', function() {
+                const canvas = document.getElementById('matrixCanvas');
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            });
+        });
+    </script>
+</body>
+</html>">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h3 class="htb-badge-title">Philomath</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+                        HackTheBox Academy Achievement - Continuous Learning Excellence
+                    </p>
+                    <a href="https://academy.hackthebox.com/achievement/badge/f4d3d5a9-8fd1-11ee-bfb6-bea50ffe6cb4" target="_blank" class="htb-badge-link">
+                        <i class="fas fa-external-link-alt"></i>
+                        View Badge
+                    </a>
+                </div>
+
+                <div class="htb-badge-card slide-up">
+                    <div class="htb-badge-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <h3 class="htb-badge-title">Academician</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+                        HackTheBox Academy Achievement - Academic Excellence in Cybersecurity
+                    </p>
+                    <a href="https://academy.hackthebox.com/achievement/badge/a821772a-8fce-11ee-bfb6-bea50ffe6cb4" target="_blank" class="htb-badge-link">
+                        <i class="fas fa-external-link-alt"></i>
+                        View Badge
+                    </a>
+                </div>
+
+                <div class="htb-badge-card slide-up">
+                    <div class="htb-badge-icon<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -199,6 +974,39 @@
             color: var(--accent-primary);
             border-color: var(--accent-primary);
             box-shadow: var(--glow) rgba(0, 255, 157, 0.3);
+        }
+
+        /* Visitor Info Display */
+        .visitor-info {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--bg-glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            z-index: 999;
+            opacity: 0.7;
+            transition: all 0.3s ease;
+        }
+
+        .visitor-info:hover {
+            opacity: 1;
+            border-color: var(--accent-primary);
+        }
+
+        .visitor-info .info-line {
+            display: flex;
+            gap: 0.5rem;
+            margin: 0.25rem 0;
+        }
+
+        .visitor-info .label {
+            color: var(--accent-primary);
         }
 
         /* Hero section - FIXED CENTERING */
@@ -637,6 +1445,66 @@
             box-shadow: var(--glow) rgba(0, 255, 157, 0.4);
         }
 
+        /* HTB Badge Integration */
+        .htb-badges-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+            padding: 2rem;
+            background: var(--bg-glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .htb-badge-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .htb-badge-card:hover {
+            transform: translateY(-5px);
+            border-color: #9fef00;
+            box-shadow: var(--glow) rgba(159, 239, 0, 0.3);
+        }
+
+        .htb-badge-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #9fef00;
+            margin-bottom: 1rem;
+        }
+
+        .htb-badge-icon {
+            font-size: 3rem;
+            color: #9fef00;
+            margin-bottom: 1rem;
+        }
+
+        .htb-badge-link {
+            display: inline-block;
+            background: linear-gradient(135deg, #9fef00, #5fd636);
+            color: var(--bg-primary);
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .htb-badge-link:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--glow) rgba(159, 239, 0, 0.4);
+        }
+
         /* TryHackMe Badge Integration */
         .thm-badge-container {
             display: flex;
@@ -822,6 +1690,9 @@
         .project-links {
             display: flex;
             gap: 1rem;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
         }
 
         .project-link {
@@ -834,6 +1705,25 @@
         .project-link:hover {
             color: var(--accent-primary);
             transform: scale(1.2);
+        }
+
+        .project-repo-btn {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-tertiary));
+            color: var(--bg-primary);
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .project-repo-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--glow) rgba(0, 255, 157, 0.4);
         }
 
         /* Terminal section */
@@ -1119,6 +2009,22 @@
                 flex-direction: column;
                 align-items: center;
             }
+
+            .visitor-info {
+                bottom: 10px;
+                right: 10px;
+                font-size: 0.7rem;
+                padding: 0.75rem;
+            }
+
+            .htb-badges-container {
+                grid-template-columns: 1fr;
+            }
+
+            .project-links {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
         }
 
         /* Scrollbar styling */
@@ -1189,946 +2095,3 @@
                 text-shadow: 0 0 5px var(--accent-primary), 0 0 10px var(--accent-primary), 0 0 15px var(--accent-primary);
             }
         }
-    </style>
-</head>
-<body>
-    <!-- Animated background -->
-    <div class="cyber-grid"></div>
-    <div class="particles" id="particles"></div>
-    <canvas class="matrix-rain" id="matrixCanvas"></canvas>
-
-    <!-- Navigation -->
-    <nav class="nav" id="navbar">
-        <div class="nav-content">
-            <a href="#" class="logo">0xb0rn3</a>
-            <ul class="nav-links">
-                <li><a href="#about" class="nav-link">About</a></li>
-                <li><a href="#certifications" class="nav-link">Certifications</a></li>
-                <li><a href="#projects" class="nav-link">Projects</a></li>
-                <li><a href="#skills" class="nav-link">Skills</a></li>
-                <li><a href="#contact" class="nav-link">Contact</a></li>
-            </ul>
-            <button class="theme-toggle" id="themeToggle">
-                <i class="fas fa-moon"></i>
-            </button>
-        </div>
-    </nav>
-
-    <div class="main-container">
-        <!-- Hero Section -->
-        <section class="hero" id="hero">
-            <div class="hero-content fade-in">
-                <h1 class="hero-title glitch neon-glow">Christian Isaac.S</h1>
-                <div class="hero-subtitle">0xb0rn3 | 0xbv1 | シェルショック</div>
-                <div class="typing-animation" id="typingText">
-                    <span id="typewriter"></span>
-                    <span class="cursor" id="cursor"></span>
-                </div>
-                
-                <!-- Achievement Badges -->
-                <div class="achievement-badges">
-                    <div class="achievement-badge">
-                        <i class="fas fa-shield-alt"></i>
-                        Security Researcher
-                    </div>
-                    <div class="achievement-badge">
-                        <i class="fas fa-flag"></i>
-                        CTF Player
-                    </div>
-                    <div class="achievement-badge">
-                        <i class="fab fa-linux"></i>
-                        Linux Advocate
-                    </div>
-                </div>
-                
-                <div class="profile-section">
-                    <div class="profile-card slide-up">
-                        <img src="profile.jpg" alt="Christian Isaac .S" class="profile-image">
-                        
-                        <!-- GitHub Statistics -->
-                        <div class="github-stats">
-                            <div class="stat-card slide-up">
-                                <img src="https://github-readme-stats.vercel.app/api?username=0xb0rn3&show_icons=true&theme=tokyonight&hide_border=true&bg_color=0D1117&title_color=58A6FF&icon_color=58A6FF&text_color=C9D1D9&count_private=true&include_all_commits=true&custom_title=Security%20Engineering%20Metrics" alt="GitHub Stats" />
-                            </div>
-                            <div class="stat-card slide-up">
-                                <img src="https://github-readme-streak-stats.herokuapp.com/?user=0xb0rn3&theme=tokyonight&hide_border=true&background=0D1117&stroke=58A6FF&ring=58A6FF&fire=FFD700&currStreakLabel=58A6FF&sideLabels=C9D1D9&currStreakNum=C9D1D9&sideNums=C9D1D9" alt="GitHub Streak" />
-                            </div>
-                            <div class="stat-card slide-up">
-                                <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=0xb0rn3&layout=donut&theme=tokyonight&hide_border=true&bg_color=0D1117&title_color=58A6FF&text_color=C9D1D9&langs_count=8&custom_title=Technology%20Arsenal&hide=html,css,scss" alt="Top Languages" />
-                            </div>
-                            <div class="stat-card slide-up">
-                                <img src="https://github-profile-summary-cards.vercel.app/api/cards/productive-time?username=0xb0rn3&theme=tokyonight&utcOffset=3" alt="Productive Time" />
-                            </div>
-                        </div>
-
-                        <!-- Skills Grid -->
-                        <div class="skills-grid">
-                            <div class="skill-card slide-up">
-                                <div class="skill-icon"><i class="fas fa-shield-alt"></i></div>
-                                <h3 class="skill-title">Penetration Testing</h3>
-                                <p class="skill-description">Web application security, network penetration testing, and vulnerability assessment with advanced exploitation techniques</p>
-                            </div>
-                            <div class="skill-card slide-up">
-                                <div class="skill-icon"><i class="fas fa-flag"></i></div>
-                                <h3 class="skill-title">CTF Player</h3>
-                                <p class="skill-description">Active in capture the flag competitions, specializing in binary exploitation, reverse engineering, and cryptography</p>
-                            </div>
-                            <div class="skill-card slide-up">
-                                <div class="skill-icon"><i class="fas fa-tools"></i></div>
-                                <h3 class="skill-title">Tool Development</h3>
-                                <p class="skill-description">Creating cybersecurity tools and automation scripts for security testing, OSINT, and penetration testing workflows</p>
-                            </div>
-                            <div class="skill-card slide-up">
-                                <div class="skill-icon"><i class="fab fa-linux"></i></div>
-                                <h3 class="skill-title">Linux Enthusiast</h3>
-                                <p class="skill-description">Deep system administration knowledge, open source contribution, and advanced shell scripting expertise</p>
-                            </div>
-                        </div>
-
-                        <div class="action-buttons">
-                            <a href="#certifications" class="btn btn-primary">
-                                <i class="fas fa-certificate"></i>
-                                View Certifications
-                            </a>
-                            <a href="#projects" class="btn btn-primary">
-                                <i class="fas fa-code"></i>
-                                View Projects
-                            </a>
-                            <a href="#contact" class="btn btn-secondary">
-                                <i class="fas fa-envelope"></i>
-                                Get In Touch
-                            </a>
-                            <a href="https://github.com/0xb0rn3" target="_blank" class="btn btn-secondary">
-                                <i class="fab fa-github"></i>
-                                GitHub
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Terminal Section -->
-        <section class="section" id="about">
-            <h2 class="section-title">About Me</h2>
-            <div class="terminal fade-in">
-                <div class="terminal-header">
-                    <div class="terminal-dots">
-                        <div class="dot red"></div>
-                        <div class="dot yellow"></div>
-                        <div class="dot green"></div>
-                    </div>
-                    <div class="terminal-title">visitor@0xb0rn3:~$</div>
-                </div>
-                <div class="terminal-body" id="terminalContent">
-                    <div class="terminal-line">
-                        <span class="prompt">$</span>
-                        <span class="command">whoami</span>
-                    </div>
-                    <div class="terminal-line">
-                        <span class="output">Christian Isaac .S (0xb0rn3)</span>
-                    </div>
-                    <div class="terminal-line">
-                        <span class="prompt">$</span>
-                        <span class="command">cat about.txt</span>
-                    </div>
-                    <div class="terminal-line">
-                        <span class="output">Security Engineer & Threat Researcher</span>
-                    </div>
-                    <div class="terminal-line">
-                        <span class="output">Cybersecurity Automation Architect</span>
-                    </div>
-                    <div class="terminal-line">
-                        <span class="output">Red Team Tool Developer</span>
-                    </div>
-                    <div class="terminal-line">
-                        <span class="output">OSINT & Reconnaissance Specialist</span>
-                    </div>
-                    <div class="terminal-line">
-                        <span class="output">Open Source Security Advocate</span>
-                    </div>
-                    <div class="terminal-line">
-                        <span class="prompt">$</span>
-                        <span class="command">cat mission.txt</span>
-                    </div>
-                    <div class="terminal-line">
-                        <span class="output">Building battle-tested security tools that bridge</span>
-                    </div>
-                    <div class="terminal-line">
-                        <span class="output">the gap between theory and real-world application</span>
-                    </div>
-                    <div class="terminal-line">
-                        <span class="prompt">$</span>
-                        <span class="command">cat skills.txt</span>
-                    </div>
-                    <div class="terminal-line">
-                        <span class="output">• Advanced Web Scraping & OSINT</span>
-                    </div>
-                    <div class="terminal-line">
-                        <span class="output">• Network Penetration Testing</span>
-                    </div>
-                    <div class="terminal-line">
-                        <span class="output">• Binary Exploitation & Reverse Engineering</span>
-                    </div>
-                    <div class="terminal-line">
-                        <span class="output">• Python/Go/Rust/Bash Development</span>
-                    </div>
-                    <div class="terminal-line">
-                        <span class="output">• Linux System Administration</span>
-                    </div>
-                    <div class="terminal-line">
-                        <span class="output">• Incident Response & Threat Intelligence</span>
-                    </div>
-                    <div class="terminal-line">
-                        <span class="output">• Docker/Kubernetes Security</span>
-                    </div>
-                    <div class="terminal-line">
-                        <span class="output">• Cloud Security (AWS)</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Technology Stack Section -->
-        <section class="section" id="tech-stack">
-            <div class="tech-stack fade-in">
-                <h2 class="section-title">🛠️ Technology Stack & Expertise</h2>
-                <div class="tech-categories">
-                    <div class="tech-category">
-                        <h3>Core Languages & Frameworks</h3>
-                        <div class="tech-badges">
-                            <div class="tech-badge">Python</div>
-                            <div class="tech-badge">Go</div>
-                            <div class="tech-badge">Rust</div>
-                            <div class="tech-badge">Bash</div>
-                            <div class="tech-badge">C</div>
-                            <div class="tech-badge">JavaScript</div>
-                        </div>
-                    </div>
-                    <div class="tech-category">
-                        <h3>Security & Infrastructure</h3>
-                        <div class="tech-badges">
-                            <div class="tech-badge">Linux</div>
-                            <div class="tech-badge">Docker</div>
-                            <div class="tech-badge">Kubernetes</div>
-                            <div class="tech-badge">AWS</div>
-                            <div class="tech-badge">Wireshark</div>
-                            <div class="tech-badge">Nmap</div>
-                        </div>
-                    </div>
-                    <div class="tech-category">
-                        <h3>Specialized Tools</h3>
-                        <div class="tech-badges">
-                            <div class="tech-badge">Burp Suite</div>
-                            <div class="tech-badge">Metasploit</div>
-                            <div class="tech-badge">Kali Linux</div>
-                            <div class="tech-badge">OWASP ZAP</div>
-                            <div class="tech-badge">Ghidra</div>
-                            <div class="tech-badge">IDA Pro</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Certifications Section -->
-        <section class="section" id="certifications">
-            <h2 class="section-title">🏆 Certifications & Achievements</h2>
-            
-            <div class="certifications-section fade-in">
-                <div class="certifications-grid">
-                    <div class="cert-card slide-up">
-                        <div class="cert-icon">
-                            <i class="fab fa-google"></i>
-                        </div>
-                        <h3 class="cert-title">Google Cybersecurity Certificate</h3>
-                        <div class="cert-issuer">Google via Coursera</div>
-                        <p class="cert-description">
-                            Comprehensive cybersecurity program covering incident response, network security, 
-                            vulnerability assessment, and security frameworks. Gained expertise in Python automation, 
-                            Linux administration, and security analysis tools.
-                        </p>
-                        <a href="https://coursera.org/share/bedd7cd691ed9f95ebf697d8735d7af4" target="_blank" class="cert-link">
-                            <i class="fas fa-external-link-alt"></i>
-                            Verify Certificate
-                        </a>
-                    </div>
-
-                    <div class="cert-card slide-up">
-                        <div class="cert-icon">
-                            <i class="fas fa-shield-alt"></i>
-                        </div>
-                        <h3 class="cert-title">Pre Security Certification</h3>
-                        <div class="cert-issuer">TryHackMe</div>
-                        <p class="cert-description">
-                            Foundational cybersecurity knowledge covering network fundamentals, web application security, 
-                            Linux basics, and Windows security. Essential preparation for advanced security roles.
-                        </p>
-                        <a href="https://tryhackme-certificates.s3-eu-west-1.amazonaws.com/THM-JB3HSWBUVV.pdf" target="_blank" class="cert-link">
-                            <i class="fas fa-external-link-alt"></i>
-                            View Certificate
-                        </a>
-                    </div>
-
-                    <div class="cert-card slide-up">
-                        <div class="cert-icon">
-                            <i class="fas fa-user-secret"></i>
-                        </div>
-                        <h3 class="cert-title">Introduction to Cyber Security</h3>
-                        <div class="cert-issuer">TryHackMe</div>
-                        <p class="cert-description">
-                            Introduction to offensive and defensive cybersecurity, covering web application security, 
-                            network security, and careers in cybersecurity. Foundation for ethical hacking journey.
-                        </p>
-                        <a href="https://tryhackme-certificates.s3-eu-west-1.amazonaws.com/THM-9BUCQG36LU.pdf" target="_blank" class="cert-link">
-                            <i class="fas fa-external-link-alt"></i>
-                            View Certificate
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TryHackMe Live Badge -->
-            <div class="thm-badge-container fade-in">
-                <iframe src="https://tryhackme.com/api/v2/badges/public-profile?userPublicId=4139197" style='border:none;'></iframe>
-            </div>
-        </section>
-
-        <!-- Projects Section -->
-        <section class="section" id="projects">
-            <h2 class="section-title">🚀 Featured Security Projects</h2>
-            <div class="projects-grid" id="projectsGrid">
-                <!-- Projects will be loaded dynamically -->
-            </div>
-        </section>
-
-        <!-- Quote Section -->
-        <section class="section" id="quotes">
-            <div class="quote-container fade-in">
-                <div class="quote-card">
-                    <div class="quote-icon">
-                        <i class="fas fa-quote-left"></i>
-                    </div>
-                    <div class="quote-text" id="quoteText">
-                        "Security is not a product, but a process"
-                    </div>
-                    <div class="quote-author" id="quoteAuthor">
-                        — Bruce Schneier
-                    </div>
-                    <button class="quote-btn" id="newQuoteBtn">
-                        <i class="fas fa-sync-alt"></i>
-                        New Quote
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <!-- Contact Section -->
-        <section class="section" id="contact">
-            <h2 class="section-title">🌐 Get In Touch</h2>
-            <div class="contact-grid">
-                <div class="contact-card fade-in">
-                    <div class="contact-icon"><i class="fas fa-envelope"></i></div>
-                    <h3 class="contact-title">Secure Email</h3>
-                    <div class="contact-info">
-                        <a href="mailto:q4n0@proton.me">q4n0@proton.me</a>
-                    </div>
-                </div>
-                <div class="contact-card fade-in">
-                    <div class="contact-icon"><i class="fas fa-phone"></i></div>
-                    <h3 class="contact-title">Phone</h3>
-                    <div class="contact-info">+255 753 066 570</div>
-                </div>
-                <div class="contact-card fade-in">
-                    <div class="contact-icon"><i class="fab fa-linkedin"></i></div>
-                    <h3 class="contact-title">LinkedIn</h3>
-                    <div class="contact-info">
-                        <a href="https://linkedin.com/in/0xb0rn3" target="_blank">linkedin.com/in/0xb0rn3</a>
-                    </div>
-                </div>
-                <div class="contact-card fade-in">
-                    <div class="contact-icon"><i class="fab fa-twitter"></i></div>
-                    <h3 class="contact-title">X (Twitter)</h3>
-                    <div class="contact-info">
-                        <a href="https://x.com/0xbv1" target="_blank">@0xbv1</a>
-                    </div>
-                </div>
-                <div class="contact-card fade-in">
-                    <div class="contact-icon"><i class="fab fa-discord"></i></div>
-                    <h3 class="contact-title">Discord</h3>
-                    <div class="contact-info">
-                        <a href="https://discordapp.com/users/700257306645037056" target="_blank">0xbv1</a>
-                    </div>
-                </div>
-                <div class="contact-card fade-in">
-                    <div class="contact-icon"><i class="fab fa-instagram"></i></div>
-                    <h3 class="contact-title">Instagram</h3>
-                    <div class="contact-info">
-                        <a href="https://instagram.com/theehiv3" target="_blank">@theehiv3</a>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </div>
-
-    <script>
-        // Enhanced security and tech quotes
-        const securityQuotes = [
-            {
-                text: "Security is not a product, but a process",
-                author: "Bruce Schneier"
-            },
-            {
-                text: "Talk is cheap. Show me the code.",
-                author: "Linus Torvalds"
-            },
-            {
-                text: "The only way to make software secure is to make it simple",
-                author: "Bruce Schneier"
-            },
-            {
-                text: "Most good programmers do programming not because they expect to get paid or get adulation by the public, but because it is fun to program.",
-                author: "Linus Torvalds"
-            },
-            {
-                text: "Intelligence is the ability to avoid doing work, yet getting the work done.",
-                author: "Linus Torvalds"
-            },
-            {
-                text: "The best way to find out if you can trust somebody is to trust them.",
-                author: "Ernest Hemingway"
-            },
-            {
-                text: "Security is always excessive until it's not enough.",
-                author: "Robbie Sinclair"
-            },
-            {
-                text: "To be secure, we must be vigilant, but not paranoid.",
-                author: "Unknown"
-            },
-            {
-                text: "The weakest link in the security chain is the strongest person who can break it.",
-                author: "Bruce Schneier"
-            },
-            {
-                text: "Bad programmers worry about the code. Good programmers worry about data structures and their relationships.",
-                author: "Linus Torvalds"
-            },
-            {
-                text: "See, you not only have to be a good coder to create a system like Linux, you have to be a sneaky bastard too.",
-                author: "Linus Torvalds"
-            },
-            {
-                text: "The Linux philosophy is 'Laugh in the face of danger'. Oops. Wrong One. 'Do it yourself'. Yes, that's it.",
-                author: "Linus Torvalds"
-            },
-            {
-                text: "Given enough eyeballs, all bugs are shallow.",
-                author: "Linus Torvalds (Linus's Law)"
-            },
-            {
-                text: "Privacy is not something that I'm merely entitled to, it's an absolute prerequisite.",
-                author: "Marlon Brando"
-            },
-            {
-                text: "In cybersecurity, the more you know, the more you realize you don't know.",
-                author: "Unknown"
-            }
-        ];
-
-        let currentQuoteIndex = 0;
-
-        function getRandomQuote() {
-            const randomIndex = Math.floor(Math.random() * securityQuotes.length);
-            if (randomIndex === currentQuoteIndex && securityQuotes.length > 1) {
-                return getRandomQuote();
-            }
-            currentQuoteIndex = randomIndex;
-            return securityQuotes[randomIndex];
-        }
-
-        function updateQuote() {
-            const quoteText = document.getElementById('quoteText');
-            const quoteAuthor = document.getElementById('quoteAuthor');
-            const quoteBtn = document.getElementById('newQuoteBtn');
-            
-            quoteText.classList.add('quote-loading');
-            quoteAuthor.classList.add('quote-loading');
-            quoteBtn.disabled = true;
-            
-            setTimeout(() => {
-                const newQuote = getRandomQuote();
-                quoteText.textContent = `"${newQuote.text}"`;
-                quoteAuthor.textContent = `— ${newQuote.author}`;
-                
-                quoteText.classList.remove('quote-loading');
-                quoteAuthor.classList.remove('quote-loading');
-                quoteBtn.disabled = false;
-            }, 500);
-        }
-
-        // Enhanced typing animation phrases
-        const phrases = [
-            "Security Engineer & Threat Researcher",
-            "Cybersecurity Automation Architect", 
-            "Red Team Tool Developer",
-            "OSINT & Reconnaissance Specialist",
-            "Open Source Security Advocate",
-            "CTF Player & Binary Exploitation Expert",
-            "Penetration Testing Specialist",
-            "Linux System Administrator",
-            "Vulnerability Assessment Expert",
-            "Incident Response Analyst"
-        ];
-
-        let currentPhraseIndex = 0;
-        let currentCharIndex = 0;
-        let isDeleting = false;
-        const typewriter = document.getElementById('typewriter');
-
-        function typeAnimation() {
-            const currentPhrase = phrases[currentPhraseIndex];
-            
-            if (isDeleting) {
-                currentCharIndex--;
-                typewriter.textContent = currentPhrase.substring(0, currentCharIndex);
-            } else {
-                currentCharIndex++;
-                typewriter.textContent = currentPhrase.substring(0, currentCharIndex);
-            }
-
-            let typeSpeed = isDeleting ? 50 : 100;
-
-            if (!isDeleting && currentCharIndex === currentPhrase.length) {
-                typeSpeed = 2000;
-                isDeleting = true;
-            } else if (isDeleting && currentCharIndex === 0) {
-                isDeleting = false;
-                currentPhraseIndex = (currentPhraseIndex + 1) % phrases.length;
-                typeSpeed = 500;
-            }
-
-            setTimeout(typeAnimation, typeSpeed);
-        }
-
-        // Initialize typing animation
-        setTimeout(typeAnimation, 1000);
-
-        // Enhanced particle system
-        function createParticle() {
-            const particle = document.createElement('div');
-            particle.className = 'particle';
-            particle.style.left = Math.random() * 100 + 'vw';
-            particle.style.animationDuration = (Math.random() * 3 + 2) + 's';
-            particle.style.opacity = Math.random();
-            particle.style.animationDelay = Math.random() * 2 + 's';
-            
-            // Random colors for particles
-            const colors = ['var(--accent-primary)', 'var(--accent-secondary)', 'var(--accent-tertiary)', 'var(--accent-quaternary)'];
-            particle.style.background = colors[Math.floor(Math.random() * colors.length)];
-            
-            document.getElementById('particles').appendChild(particle);
-            
-            setTimeout(() => {
-                particle.remove();
-            }, 5000);
-        }
-
-        // Create particles periodically
-        setInterval(createParticle, 200);
-
-        // Enhanced Matrix rain effect
-        const canvas = document.getElementById('matrixCanvas');
-        const ctx = canvas.getContext('2d');
-
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-
-        const matrix = "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789@#$%^&*()*&^%+-/~{[|`]}アカサタナハマヤラワガザダバパイキシチニピミリウクスツヌフムユルウズヅブプエケセテネヘメレウゲゼデベペオコソトノホモヨロヲゴゾドボポヴッン";
-        const matrixArray = matrix.split("");
-
-        const fontSize = 10;
-        const columns = canvas.width / fontSize;
-
-        const drops = [];
-        for (let x = 0; x < columns; x++) {
-            drops[x] = 1;
-        }
-
-        function drawMatrix() {
-            ctx.fillStyle = 'rgba(10, 10, 15, 0.04)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            ctx.fillStyle = '#00ff41';
-            ctx.font = fontSize + 'px monospace';
-
-            for (let i = 0; i < drops.length; i++) {
-                const text = matrixArray[Math.floor(Math.random() * matrixArray.length)];
-                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-
-                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-                    drops[i] = 0;
-                }
-                drops[i]++;
-            }
-        }
-
-        setInterval(drawMatrix, 35);
-
-        // Resize canvas on window resize
-        window.addEventListener('resize', () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        });
-
-        // Enhanced GitHub projects loader
-        async function loadProjects() {
-            const projectsGrid = document.getElementById('projectsGrid');
-            
-            try {
-                const response = await fetch('https://api.github.com/users/0xb0rn3/repos?sort=updated&direction=desc');
-                const repos = await response.json();
-                
-                // Enhanced filtering for security projects
-                const filteredRepos = repos.filter(repo => 
-                    !["0xb0rn3.github.io", "0xb0rn3", "b0urn3"].includes(repo.name) && 
-                    !repo.archived && 
-                    !repo.fork
-                ).slice(0, 6);
-
-                projectsGrid.innerHTML = '';
-
-                filteredRepos.forEach((repo, index) => {
-                    const projectCard = document.createElement('div');
-                    projectCard.className = 'project-card slide-up';
-                    projectCard.style.animationDelay = `${index * 0.1}s`;
-
-                    // Enhanced project categorization
-                    let category = 'Security Tool';
-                    let icon = 'fas fa-shield-alt';
-                    const topics = repo.topics || [];
-                    const description = repo.description ? repo.description.toLowerCase() : '';
-                    const repoName = repo.name.toLowerCase();
-
-                    if (topics.includes('ctf') || description.includes('ctf') || repoName.includes('ctf')) {
-                        category = 'CTF Tool';
-                        icon = 'fas fa-flag';
-                    } else if (topics.includes('pentest') || description.includes('pentest') || description.includes('penetration')) {
-                        category = 'Pentest Tool';
-                        icon = 'fas fa-user-secret';
-                    } else if (topics.includes('osint') || description.includes('osint') || description.includes('reconnaissance')) {
-                        category = 'OSINT Tool';
-                        icon = 'fas fa-search';
-                    } else if (topics.includes('web') || description.includes('web')) {
-                        category = 'Web Security';
-                        icon = 'fas fa-globe';
-                    } else if (description.includes('automation') || description.includes('script')) {
-                        category = 'Automation';
-                        icon = 'fas fa-robot';
-                    } else if (repo.language === 'Python' || repo.language === 'Shell') {
-                        category = 'Security Script';
-                        icon = 'fas fa-terminal';
-                    }
-
-                    const tags = [category];
-                    if (repo.language) tags.push(repo.language);
-                    if (topics.length > 0) tags.push(...topics.slice(0, 2));
-
-                    // Enhanced descriptions for security context
-                    let enhancedDescription = repo.description || 'A cybersecurity tool for penetration testing and security research.';
-                    if (!repo.description) {
-                        switch (category) {
-                            case 'CTF Tool':
-                                enhancedDescription = 'Advanced tool for Capture The Flag competitions and security challenges.';
-                                break;
-                            case 'Pentest Tool':
-                                enhancedDescription = 'Professional penetration testing utility for security assessments.';
-                                break;
-                            case 'OSINT Tool':
-                                enhancedDescription = 'Open Source Intelligence gathering and reconnaissance framework.';
-                                break;
-                            case 'Web Security':
-                                enhancedDescription = 'Web application security testing and vulnerability assessment tool.';
-                                break;
-                            case 'Automation':
-                                enhancedDescription = 'Cybersecurity automation framework for streamlined security operations.';
-                                break;
-                        }
-                    }
-
-                    projectCard.innerHTML = `
-                        <div class="project-title">
-                            <i class="${icon}"></i>
-                            ${repo.name}
-                        </div>
-                        <div class="project-description">
-                            ${enhancedDescription}
-                        </div>
-                        <div class="project-tags">
-                            ${tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
-                        </div>
-                        <div class="project-links">
-                            <a href="${repo.html_url}" target="_blank" class="project-link" title="View on GitHub">
-                                <i class="fab fa-github"></i>
-                            </a>
-                            ${repo.homepage ? `<a href="${repo.homepage}" target="_blank" class="project-link" title="Live Demo"><i class="fas fa-external-link-alt"></i></a>` : ''}
-                            <div style="margin-left: auto; display: flex; gap: 1rem; align-items: center; color: var(--text-muted); font-size: 0.8rem;">
-                                <span><i class="fas fa-star"></i> ${repo.stargazers_count}</span>
-                                <span><i class="fas fa-code-branch"></i> ${repo.forks_count}</span>
-                                <span><i class="fas fa-eye"></i> ${repo.watchers_count}</span>
-                            </div>
-                        </div>
-                    `;
-
-                    projectsGrid.appendChild(projectCard);
-                });
-
-            } catch (error) {
-                console.error('Error loading projects:', error);
-                projectsGrid.innerHTML = `
-                    <div style="grid-column: 1 / -1; text-align: center; color: var(--text-secondary); padding: 2rem;">
-                        <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 1rem; color: var(--accent-secondary);"></i>
-                        <p>Unable to load projects at the moment. Please visit my <a href="https://github.com/0xb0rn3" target="_blank" style="color: var(--accent-primary);">GitHub profile</a> directly.</p>
-                    </div>
-                `;
-            }
-        }
-
-        // Smooth scrolling for navigation links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
-
-        // Enhanced navbar scroll effect
-        let lastScrollTop = 0;
-        const navbar = document.getElementById('navbar');
-
-        window.addEventListener('scroll', () => {
-            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-            
-            if (scrollTop > lastScrollTop && scrollTop > 100) {
-                navbar.style.transform = 'translateY(-100%)';
-            } else {
-                navbar.style.transform = 'translateY(0)';
-            }
-            
-            lastScrollTop = scrollTop;
-
-            if (scrollTop > 50) {
-                navbar.style.background = 'rgba(21, 21, 32, 0.95)';
-                navbar.style.backdropFilter = 'blur(20px)';
-            } else {
-                navbar.style.background = 'rgba(21, 21, 32, 0.8)';
-                navbar.style.backdropFilter = 'blur(20px)';
-            }
-        });
-
-        // Enhanced theme toggle
-        const themeToggle = document.getElementById('themeToggle');
-        let isDarkTheme = true;
-
-        themeToggle.addEventListener('click', () => {
-            isDarkTheme = !isDarkTheme;
-            
-            if (isDarkTheme) {
-                document.documentElement.style.setProperty('--bg-primary', '#0a0a0f');
-                document.documentElement.style.setProperty('--bg-secondary', '#151520');
-                document.documentElement.style.setProperty('--bg-tertiary', '#1e1e2e');
-                document.documentElement.style.setProperty('--text-primary', '#e2e8f0');
-                document.documentElement.style.setProperty('--text-secondary', '#94a3b8');
-                themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
-            } else {
-                document.documentElement.style.setProperty('--bg-primary', '#f8fafc');
-                document.documentElement.style.setProperty('--bg-secondary', '#f1f5f9');
-                document.documentElement.style.setProperty('--bg-tertiary', '#e2e8f0');
-                document.documentElement.style.setProperty('--text-primary', '#1e293b');
-                document.documentElement.style.setProperty('--text-secondary', '#475569');
-                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-            }
-        });
-
-        // Enhanced intersection observer for animations
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.animationPlayState = 'running';
-                    entry.target.classList.add('animate');
-                }
-            });
-        }, observerOptions);
-
-        // Enhanced terminal typing effect
-        function typeTerminalContent() {
-            const terminalContent = document.getElementById('terminalContent');
-            const lines = terminalContent.querySelectorAll('.terminal-line');
-            
-            lines.forEach((line, index) => {
-                line.style.opacity = '0';
-                setTimeout(() => {
-                    line.style.opacity = '1';
-                    line.style.animation = 'fadeIn 0.5s ease forwards';
-                }, index * 300);
-            });
-        }
-
-        // Add interactive terminal commands
-        function addTerminalLine(command, output, delay = 0) {
-            const terminalBody = document.getElementById('terminalContent');
-            setTimeout(() => {
-                const commandLine = document.createElement('div');
-                commandLine.className = 'terminal-line';
-                commandLine.innerHTML = `<span class="prompt">$</span> <span class="command">${command}</span>`;
-                terminalBody.appendChild(commandLine);
-                
-                setTimeout(() => {
-                    const outputLine = document.createElement('div');
-                    outputLine.className = 'terminal-line';
-                    outputLine.innerHTML = `<span class="output">${output}</span>`;
-                    terminalBody.appendChild(outputLine);
-                    terminalBody.scrollTop = terminalBody.scrollHeight;
-                }, 500);
-            }, delay);
-        }
-
-        // Enhanced easter eggs
-        let konamiCode = [];
-        const konami = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'KeyB', 'KeyA'];
-
-        document.addEventListener('keydown', (e) => {
-            konamiCode.push(e.code);
-            if (konamiCode.length > konami.length) {
-                konamiCode.shift();
-            }
-            
-            if (konamiCode.join(',') === konami.join(',')) {
-                // Matrix mode activation
-                document.body.style.filter = 'hue-rotate(120deg) saturate(2)';
-                document.querySelector('.matrix-rain').style.opacity = '0.3';
-                
-                // Add special message
-                addTerminalLine('matrix --activate', '🔴 RED PILL ACTIVATED - WELCOME TO THE MATRIX 🔴', 0);
-                addTerminalLine('wake up neo...', 'The Matrix has you...', 2000);
-                
-                setTimeout(() => {
-                    document.body.style.filter = '';
-                    document.querySelector('.matrix-rain').style.opacity = '0.1';
-                }, 10000);
-                konamiCode = [];
-            }
-        });
-
-        // Hacker mode toggle
-        let hackerModeActive = false;
-        document.addEventListener('keydown', (e) => {
-            if (e.ctrlKey && e.shiftKey && e.code === 'KeyH') {
-                hackerModeActive = !hackerModeActive;
-                if (hackerModeActive) {
-                    document.body.classList.add('hacker-mode');
-                    addTerminalLine('sudo enable --hacker-mode', '🚨 HACKER MODE ACTIVATED 🚨', 0);
-                    addTerminalLine('nmap -sS -O target', 'Scanning... 127.0.0.1:22 open', 1000);
-                    addTerminalLine('exploit.py --target localhost', 'Access granted. Welcome, h4ck3r.', 2000);
-                } else {
-                    document.body.classList.remove('hacker-mode');
-                    addTerminalLine('logout', 'Hacker mode deactivated. Stay safe!', 0);
-                }
-            }
-        });
-
-        // Initialize everything
-        document.addEventListener('DOMContentLoaded', () => {
-            // Load projects
-            loadProjects();
-            
-            // Initialize quote system
-            const newQuoteBtn = document.getElementById('newQuoteBtn');
-            if (newQuoteBtn) {
-                newQuoteBtn.addEventListener('click', updateQuote);
-                setInterval(updateQuote, 45000); // Auto-rotate every 45 seconds
-            }
-            
-            // Initialize terminal animation
-            setTimeout(typeTerminalContent, 2000);
-            
-            // Add live terminal updates
-            setTimeout(() => {
-                addTerminalLine('uptime', `${new Date().toLocaleTimeString()} up 24:7, hacking since 2020`, 5000);
-                addTerminalLine('ps aux | grep security', 'penetration_testing.py  running...', 8000);
-                addTerminalLine('tail -f /var/log/security.log', 'Monitoring threats... All systems secure ✅', 11000);
-                addTerminalLine('git status', 'On branch main. Ready to push new exploits 🔥', 14000);
-            }, 3000);
-            
-            // Initialize observers
-            const animatedElements = document.querySelectorAll('.fade-in, .slide-up');
-            animatedElements.forEach(el => {
-                el.style.animationPlayState = 'paused';
-                observer.observe(el);
-            });
-            
-            // Random glitch effects
-            setInterval(() => {
-                const heroTitle = document.querySelector('.hero-title');
-                if (Math.random() > 0.97) {
-                    heroTitle.style.animation = 'glitch 0.3s ease-in-out';
-                    setTimeout(() => {
-                        heroTitle.style.animation = '';
-                    }, 300);
-                }
-            }, 3000);
-
-            // Performance monitoring
-            const perfData = performance.timing;
-            const loadTime = perfData.loadEventEnd - perfData.navigationStart;
-            console.log(`🚀 Portfolio loaded in ${loadTime}ms`);
-            
-            // Add load time to terminal
-            setTimeout(() => {
-                addTerminalLine('benchmark --load-time', `Portfolio loaded in ${loadTime}ms ⚡`, 17000);
-            }, 17000);
-        });
-
-        // Add CSS for hacker mode
-        const hackerStyles = `
-            .hacker-mode {
-                animation: hackFlicker 0.1s infinite;
-            }
-            @keyframes hackFlicker {
-                0%, 98% { opacity: 1; }
-                99%, 100% { opacity: 0.95; }
-            }
-        `;
-        
-        const styleSheet = document.createElement('style');
-        styleSheet.textContent = hackerStyles;
-        document.head.appendChild(styleSheet);
-
-        // Console easter egg
-        console.log(`
-        ███████╗██╗  ██╗██████╗  ██████╗ ██████╗ ███╗   ██╗██████╗ 
-        ██╔══██╗╚██╗██╔╝██╔══██╗██╔═══██╗██╔══██╗████╗  ██║╚════██╗
-        ██████╔╝ ╚███╔╝ ██████╔╝██║   ██║██████╔╝██╔██╗ ██║ ███████║
-        ██╔═══╝  ██╔██╗ ██╔══██╗██║   ██║██╔══██╗██║╚██╗██║ ╚════██║
-        ██║     ██╔╝ ██╗██████╔╝╚██████╔╝██║  ██║██║ ╚████║ ██████╔╝
-        ╚═╝     ╚═╝  ╚═╝╚═════╝  ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝ 
-        
-        🎯 Welcome to my portfolio!
-        🔍 Looking for easter eggs? Try the Konami code...
-        🚨 Press Ctrl+Shift+H for hacker mode
-        💻 Check out my GitHub: https://github.com/0xb0rn3
-        `);
-    </script>
-</body>
-</html>
