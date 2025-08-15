@@ -605,7 +605,107 @@
             margin-left: 1rem;
         }
 
-        /* Contact section */
+        /* Quote section styles */
+        .quote-container {
+            display: flex;
+            justify-content: center;
+            padding: 2rem 0;
+        }
+
+        .quote-card {
+            background: var(--bg-glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 3rem;
+            max-width: 600px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .quote-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary), var(--accent-tertiary));
+            animation: shimmer 3s infinite;
+        }
+
+        .quote-icon {
+            font-size: 2.5rem;
+            color: var(--accent-primary);
+            margin-bottom: 1.5rem;
+            opacity: 0.3;
+        }
+
+        .quote-text {
+            font-size: 1.4rem;
+            line-height: 1.6;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            font-style: italic;
+            font-weight: 500;
+            min-height: 4rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .quote-author {
+            font-size: 1.1rem;
+            color: var(--accent-tertiary);
+            margin-bottom: 2rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+        }
+
+        .quote-btn {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-tertiary));
+            color: var(--bg-primary);
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: inherit;
+        }
+
+        .quote-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--glow) rgba(0, 255, 157, 0.4);
+        }
+
+        .quote-btn:active {
+            transform: translateY(0);
+        }
+
+        .quote-btn i {
+            transition: transform 0.3s ease;
+        }
+
+        .quote-btn:hover i {
+            transform: rotate(180deg);
+        }
+
+        /* Quote loading animation */
+        .quote-loading {
+            opacity: 0.5;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 0.8; }
+        }
         .contact-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -900,7 +1000,26 @@
             </div>
         </section>
 
-        <!-- Contact Section -->
+        <!-- Quote Section -->
+        <section class="section" id="quotes">
+            <div class="quote-container fade-in">
+                <div class="quote-card">
+                    <div class="quote-icon">
+                        <i class="fas fa-quote-left"></i>
+                    </div>
+                    <div class="quote-text" id="quoteText">
+                        "Talk is cheap. Show me the code."
+                    </div>
+                    <div class="quote-author" id="quoteAuthor">
+                        — Linus Torvalds
+                    </div>
+                    <button class="quote-btn" id="newQuoteBtn">
+                        <i class="fas fa-sync-alt"></i>
+                        New Quote
+                    </button>
+                </div>
+            </div>
+        </section>
         <section class="section" id="contact">
             <h2 class="section-title">Get In Touch</h2>
             <div class="contact-grid">
@@ -949,7 +1068,114 @@
     </div>
 
     <script>
-        // Typing animation for hero section
+        // Linus Torvalds and tech legend quotes
+        const linusQuotes = [
+            {
+                text: "Talk is cheap. Show me the code.",
+                author: "Linus Torvalds"
+            },
+            {
+                text: "Most good programmers do programming not because they expect to get paid or get adulation by the public, but because it is fun to program.",
+                author: "Linus Torvalds"
+            },
+            {
+                text: "Software is like sex: it's better when it's free.",
+                author: "Linus Torvalds"
+            },
+            {
+                text: "Intelligence is the ability to avoid doing work, yet getting the work done.",
+                author: "Linus Torvalds"
+            },
+            {
+                text: "Bad programmers worry about the code. Good programmers worry about data structures and their relationships.",
+                author: "Linus Torvalds"
+            },
+            {
+                text: "I'm an egotistical bastard, and I name all my projects after myself. First 'Linux', now 'Git'.",
+                author: "Linus Torvalds"
+            },
+            {
+                text: "See, you not only have to be a good coder to create a system like Linux, you have to be a sneaky bastard too.",
+                author: "Linus Torvalds"
+            },
+            {
+                text: "Only wimps use tape backup. Real men just upload their important stuff on FTP and let the rest of the world mirror it.",
+                author: "Linus Torvalds"
+            },
+            {
+                text: "My name is Linus, and I am your God.",
+                author: "Linus Torvalds"
+            },
+            {
+                text: "If you need more than 3 levels of indentation, you're screwed anyway, and should fix your program.",
+                author: "Linus Torvalds"
+            },
+            {
+                text: "Microsoft isn't evil, they just make really crappy operating systems.",
+                author: "Linus Torvalds"
+            },
+            {
+                text: "The Linux philosophy is 'Laugh in the face of danger'. Oops. Wrong One. 'Do it yourself'. Yes, that's it.",
+                author: "Linus Torvalds"
+            },
+            {
+                text: "I'm not a visionary. I'm an engineer. I'm happy with the people who are wandering around looking at the stars but I am looking at the ground and I want to fix the pothole before I fall in.",
+                author: "Linus Torvalds"
+            },
+            {
+                text: "C++ is a horrible language. It's made more horrible by the fact that a lot of substandard programmers use it.",
+                author: "Linus Torvalds"
+            },
+            {
+                text: "Given enough eyeballs, all bugs are shallow.",
+                author: "Linus Torvalds (Linus's Law)"
+            }
+        ];
+
+        let currentQuoteIndex = 0;
+
+        function getRandomQuote() {
+            const randomIndex = Math.floor(Math.random() * linusQuotes.length);
+            // Ensure we don't get the same quote twice in a row
+            if (randomIndex === currentQuoteIndex && linusQuotes.length > 1) {
+                return getRandomQuote();
+            }
+            currentQuoteIndex = randomIndex;
+            return linusQuotes[randomIndex];
+        }
+
+        function updateQuote() {
+            const quoteText = document.getElementById('quoteText');
+            const quoteAuthor = document.getElementById('quoteAuthor');
+            const quoteBtn = document.getElementById('newQuoteBtn');
+            
+            // Add loading state
+            quoteText.classList.add('quote-loading');
+            quoteAuthor.classList.add('quote-loading');
+            quoteBtn.disabled = true;
+            
+            setTimeout(() => {
+                const newQuote = getRandomQuote();
+                quoteText.textContent = `"${newQuote.text}"`;
+                quoteAuthor.textContent = `— ${newQuote.author}`;
+                
+                // Remove loading state
+                quoteText.classList.remove('quote-loading');
+                quoteAuthor.classList.remove('quote-loading');
+                quoteBtn.disabled = false;
+            }, 500);
+        }
+
+        // Quote button event listener
+        document.addEventListener('DOMContentLoaded', () => {
+            const newQuoteBtn = document.getElementById('newQuoteBtn');
+            if (newQuoteBtn) {
+                newQuoteBtn.addEventListener('click', updateQuote);
+                
+                // Auto-rotate quotes every 30 seconds
+                setInterval(updateQuote, 30000);
+            }
+        });
         const phrases = [
             "Jr. Pentester & Security Researcher",
             "CTF Player & Binary Exploitation Expert",
