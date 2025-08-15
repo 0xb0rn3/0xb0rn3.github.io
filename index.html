@@ -201,7 +201,7 @@
             box-shadow: var(--glow) rgba(0, 255, 157, 0.3);
         }
 
-        /* Hero section */
+        /* Hero section - FIXED CENTERING */
         .hero {
             min-height: 100vh;
             display: flex;
@@ -213,8 +213,13 @@
 
         .hero-content {
             max-width: 1000px;
+            width: 100%;
             text-align: center;
             z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
         .hero-title {
@@ -278,10 +283,42 @@
             }
         }
 
-        /* Profile section */
+        /* Achievement badges - FIXED CENTERING */
+        .achievement-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            margin: 2rem 0;
+            width: 100%;
+        }
+
+        .achievement-badge {
+            background: linear-gradient(135deg, var(--accent-quaternary), var(--accent-secondary));
+            color: var(--bg-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .achievement-badge:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--glow) rgba(255, 215, 0, 0.4);
+        }
+
+        /* Profile section - FIXED CENTERING */
         .profile-section {
             position: relative;
-            margin-bottom: 3rem;
+            margin: 3rem 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
         }
 
         .profile-card {
@@ -293,6 +330,9 @@
             box-shadow: var(--shadow);
             position: relative;
             overflow: hidden;
+            width: 100%;
+            max-width: 1000px;
+            text-align: center;
         }
 
         .profile-card::before {
@@ -328,12 +368,13 @@
             box-shadow: var(--glow) rgba(0, 255, 157, 0.8);
         }
 
-        /* GitHub Stats Section */
+        /* GitHub Stats Section - FIXED CENTERING */
         .github-stats {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 2rem;
             margin: 3rem 0;
+            justify-items: center;
         }
 
         .stat-card {
@@ -346,6 +387,8 @@
             position: relative;
             overflow: hidden;
             transition: all 0.3s ease;
+            width: 100%;
+            max-width: 400px;
         }
 
         .stat-card::before {
@@ -373,6 +416,117 @@
             max-width: 100%;
             height: auto;
             border-radius: 8px;
+        }
+
+        /* Skills grid - FIXED CENTERING */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+            justify-items: center;
+        }
+
+        .skill-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            max-width: 300px;
+            text-align: center;
+        }
+
+        .skill-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 157, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .skill-card:hover::before {
+            left: 100%;
+        }
+
+        .skill-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-primary);
+            box-shadow: var(--glow) rgba(0, 255, 157, 0.2);
+        }
+
+        .skill-icon {
+            font-size: 2rem;
+            color: var(--accent-primary);
+            margin-bottom: 1rem;
+        }
+
+        .skill-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .skill-description {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Action buttons - FIXED CENTERING */
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+            width: 100%;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-tertiary));
+            color: var(--bg-primary);
+        }
+
+        .btn-secondary {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-primary:hover {
+            box-shadow: var(--glow) rgba(0, 255, 157, 0.4);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent-primary);
+            box-shadow: var(--glow) rgba(0, 255, 157, 0.2);
         }
 
         /* Certifications Section */
@@ -508,63 +662,6 @@
             animation: shimmer 2s infinite;
         }
 
-        /* Skills grid */
-        .skills-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin: 2rem 0;
-        }
-
-        .skill-card {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 1.5rem;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .skill-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(0, 255, 157, 0.1), transparent);
-            transition: left 0.5s ease;
-        }
-
-        .skill-card:hover::before {
-            left: 100%;
-        }
-
-        .skill-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--accent-primary);
-            box-shadow: var(--glow) rgba(0, 255, 157, 0.2);
-        }
-
-        .skill-icon {
-            font-size: 2rem;
-            color: var(--accent-primary);
-            margin-bottom: 1rem;
-        }
-
-        .skill-title {
-            font-size: 1.2rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: var(--text-primary);
-        }
-
-        .skill-description {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
-
         /* Technology Stack */
         .tech-stack {
             background: var(--bg-glass);
@@ -621,55 +718,6 @@
         }
 
         .tech-badge:hover {
-            border-color: var(--accent-primary);
-            box-shadow: var(--glow) rgba(0, 255, 157, 0.2);
-        }
-
-        /* Action buttons */
-        .action-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-top: 2rem;
-        }
-
-        .btn {
-            padding: 1rem 2rem;
-            border: none;
-            border-radius: 12px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            cursor: pointer;
-            font-family: inherit;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--accent-primary), var(--accent-tertiary));
-            color: var(--bg-primary);
-        }
-
-        .btn-secondary {
-            background: var(--bg-secondary);
-            color: var(--text-primary);
-            border: 1px solid var(--border);
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-        }
-
-        .btn-primary:hover {
-            box-shadow: var(--glow) rgba(0, 255, 157, 0.4);
-        }
-
-        .btn-secondary:hover {
             border-color: var(--accent-primary);
             box-shadow: var(--glow) rgba(0, 255, 157, 0.2);
         }
@@ -1062,6 +1110,15 @@
             .tech-categories {
                 grid-template-columns: 1fr;
             }
+
+            .skills-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .achievement-badges {
+                flex-direction: column;
+                align-items: center;
+            }
         }
 
         /* Scrollbar styling */
@@ -1132,34 +1189,6 @@
                 text-shadow: 0 0 5px var(--accent-primary), 0 0 10px var(--accent-primary), 0 0 15px var(--accent-primary);
             }
         }
-
-        /* Achievement badges */
-        .achievement-badges {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-            justify-content: center;
-            margin: 2rem 0;
-        }
-
-        .achievement-badge {
-            background: linear-gradient(135deg, var(--accent-quaternary), var(--accent-secondary));
-            color: var(--bg-primary);
-            padding: 0.5rem 1rem;
-            border-radius: 25px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            box-shadow: var(--shadow);
-            transition: all 0.3s ease;
-        }
-
-        .achievement-badge:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--glow) rgba(255, 215, 0, 0.4);
-        }
     </style>
 </head>
 <body>
@@ -1197,6 +1226,7 @@
                 </div>
                 
                 <!-- Achievement Badges -->
+                <div class="achievement-badges">
                     <div class="achievement-badge">
                         <i class="fas fa-shield-alt"></i>
                         Security Researcher
@@ -1714,7 +1744,7 @@
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
 
-        const matrix = "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789@#$%^&*()*&^%+-/~{[|`]}アカサタナハマヤラワガザダバパイキシチニヒミリヰギジヂビピウクスツヌフムユルグズヅブプエケセテネヘメレヱゲゼデベペオコソトノホモヨロヲゴゾドボポヴッン";
+        const matrix = "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789@#$%^&*()*&^%+-/~{[|`]}アカサタナハマヤラワガザダバパイキシチニピミリウクスツヌフムユルウズヅブプエケセテネヘメレウゲゼデベペオコソトノホモヨロヲゴゾドボポヴッン";
         const matrixArray = matrix.split("");
 
         const fontSize = 10;
@@ -2087,12 +2117,12 @@
 
         // Console easter egg
         console.log(`
-        ██████╗ ██╗  ██╗██████╗  ██████╗ ██████╗ ███╗   ██╗██████╗ 
+        ███████╗██╗  ██╗██████╗  ██████╗ ██████╗ ███╗   ██╗██████╗ 
         ██╔══██╗╚██╗██╔╝██╔══██╗██╔═══██╗██╔══██╗████╗  ██║╚════██╗
-        ██████╔╝ ╚███╔╝ ██████╔╝██║   ██║██████╔╝██╔██╗ ██║ █████╔╝
-        ██╔═══╝  ██╔██╗ ██╔══██╗██║   ██║██╔══██╗██║╚██╗██║ ╚═══██╗
-        ██║     ██╔╝ ██╗██████╔╝╚██████╔╝██║  ██║██║ ╚████║██████╔╝
-        ╚═╝     ╚═╝  ╚═╝╚═════╝  ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═══╝╚═════╝ 
+        ██████╔╝ ╚███╔╝ ██████╔╝██║   ██║██████╔╝██╔██╗ ██║ ███████║
+        ██╔═══╝  ██╔██╗ ██╔══██╗██║   ██║██╔══██╗██║╚██╗██║ ╚════██║
+        ██║     ██╔╝ ██╗██████╔╝╚██████╔╝██║  ██║██║ ╚████║ ██████╔╝
+        ╚═╝     ╚═╝  ╚═╝╚═════╝  ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝ 
         
         🎯 Welcome to my portfolio!
         🔍 Looking for easter eggs? Try the Konami code...
