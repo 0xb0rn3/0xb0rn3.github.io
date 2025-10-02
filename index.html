@@ -1,0 +1,1283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>0xb0rn3 | シェルショック - Cybersecurity Specialist & Tool Developer</title>
+    <meta name="description" content="0xb0rn3 (シェルショック) - CTF Player, Cybersecurity Tool Developer, Open Source Enthusiast & Linux Advocate">
+    <meta name="keywords" content="0xb0rn3, 0xbv1, シェルショック, cybersecurity, pentester, CTF, linux, open source, tool developer">
+    <meta name="author" content="0xb0rn3 (シェルショック)">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --bg-primary: #000000;
+            --bg-secondary: #050505;
+            --bg-tertiary: #0a0a0a;
+            --bg-glass: rgba(10, 10, 10, 0.6);
+            --bg-glass-light: rgba(20, 20, 20, 0.4);
+            --bg-card: rgba(5, 5, 5, 0.7);
+            --bg-card-hover: rgba(15, 15, 15, 0.8);
+            --accent-primary: #00d4ff;
+            --accent-secondary: #ff00ff;
+            --accent-tertiary: #00ff88;
+            --accent-quaternary: #ffaa00;
+            --accent-danger: #ff0055;
+            --text-primary: #ffffff;
+            --text-secondary: #b8b8b8;
+            --text-muted: #808080;
+            --border: rgba(255, 255, 255, 0.08);
+            --border-light: rgba(255, 255, 255, 0.12);
+            --border-glass: rgba(255, 255, 255, 0.06);
+            --shadow: 0 20px 60px rgba(0, 0, 0, 0.9);
+            --shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.5);
+            --shadow-glow: 0 0 40px;
+            --glow: 0 0 20px;
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f5;
+            --bg-tertiary: #eeeeee;
+            --bg-glass: rgba(255, 255, 255, 0.7);
+            --bg-glass-light: rgba(245, 245, 245, 0.6);
+            --bg-card: rgba(255, 255, 255, 0.8);
+            --bg-card-hover: rgba(245, 245, 245, 0.9);
+            --accent-primary: #0088cc;
+            --accent-secondary: #cc00cc;
+            --accent-tertiary: #00cc66;
+            --accent-quaternary: #ff8800;
+            --accent-danger: #cc0044;
+            --text-primary: #1a1a1a;
+            --text-secondary: #4a4a4a;
+            --text-muted: #888888;
+            --border: rgba(0, 0, 0, 0.12);
+            --border-light: rgba(0, 0, 0, 0.18);
+            --border-glass: rgba(0, 0, 0, 0.08);
+            --shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            --shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            line-height: 1.6;
+            position: relative;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 50%, rgba(0, 212, 255, 0.05) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(255, 0, 255, 0.03) 0%, transparent 50%),
+                        radial-gradient(circle at 40% 20%, rgba(0, 255, 136, 0.04) 0%, transparent 50%);
+            animation: gradientShift 20s ease infinite;
+            z-index: -3;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(1.2); }
+        }
+
+        .cyber-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 212, 255, 0.008) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 212, 255, 0.008) 1px, transparent 1px);
+            background-size: 100px 100px;
+            animation: gridMove 20s linear infinite;
+            transform: perspective(1000px) rotateX(60deg);
+            z-index: -2;
+            opacity: 0.2;
+        }
+
+        @keyframes gridMove {
+            0% { transform: perspective(1000px) rotateX(60deg) translateZ(0); }
+            100% { transform: perspective(1000px) rotateX(60deg) translateZ(100px); }
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: var(--accent-primary);
+            border-radius: 50%;
+            animation: floatGlow 25s infinite linear;
+            box-shadow: 0 0 6px var(--accent-primary);
+            opacity: 0.6;
+        }
+
+        @keyframes floatGlow {
+            0% {
+                transform: translateY(100vh) translateX(0px) scale(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.6;
+                transform: translateY(90vh) translateX(10px) scale(1);
+            }
+            90% {
+                opacity: 0.6;
+                transform: translateY(10vh) translateX(-10px) scale(1);
+            }
+            100% {
+                transform: translateY(-100px) translateX(20px) scale(0);
+                opacity: 0;
+            }
+        }
+
+        .main-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            backdrop-filter: blur(20px) saturate(150%);
+            background: var(--bg-glass);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--shadow-glass);
+        }
+
+        .nav.scrolled {
+            background: var(--bg-card);
+            box-shadow: var(--shadow);
+        }
+
+        .nav-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+            position: relative;
+            animation: logoGlow 3s ease infinite;
+        }
+
+        @keyframes logoGlow {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.2); }
+        }
+
+        .logo::before {
+            content: '> ';
+            color: var(--accent-tertiary);
+            animation: blink 1.5s infinite;
+        }
+
+        .logo-subtitle {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            font-family: 'JetBrains Mono', monospace;
+            margin-top: 0.2rem;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            padding: 0.5rem 1rem;
+            border-radius: 12px;
+        }
+
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::before {
+            width: 80%;
+        }
+
+        .nav-link:hover {
+            color: var(--accent-primary);
+            background: rgba(0, 212, 255, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .theme-toggle {
+            background: var(--bg-glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            padding: 0.7rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 1.2rem;
+        }
+
+        .theme-toggle:hover {
+            color: var(--accent-primary);
+            border-color: var(--accent-primary);
+            box-shadow: var(--glow) rgba(0, 212, 255, 0.2);
+            transform: rotate(180deg);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: var(--bg-glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            padding: 0.5rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .visitor-info {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--bg-glass);
+            backdrop-filter: blur(20px) saturate(150%);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 1.2rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            z-index: 999;
+            opacity: 0;
+            animation: slideInRight 1s ease forwards 0.5s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--shadow-glass);
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 0.7;
+                transform: translateX(0);
+            }
+        }
+
+        .visitor-info:hover {
+            opacity: 0.9;
+            border-color: var(--accent-primary);
+            transform: translateY(-5px);
+        }
+
+        .visitor-info .info-line {
+            display: flex;
+            gap: 0.5rem;
+            margin: 0.3rem 0;
+            align-items: center;
+        }
+
+        .visitor-info .label {
+            color: var(--accent-primary);
+            text-shadow: 0 0 8px var(--accent-primary);
+        }
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6rem 2rem 2rem;
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            width: 100%;
+            text-align: center;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-title {
+            font-size: clamp(2.5rem, 8vw, 6rem);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary), var(--accent-tertiary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.1;
+            animation: heroGlow 4s ease infinite, floatTitle 6s ease-in-out infinite;
+        }
+
+        .hero-alias {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(0.9rem, 2.5vw, 1.3rem);
+            color: var(--text-secondary);
+            margin-bottom: 0.3rem;
+        }
+
+        .hero-alias-note {
+            font-size: clamp(0.7rem, 1.5vw, 0.9rem);
+            color: var(--text-muted);
+            font-style: italic;
+            margin-bottom: 2rem;
+        }
+
+        @keyframes heroGlow {
+            0%, 100% { filter: brightness(1) blur(0px); }
+            50% { filter: brightness(1.2) blur(0.5px); }
+        }
+
+        @keyframes floatTitle {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .typing-animation {
+            font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+            color: var(--accent-tertiary);
+            margin-bottom: 3rem;
+            min-height: 3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            animation: fadeInUp 1s ease forwards 0.6s;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 3px;
+            height: 1.2rem;
+            background: linear-gradient(to bottom, var(--accent-primary), var(--accent-secondary));
+            margin-left: 2px;
+            animation: blink 1s infinite;
+            box-shadow: 0 0 8px var(--accent-primary);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .achievement-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            margin: 2rem 0;
+            width: 100%;
+            opacity: 0;
+            animation: fadeInUp 1s ease forwards 0.9s;
+        }
+
+        .achievement-badge {
+            background: var(--bg-glass);
+            backdrop-filter: blur(20px) saturate(150%);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 0.75rem 1.5rem;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: var(--shadow-glass);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .achievement-badge:hover {
+            transform: translateY(-5px) scale(1.05);
+            border-color: var(--accent-primary);
+            box-shadow: 0 15px 50px rgba(0, 212, 255, 0.2);
+        }
+
+        .achievement-badge i {
+            color: var(--accent-primary);
+            filter: drop-shadow(0 0 5px var(--accent-primary));
+        }
+
+        .profile-section {
+            position: relative;
+            margin: 3rem 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            opacity: 0;
+            animation: fadeInUp 1s ease forwards 1.2s;
+        }
+
+        .profile-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(30px) saturate(150%);
+            border: 1px solid var(--border);
+            border-radius: 30px;
+            padding: 3rem;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            max-width: 1200px;
+            text-align: center;
+        }
+
+        .github-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+            justify-items: center;
+        }
+
+        .stat-card {
+            background: var(--bg-glass);
+            backdrop-filter: blur(20px) saturate(150%);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 1.5rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 100%;
+            max-width: 400px;
+            box-shadow: var(--shadow-glass);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: var(--accent-primary);
+            box-shadow: 0 20px 60px rgba(0, 212, 255, 0.15);
+        }
+
+        .stat-card img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 12px;
+            filter: saturate(1.1);
+        }
+
+        .section {
+            padding: 4rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 3rem;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary), var(--accent-tertiary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+            border-radius: 2px;
+        }
+
+        .certifications-section {
+            background: var(--bg-card);
+            backdrop-filter: blur(30px) saturate(150%);
+            border: 1px solid var(--border);
+            border-radius: 30px;
+            padding: 3rem;
+            margin: 3rem 0;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .certifications-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .cert-card {
+            background: var(--bg-glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-glass);
+        }
+
+        .cert-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            border-color: var(--accent-primary);
+            box-shadow: 0 25px 60px rgba(0, 212, 255, 0.2);
+        }
+
+        .cert-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-quaternary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 0 15px var(--accent-primary));
+        }
+
+        .cert-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .cert-issuer {
+            color: var(--accent-tertiary);
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .cert-description {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .cert-link {
+            display: inline-block;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(255, 0, 255, 0.15));
+            color: var(--text-primary);
+            padding: 0.8rem 1.5rem;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid var(--border-light);
+        }
+
+        .cert-link:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.2);
+        }
+
+        .badge-iframe {
+            width: 100%;
+            max-width: 600px;
+            height: 200px;
+            border: none;
+            border-radius: 15px;
+            margin: 1.5rem auto;
+            display: block;
+            background: var(--bg-glass);
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .contact-card {
+            background: var(--bg-glass);
+            backdrop-filter: blur(25px) saturate(150%);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--shadow-glass);
+        }
+
+        .contact-card:hover {
+            transform: translateY(-10px) scale(1.03);
+            border-color: var(--accent-primary);
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.4);
+        }
+
+        .contact-icon {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            filter: drop-shadow(0 0 15px var(--accent-primary));
+        }
+
+        .contact-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .contact-info {
+            color: var(--text-secondary);
+        }
+
+        .contact-info a {
+            color: var(--accent-tertiary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .contact-info a:hover {
+            color: var(--accent-primary);
+        }
+
+        .profile-image {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin: 0 auto 2rem;
+            border: 3px solid transparent;
+            background: linear-gradient(45deg, var(--accent-primary), var(--accent-secondary));
+            background-clip: padding-box;
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.3);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            display: block;
+            position: relative;
+            animation: profileFloat 6s ease-in-out infinite;
+        }
+
+        @keyframes profileFloat {
+            0%, 100% { transform: translateY(0px) scale(1); }
+            50% { transform: translateY(-10px) scale(1.02); }
+        }
+
+        .profile-image:hover {
+            transform: scale(1.15) rotate(5deg);
+            box-shadow: 0 0 50px rgba(0, 212, 255, 0.6), 0 0 100px rgba(255, 0, 255, 0.4);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+            width: 100%;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 15px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            font-family: inherit;
+            backdrop-filter: blur(20px);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(255, 0, 255, 0.15));
+            color: var(--text-primary);
+            border: 1px solid var(--border-light);
+            box-shadow: 0 4px 20px rgba(0, 212, 255, 0.15);
+        }
+
+        .btn-secondary {
+            background: var(--bg-glass);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 10px 40px rgba(0, 212, 255, 0.3);
+        }
+
+        .btn-primary:hover {
+            border-color: var(--accent-primary);
+        }
+
+        @media (max-width: 768px) {
+            .nav {
+                padding: 1rem;
+            }
+
+            .nav-content {
+                position: relative;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 60px;
+                left: 0;
+                right: 0;
+                background: var(--bg-card);
+                backdrop-filter: blur(20px);
+                flex-direction: column;
+                padding: 2rem;
+                gap: 1rem;
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+                z-index: 999;
+                border-bottom: 1px solid var(--border);
+            }
+
+            .nav-links.active {
+                transform: translateX(0);
+            }
+
+            .mobile-menu-btn {
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+            }
+
+            .mobile-menu-btn span {
+                width: 20px;
+                height: 2px;
+                background: var(--text-secondary);
+                transition: all 0.3s ease;
+            }
+
+            .logo {
+                font-size: 1.2rem;
+            }
+
+            .hero {
+                padding: 5rem 1rem 2rem;
+            }
+
+            .section {
+                padding: 3rem 1rem;
+            }
+
+            .certifications-section {
+                padding: 2rem 1rem;
+            }
+
+            .certifications-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .github-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .visitor-info {
+                bottom: 10px;
+                right: 10px;
+                left: 10px;
+                font-size: 0.7rem;
+                padding: 0.8rem;
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(to bottom, var(--accent-primary), var(--accent-secondary));
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(to bottom, var(--accent-secondary), var(--accent-tertiary));
+        }
+    </style>
+</head>
+<body>
+    <div class="cyber-grid"></div>
+    <div class="particles" id="particles"></div>
+
+    <div class="visitor-info" id="visitorInfo">
+        <div class="info-line">
+            <span class="label">IP:</span>
+            <span id="visitorIP">Detecting...</span>
+        </div>
+        <div class="info-line">
+            <span class="label">Device:</span>
+            <span id="visitorDevice">Analyzing...</span>
+        </div>
+        <div class="info-line">
+            <span class="label">OS:</span>
+            <span id="visitorOS">Scanning...</span>
+        </div>
+    </div>
+
+    <nav class="nav" id="navbar">
+        <div class="nav-content">
+            <div>
+                <a href="#" class="logo">0xb0rn3</a>
+                <div class="logo-subtitle">シェルショック (Shell Shock)</div>
+            </div>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#about" class="nav-link">About</a></li>
+                <li><a href="#certifications" class="nav-link">Certifications</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
+            </ul>
+            <div style="display: flex; gap: 1rem; align-items: center;">
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button class="mobile-menu-btn" id="mobileMenuBtn">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <section class="hero" id="hero">
+            <div class="hero-content fade-in">
+                <h1 class="hero-title">0xb0rn3</h1>
+                <div class="hero-alias">aka 0xbv1 | シェルショック (Shell Shock)</div>
+                <div class="hero-alias-note">My Digital Alias</div>
+                
+                <div class="typing-animation">
+                    <span id="typewriter"></span>
+                    <span class="cursor"></span>
+                </div>
+                
+                <div class="achievement-badges">
+                    <div class="achievement-badge">
+                        <i class="fas fa-shield-alt"></i>
+                        Security Researcher
+                    </div>
+                    <div class="achievement-badge">
+                        <i class="fas fa-flag"></i>
+                        CTF Player
+                    </div>
+                    <div class="achievement-badge">
+                        <i class="fab fa-linux"></i>
+                        Linux Advocate
+                    </div>
+                </div>
+                
+                <div class="profile-section">
+                    <div class="profile-card slide-up">
+                        <img src="profile.jpg" alt="0xb0rn3" class="profile-image">
+                        
+                        <div class="github-stats">
+                            <div class="stat-card slide-up">
+                                <img src="https://github-readme-stats.vercel.app/api?username=0xb0rn3&show_icons=true&theme=tokyonight&hide_border=true&bg_color=0D1117&title_color=58A6FF&icon_color=58A6FF&text_color=C9D1D9&count_private=true&include_all_commits=true&custom_title=Security%20Engineering%20Metrics" alt="GitHub Stats" />
+                            </div>
+                            <div class="stat-card slide-up">
+                                <img src="https://github-readme-streak-stats.herokuapp.com/?user=0xb0rn3&theme=tokyonight&hide_border=true&background=0D1117&stroke=58A6FF&ring=58A6FF&fire=FFD700&currStreakLabel=58A6FF&sideLabels=C9D1D9&currStreakNum=C9D1D9&sideNums=C9D1D9" alt="GitHub Streak" />
+                            </div>
+                        </div>
+                        <div class="action-buttons">
+                            <a href="#certifications" class="btn btn-primary">
+                                <i class="fas fa-certificate"></i>
+                                View Certifications
+                            </a>
+                            <a href="#contact" class="btn btn-secondary">
+                                <i class="fas fa-envelope"></i>
+                                Get In Touch
+                            </a>
+                            <a href="https://github.com/0xb0rn3" target="_blank" class="btn btn-secondary">
+                                <i class="fab fa-github"></i>
+                                GitHub
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="certifications">
+            <h2 class="section-title">🏆 Certifications & Achievements</h2>
+            
+            <div class="certifications-section fade-in">
+                <div class="certifications-grid">
+                    <div class="cert-card slide-up">
+                        <div class="cert-icon">
+                            <i class="fab fa-google"></i>
+                        </div>
+                        <h3 class="cert-title">Google Cybersecurity Certificate</h3>
+                        <div class="cert-issuer">Google via Coursera</div>
+                        <p class="cert-description">
+                            Comprehensive cybersecurity program covering incident response, network security, 
+                            vulnerability assessment, and security frameworks. Gained expertise in Python automation, 
+                            Linux administration, and security analysis tools.
+                        </p>
+                        <a href="htttps://ccoursera.org/" target="_blank" class="cert-link">
+                            <i class="fas fa-external-link-alt"></i>
+                            Verify Certificate
+                        </a>
+                    </div>
+
+                    <div class="cert-card slide-up">
+                        <div class="cert-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3 class="cert-title">Pre Security Certification</h3>
+                        <div class="cert-issuer">TryHackMe</div>
+                        <p class="cert-description">
+                            Foundational cybersecurity knowledge covering network fundamentals, web application security, 
+                            Linux basics, and Windows security. Essential preparation for advanced security roles.
+                        </p>
+                        <a href="https://tryhackme-certificates.s3-eu-west-1.amazonaws.com/THM-JB3HSWBUVV.pdf" target="_blank" class="cert-link">
+                            <i class="fas fa-external-link-alt"></i>
+                            View Certificate
+                        </a>
+                    </div>
+
+                    <div class="cert-card slide-up">
+                        <div class="cert-icon">
+                            <i class="fas fa-user-secret"></i>
+                        </div>
+                        <h3 class="cert-title">Introduction to Cyber Security</h3>
+                        <div class="cert-issuer">TryHackMe</div>
+                        <p class="cert-description">
+                            Introduction to offensive and defensive cybersecurity, covering web application security, 
+                            network security, and careers in cybersecurity. Foundation for ethical hacking journey.
+                        </p>
+                        <a href="https://tryhackme-certificates.s3-eu-west-1.amazonaws.com/THM-9BUCQG36LU.pdf" target="_blank" class="cert-link">
+                            <i class="fas fa-external-link-alt"></i>
+                            View Certificate
+                        </a>
+                    </div>
+
+                    <div class="cert-card slide-up">
+                        <div class="cert-icon">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <h3 class="cert-title">Academician Badge</h3>
+                        <div class="cert-issuer">HackTheBox Academy</div>
+                        <p class="cert-description">
+                            Recognition for completing comprehensive security training modules and demonstrating 
+                            mastery of cybersecurity concepts through HackTheBox Academy platform.
+                        </p>
+                        <a href="https://academy.hackthebox.com/achievement/badge/a821772a-8fce-11ee-bfb6-bea50ffe6cb4" target="_blank" class="cert-link">
+                            <i class="fas fa-external-link-alt"></i>
+                            View Badge
+                        </a>
+                    </div>
+
+                    <div class="cert-card slide-up">
+                        <div class="cert-icon">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <h3 class="cert-title">Philomath Badge</h3>
+                        <div class="cert-issuer">HackTheBox Academy</div>
+                        <p class="cert-description">
+                            Awarded for continuous learning and dedication to expanding cybersecurity knowledge 
+                            through diverse training modules and practical challenges.
+                        </p>
+                        <a href="https://academy.hackthebox.com/achievement/badge/f4d3d5a9-8fd1-11ee-bfb6-bea50ffe6cb4" target="_blank" class="cert-link">
+                            <i class="fas fa-external-link-alt"></i>
+                            View Badge
+                        </a>
+                    </div>
+                </div>
+
+                <div style="margin-top: 4rem; text-align: center;">
+                    <h3 style="font-size: 2rem; margin-bottom: 2rem; color: var(--text-primary);">
+                        Live Platform Progress
+                    </h3>
+                    <div style="display: flex; flex-direction: column; gap: 2rem; align-items: center;">
+                        <div>
+                            <h4 style="color: var(--accent-secondary); margin-bottom: 1rem;">TryHackMe Profile</h4>
+                            <iframe src="https://tryhackme.com/api/v2/badges/public-profile?userPublicId=4139197" class="badge-iframe"></iframe>
+                            <a href="https://tryhackme.com/p/0xb0rn3" target="_blank" class="btn btn-primary" style="margin-top: 1rem;">
+                                <i class="fas fa-external-link-alt"></i>
+                                Visit TryHackMe Profile
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="contact">
+            <h2 class="section-title">🌐 Get In Touch</h2>
+            <div class="contact-grid">
+                <div class="contact-card fade-in">
+                    <div class="contact-icon"><i class="fas fa-envelope"></i></div>
+                    <h3 class="contact-title">Email</h3>
+                    <div class="contact-info">
+                        <a href="mailto:oxbv1@proton.me">oxbv1@proton.me</a>
+                    </div>
+                </div>
+                <div class="contact-card fade-in">
+                    <div class="contact-icon"><i class="fab fa-github"></i></div>
+                    <h3 class="contact-title">GitHub</h3>
+                    <div class="contact-info">
+                        <a href="https://github.com/0xb0rn3" target="_blank">github.com/0xb0rn3</a>
+                    </div>
+                </div>
+                <div class="contact-card fade-in">
+                    <div class="contact-icon"><i class="fab fa-Twitter"></i></div>
+                    <h3 class="contact-title">X</h3>
+                    <div class="contact-info">
+                        <a href="https://x.com/oxbv1" target="_blank">@oxbv1</a>
+                    </div>
+                </div>
+                <div class="contact-card fade-in">
+                    <div class="contact-icon"><i class="fab fa-discord"></i></div>
+                    <h3 class="contact-title">Discord</h3>
+                    <div class="contact-info">0xbv1</div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Theme Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        const icon = themeToggle.querySelector('i');
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        body.setAttribute('data-theme', savedTheme);
+        icon.className = savedTheme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            body.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            icon.className = newTheme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
+        });
+
+        // Mobile menu
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const navLinks = document.getElementById('navLinks');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+            });
+        });
+
+        // Visitor Info
+        async function detectVisitorInfo() {
+            try {
+                const ipResponse = await fetch('https://api.ipify.org?format=json');
+                const ipData = await ipResponse.json();
+                document.getElementById('visitorIP').textContent = ipData.ip;
+
+                const userAgent = navigator.userAgent;
+                let deviceType = 'Desktop';
+                if (/Mobile|Android|iPhone/i.test(userAgent)) deviceType = 'Mobile';
+                else if (/Tablet|iPad/i.test(userAgent)) deviceType = 'Tablet';
+                document.getElementById('visitorDevice').textContent = deviceType;
+
+                let os = 'Unknown';
+                if (userAgent.indexOf('Windows') !== -1) os = 'Windows';
+                else if (userAgent.indexOf('Mac') !== -1) os = 'macOS';
+                else if (userAgent.indexOf('Linux') !== -1) os = 'Linux';
+                else if (userAgent.indexOf('Android') !== -1) os = 'Android';
+                else if (userAgent.indexOf('iPhone') !== -1 || userAgent.indexOf('iPad') !== -1) os = 'iOS';
+                document.getElementById('visitorOS').textContent = os;
+            } catch (error) {
+                document.getElementById('visitorIP').textContent = 'Hidden';
+                document.getElementById('visitorDevice').textContent = 'Unknown';
+                document.getElementById('visitorOS').textContent = 'Unknown';
+            }
+        }
+
+        // Enhanced Quotes with Hacktivists
+        const quotes = [
+            { text: "Security is not a product, but a process", author: "Bruce Schneier" },
+            { text: "The Internet treats censorship as a malfunction and routes around it", author: "John Gilmore" },
+            { text: "Privacy is not something that I'm merely entitled to, it's an absolute prerequisite", author: "Marlon Brando" },
+            { text: "Information wants to be free", author: "Stewart Brand" },
+            { text: "The best way to predict the future is to invent it", author: "Alan Kay" },
+            { text: "Knowledge is power. Information is liberation", author: "Kofi Annan" },
+            { text: "Hackers are breaking the systems for profit. Before, it was about intellectual curiosity and pursuit of knowledge", author: "Kevin Mitnick" },
+            { text: "We can't have a democracy if we're having to protect you and our users from the government over stuff we've never had a conversation about", author: "Mark Zuckerberg" },
+            { text: "The internet is not just one thing, it's a collection of things - of numerous communications networks that all speak the same digital language", author: "Jim Clark" },
+            { text: "Arguing that you don't care about privacy because you have nothing to hide is no different than saying you don't care about free speech because you have nothing to say", author: "Edward Snowden" },
+            { text: "True hackers are the people who want to understand how something works", author: "Linus Torvalds" },
+            { text: "Software is like sex: it's better when it's free", author: "Linus Torvalds" },
+            { text: "Intelligence agencies keep things secret because they often violate the rule of law or of good behavior", author: "Julian Assange" },
+            { text: "The only way to deal with an unfree world is to become so absolutely free that your very existence is an act of rebellion", author: "Albert Camus" },
+            { text: "Courage is contagious", author: "Julian Assange" },
+            { text: "Transparency and privacy are not opposite of the scale, they are two different dimensions", author: "Mikko Hypponen" },
+            { text: "The weakest link in the security chain is the strongest link in the attacker's chain", author: "Bruce Schneier" }
+        ];
+
+        let currentQuoteIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+
+        function typeWriter() {
+            const typewriterElement = document.getElementById('typewriter');
+            const currentQuote = quotes[currentQuoteIndex];
+            const fullText = `"${currentQuote.text}" — ${currentQuote.author}`;
+            
+            if (isDeleting) {
+                typewriterElement.textContent = fullText.substring(0, charIndex - 1);
+                charIndex--;
+            } else {
+                typewriterElement.textContent = fullText.substring(0, charIndex + 1);
+                charIndex++;
+            }
+
+            let typeSpeed = isDeleting ? 30 : 50;
+
+            if (!isDeleting && charIndex === fullText.length) {
+                typeSpeed = 3000;
+                isDeleting = true;
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                currentQuoteIndex = (currentQuoteIndex + 1) % quotes.length;
+            }
+
+            setTimeout(typeWriter, typeSpeed);
+        }
+
+        // Particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            for (let i = 0; i < 40; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDuration = (Math.random() * 15 + 15) + 's';
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Navbar scroll
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            detectVisitorInfo();
+            typeWriter();
+            createParticles();
+        });
+    </script>
+</body>
+</html>
