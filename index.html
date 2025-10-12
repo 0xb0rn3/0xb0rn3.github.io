@@ -196,6 +196,32 @@
             animation: fadeInUp 1s ease;
         }
 
+        .profile-image-container {
+            margin-bottom: 2rem;
+            animation: fadeInUp 1s ease 0.1s both;
+        }
+
+        .profile-image {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--accent);
+            box-shadow: 0 0 30px rgba(59, 130, 246, 0.6), 0 0 60px rgba(139, 92, 246, 0.4);
+            transition: all 0.4s ease;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .profile-image:hover {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 0 40px rgba(59, 130, 246, 0.8), 0 0 80px rgba(139, 92, 246, 0.6);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
@@ -612,6 +638,10 @@
 
     <section class="hero" id="about">
         <div class="hero-content">
+            <div class="profile-image-container">
+                <img src="profile.jpg" alt="0xb0rn3 Profile" class="profile-image">
+            </div>
+            
             <div class="hero-badge glass">
                 <span class="status-dot"></span>
                 Available for Security Research
