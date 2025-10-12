@@ -4,37 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>0xb0rn3 | Cybersecurity Specialist</title>
-    <meta name="description" content="0xb0rn3 - Cybersecurity Researcher, CTF Player, and Security Tool Developer">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
         
         :root {
             --bg-primary: #0a0a0a;
-            --bg-secondary: #111111;
-            --bg-card: #161616;
             --accent: #3b82f6;
             --accent-hover: #2563eb;
             --text-primary: #f5f5f5;
             --text-secondary: #a1a1a1;
             --text-muted: #737373;
-            --border: #262626;
-            --border-light: #404040;
             --success: #10b981;
-            --warning: #f59e0b;
         }
 
         [data-theme="light"] {
-            --bg-primary: #ffffff;
-            --bg-secondary: #f9fafb;
-            --bg-card: #f3f4f6;
+            --bg-primary: #f0f4f8;
             --accent: #2563eb;
             --accent-hover: #1d4ed8;
             --text-primary: #111827;
             --text-secondary: #4b5563;
             --text-muted: #6b7280;
-            --border: #e5e7eb;
-            --border-light: #d1d5db;
         }
 
         * {
@@ -44,51 +34,82 @@
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-family: 'Inter', sans-serif;
             background: var(--bg-primary);
             color: var(--text-primary);
             line-height: 1.6;
             overflow-x: hidden;
-            transition: background 0.2s ease;
+            position: relative;
         }
 
-        /* Subtle background accent */
         body::before {
             content: '';
             position: fixed;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle at 30% 30%, rgba(59, 130, 246, 0.03) 0%, transparent 50%);
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(16, 185, 129, 0.1) 0%, transparent 50%);
+            animation: gradientShift 15s ease infinite;
             pointer-events: none;
             z-index: -1;
         }
 
-        /* Navigation */
+        @keyframes gradientShift {
+            0%, 100% { opacity: 1; transform: scale(1) rotate(0deg); }
+            50% { opacity: 0.8; transform: scale(1.1) rotate(5deg); }
+        }
+
+        .particle {
+            position: fixed;
+            width: 3px;
+            height: 3px;
+            background: var(--accent);
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0;
+            animation: float 20s infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) translateX(0); opacity: 0; }
+            10% { opacity: 0.5; }
+            90% { opacity: 0.5; }
+            100% { transform: translateY(-100vh) translateX(100px); opacity: 0; }
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        [data-theme="light"] .glass {
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
         .nav {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             z-index: 1000;
-            background: rgba(10, 10, 10, 0.8);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--border);
-            transition: all 0.2s ease;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            background: rgba(10, 10, 10, 0.7);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
         }
 
         [data-theme="light"] .nav {
-            background: rgba(255, 255, 255, 0.8);
-        }
-
-        .nav.scrolled {
-            background: rgba(10, 10, 10, 0.95);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-
-        [data-theme="light"] .nav.scrolled {
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 0.7);
         }
 
         .nav-content {
@@ -108,17 +129,15 @@
             text-decoration: none;
             display: flex;
             flex-direction: column;
-            gap: 0.125rem;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: translateY(-2px);
         }
 
         .logo-main {
             color: var(--accent);
-        }
-
-        .logo-sub {
-            font-size: 0.625rem;
-            color: var(--text-muted);
-            font-weight: 400;
         }
 
         .nav-links {
@@ -133,50 +152,36 @@
             text-decoration: none;
             font-size: 0.9rem;
             font-weight: 500;
-            transition: color 0.2s ease;
+            transition: all 0.3s ease;
             position: relative;
         }
 
         .nav-link:hover {
             color: var(--accent);
-        }
-
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            bottom: -4px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--accent);
-            transition: width 0.2s ease;
-        }
-
-        .nav-link:hover::after {
-            width: 100%;
+            transform: translateY(-2px);
         }
 
         .theme-toggle {
             background: transparent;
-            border: 1px solid var(--border);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             color: var(--text-secondary);
             padding: 0.5rem;
-            border-radius: 8px;
+            border-radius: 12px;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
+            width: 40px;
+            height: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 36px;
-            height: 36px;
         }
 
         .theme-toggle:hover {
             color: var(--accent);
             border-color: var(--accent);
+            transform: rotate(180deg);
         }
 
-        /* Hero Section */
         .hero {
             min-height: 100vh;
             display: flex;
@@ -186,21 +191,31 @@
         }
 
         .hero-content {
-            max-width: 800px;
+            max-width: 900px;
             text-align: center;
+            animation: fadeInUp 1s ease;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .hero-badge {
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            padding: 0.5rem 1rem;
+            padding: 0.625rem 1.25rem;
             border-radius: 100px;
             font-size: 0.875rem;
             color: var(--text-secondary);
             margin-bottom: 2rem;
+            animation: slideIn 1s ease 0.2s both;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
         }
 
         .status-dot {
@@ -209,374 +224,346 @@
             background: var(--success);
             border-radius: 50%;
             animation: pulse 2s ease-in-out infinite;
+            box-shadow: 0 0 10px var(--success);
         }
 
         @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.2); }
         }
 
         .hero-title {
-            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-size: clamp(3rem, 8vw, 5rem);
             font-weight: 700;
             margin-bottom: 1rem;
             letter-spacing: -0.02em;
-        }
-
-        .hero-alias {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: clamp(0.875rem, 2vw, 1.125rem);
-            color: var(--text-muted);
-            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--accent), #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: fadeInUp 1s ease 0.3s both;
         }
 
         .hero-description {
-            font-size: 1.125rem;
+            font-size: 1.25rem;
             color: var(--text-secondary);
             margin-bottom: 3rem;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-            line-height: 1.7;
+            line-height: 1.8;
+            animation: fadeInUp 1s ease 0.4s both;
         }
 
-        .quote-container {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin: 2rem 0;
-            font-style: italic;
-            color: var(--text-secondary);
-            min-height: 100px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-        }
-
-        .quote-text {
-            font-size: 0.95rem;
-            line-height: 1.6;
-        }
-
-        .quote-author {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            margin-top: 0.5rem;
-            font-style: normal;
-        }
-
-        /* Badges */
         .badges {
             display: flex;
             flex-wrap: wrap;
-            gap: 0.75rem;
+            gap: 1rem;
             justify-content: center;
             margin: 2rem 0;
+            animation: fadeInUp 1s ease 0.5s both;
         }
 
         .badge {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            padding: 0.625rem 1.25rem;
+            padding: 0.75rem 1.5rem;
             border-radius: 100px;
             font-size: 0.875rem;
             font-weight: 500;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            transition: all 0.2s ease;
+            gap: 0.625rem;
+            transition: all 0.3s ease;
         }
 
         .badge:hover {
-            border-color: var(--accent);
-            transform: translateY(-2px);
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 12px 24px rgba(59, 130, 246, 0.3);
         }
 
         .badge i {
             color: var(--accent);
+            filter: drop-shadow(0 0 5px var(--accent));
         }
 
-        /* Buttons */
         .hero-actions {
             display: flex;
             gap: 1rem;
             justify-content: center;
             flex-wrap: wrap;
-            margin-top: 2rem;
+            margin-top: 3rem;
+            animation: fadeInUp 1s ease 0.6s both;
         }
 
         .btn {
-            padding: 0.875rem 1.75rem;
-            border-radius: 10px;
-            font-weight: 500;
+            padding: 1rem 2rem;
+            border-radius: 16px;
+            font-weight: 600;
             text-decoration: none;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
-            font-size: 0.9375rem;
-            cursor: pointer;
+            gap: 0.625rem;
+            font-size: 1rem;
             border: none;
-            font-family: inherit;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
         }
 
         .btn-primary {
-            background: var(--accent);
+            background: linear-gradient(135deg, var(--accent), #8b5cf6);
             color: white;
+            box-shadow: 0 8px 24px rgba(59, 130, 246, 0.4);
         }
 
         .btn-primary:hover {
-            background: var(--accent-hover);
-            transform: translateY(-2px);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(59, 130, 246, 0.6);
         }
 
         .btn-secondary {
-            background: var(--bg-card);
+            background: rgba(255, 255, 255, 0.05);
             color: var(--text-primary);
-            border: 1px solid var(--border);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .btn-secondary:hover {
+            transform: translateY(-3px);
             border-color: var(--accent);
-            transform: translateY(-2px);
+            background: rgba(59, 130, 246, 0.1);
         }
 
-        /* Stats Section */
-        .stats-section {
-            padding: 4rem 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-            margin-top: 2rem;
-        }
-
-        .stat-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 1.5rem;
-            transition: all 0.2s ease;
-        }
-
-        .stat-card:hover {
-            border-color: var(--accent);
-            transform: translateY(-4px);
-        }
-
-        .stat-card img {
-            width: 100%;
-            height: auto;
-            border-radius: 8px;
-        }
-
-        /* Section */
         .section {
-            padding: 4rem 2rem;
+            padding: 5rem 2rem;
             max-width: 1200px;
             margin: 0 auto;
-        }
-
-        .section-header {
-            text-align: center;
-            margin-bottom: 3rem;
         }
 
         .section-title {
-            font-size: clamp(2rem, 4vw, 2.5rem);
+            font-size: clamp(2rem, 5vw, 3rem);
             font-weight: 700;
-            margin-bottom: 0.5rem;
-            letter-spacing: -0.02em;
+            text-align: center;
+            margin-bottom: 3rem;
+            background: linear-gradient(135deg, var(--text-primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
-        .section-subtitle {
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .card {
+            border-radius: 24px;
+            padding: 2rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent), #8b5cf6);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 60px rgba(59, 130, 246, 0.3);
+        }
+
+        .card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .card-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--accent), #8b5cf6);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            color: white;
+            font-size: 1.75rem;
+            box-shadow: 0 8px 24px rgba(59, 130, 246, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover .card-icon {
+            transform: rotateY(360deg);
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .card-subtitle {
+            color: var(--accent);
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .card-description {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-link {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .card-link:hover {
+            gap: 1rem;
+        }
+
+        .card-link i {
+            transition: transform 0.3s ease;
+        }
+
+        .card-link:hover i {
+            transform: translateX(5px);
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+            padding: 3rem;
+            border-radius: 24px;
+        }
+
+        .stat-item {
+            text-align: center;
+            animation: fadeInUp 1s ease both;
+        }
+
+        .stat-item:nth-child(1) { animation-delay: 0.1s; }
+        .stat-item:nth-child(2) { animation-delay: 0.2s; }
+        .stat-item:nth-child(3) { animation-delay: 0.3s; }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent), #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
             color: var(--text-secondary);
             font-size: 1rem;
         }
 
-        /* Certifications */
-        .cert-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .cert-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 2rem;
-            transition: all 0.2s ease;
-        }
-
-        .cert-card:hover {
-            border-color: var(--accent);
-            transform: translateY(-4px);
-        }
-
-        .cert-icon {
-            width: 48px;
-            height: 48px;
-            background: var(--accent);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 1.5rem;
-            color: white;
-            font-size: 1.5rem;
-        }
-
-        .cert-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-        }
-
-        .cert-issuer {
-            color: var(--accent);
-            font-size: 0.875rem;
-            font-weight: 500;
-            margin-bottom: 1rem;
-        }
-
-        .cert-description {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            line-height: 1.6;
-            margin-bottom: 1.5rem;
-        }
-
-        .cert-link {
-            color: var(--accent);
-            text-decoration: none;
-            font-size: 0.875rem;
-            font-weight: 500;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: gap 0.2s ease;
-        }
-
-        .cert-link:hover {
-            gap: 0.75rem;
-        }
-
-        /* Contact */
         .contact-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
+            gap: 2rem;
         }
 
         .contact-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
+            border-radius: 24px;
             padding: 2rem;
             text-align: center;
-            transition: all 0.2s ease;
+            transition: all 0.4s ease;
         }
 
         .contact-card:hover {
-            border-color: var(--accent);
-            transform: translateY(-4px);
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 20px 60px rgba(59, 130, 246, 0.3);
         }
 
         .contact-icon {
-            width: 48px;
-            height: 48px;
-            background: var(--accent);
-            border-radius: 12px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--accent), #8b5cf6);
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 1rem;
+            margin: 0 auto 1.5rem;
             color: white;
-            font-size: 1.25rem;
+            font-size: 1.5rem;
+            box-shadow: 0 8px 24px rgba(59, 130, 246, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .contact-card:hover .contact-icon {
+            transform: scale(1.1) rotate(360deg);
         }
 
         .contact-title {
-            font-size: 1.125rem;
+            font-size: 1.25rem;
             font-weight: 600;
             margin-bottom: 0.5rem;
-        }
-
-        .contact-info {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
         }
 
         .contact-info a {
             color: var(--accent);
             text-decoration: none;
-            transition: opacity 0.2s ease;
+            transition: all 0.3s ease;
         }
 
         .contact-info a:hover {
             opacity: 0.8;
+            text-decoration: underline;
         }
 
-        /* Mobile Menu */
-        .mobile-menu-btn {
-            display: none;
-            background: transparent;
-            border: 1px solid var(--border);
-            color: var(--text-secondary);
-            padding: 0.5rem;
-            border-radius: 8px;
-            cursor: pointer;
-            width: 36px;
-            height: 36px;
-            flex-direction: column;
-            align-items: center;
+        .badge-container {
+            margin-top: 1rem;
+            display: flex;
             justify-content: center;
-            gap: 4px;
+            align-items: center;
         }
 
-        .mobile-menu-btn span {
-            width: 18px;
-            height: 2px;
-            background: currentColor;
-            transition: all 0.2s ease;
+        .badge-container iframe {
+            border: none;
+            width: 100%;
+            max-width: 400px;
+            height: 120px;
         }
 
-        /* Responsive */
         @media (max-width: 768px) {
-            .nav-content {
-                padding: 1rem;
-            }
-
             .nav-links {
-                position: fixed;
-                top: 60px;
-                left: 0;
-                right: 0;
-                background: var(--bg-primary);
-                border-bottom: 1px solid var(--border);
-                flex-direction: column;
-                padding: 1.5rem;
-                gap: 1rem;
-                transform: translateY(-100%);
-                transition: transform 0.3s ease;
-                opacity: 0;
-                pointer-events: none;
-            }
-
-            .nav-links.active {
-                transform: translateY(0);
-                opacity: 1;
-                pointer-events: all;
-            }
-
-            .mobile-menu-btn {
-                display: flex;
+                display: none;
             }
 
             .hero {
@@ -587,319 +574,72 @@
                 padding: 3rem 1.5rem;
             }
 
-            .cert-grid {
+            .cards-grid {
                 grid-template-columns: 1fr;
             }
 
-            .contact-grid {
+            .stats-container {
                 grid-template-columns: 1fr;
-            }
-
-            .hero-actions {
-                flex-direction: column;
-                width: 100%;
-            }
-
-            .btn {
-                width: 100%;
-                justify-content: center;
-            }
-        }
-
-        /* Loading State */
-        .loading {
-            opacity: 0.5;
-            pointer-events: none;
-        }
-
-        /* Smooth Scroll */
-        html {
-            scroll-behavior: smooth;
-        }
-
-        /* Visitor Info Panel */
-        .visitor-panel {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: rgba(22, 22, 22, 0.4);
-            backdrop-filter: blur(20px) saturate(180%);
-            -webkit-backdrop-filter: blur(20px) saturate(180%);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            padding: 1.5rem;
-            z-index: 999;
-            min-width: 280px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4),
-                        inset 0 1px 0 rgba(255, 255, 255, 0.05);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            opacity: 0;
-            transform: translateY(20px);
-            animation: slideUp 0.5s ease forwards 1s;
-        }
-
-        [data-theme="light"] .visitor-panel {
-            background: rgba(255, 255, 255, 0.4);
-            border: 1px solid rgba(0, 0, 0, 0.1);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1),
-                        inset 0 1px 0 rgba(255, 255, 255, 0.5);
-        }
-
-        @keyframes slideUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .visitor-panel:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.5),
-                        inset 0 1px 0 rgba(255, 255, 255, 0.1);
-        }
-
-        [data-theme="light"] .visitor-panel:hover {
-            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.15),
-                        inset 0 1px 0 rgba(255, 255, 255, 0.6);
-        }
-
-        .visitor-panel-header {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-bottom: 1.25rem;
-            padding-bottom: 0.75rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        [data-theme="light"] .visitor-panel-header {
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-        }
-
-        .visitor-panel-title {
-            font-size: 0.875rem;
-            font-weight: 600;
-            color: var(--text-primary);
-            font-family: 'JetBrains Mono', monospace;
-            letter-spacing: 0.5px;
-        }
-
-        .visitor-panel-icon {
-            width: 20px;
-            height: 20px;
-            background: linear-gradient(135deg, var(--accent), #8b5cf6);
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 0.75rem;
-            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
-        }
-
-        .visitor-info-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.625rem 0;
-            font-size: 0.8125rem;
-            font-family: 'JetBrains Mono', monospace;
-        }
-
-        .visitor-info-label {
-            color: var(--text-muted);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-weight: 500;
-        }
-
-        .visitor-info-label i {
-            color: var(--accent);
-            width: 14px;
-            filter: drop-shadow(0 0 2px var(--accent));
-        }
-
-        .visitor-info-value {
-            color: var(--text-primary);
-            font-weight: 600;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-        }
-
-        .visitor-info-loading {
-            color: var(--text-muted);
-            font-style: italic;
-            font-weight: 400;
-        }
-
-        .visitor-panel-minimize {
-            background: transparent;
-            border: none;
-            color: var(--text-muted);
-            cursor: pointer;
-            font-size: 0.875rem;
-            padding: 0.25rem;
-            transition: all 0.2s ease;
-            margin-left: auto;
-        }
-
-        .visitor-panel-minimize:hover {
-            color: var(--accent);
-            transform: scale(1.1);
-        }
-
-        .visitor-panel.minimized {
-            min-width: auto;
-            padding: 0.75rem;
-            cursor: pointer;
-        }
-
-        .visitor-panel.minimized .visitor-panel-content,
-        .visitor-panel.minimized .visitor-panel-header {
-            display: none;
-        }
-
-        @media (max-width: 768px) {
-            .visitor-panel {
-                bottom: 10px;
-                right: 10px;
-                left: 10px;
-                min-width: auto;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .visitor-panel {
-                padding: 1.25rem;
-            }
-
-            .visitor-panel-title {
-                font-size: 0.8125rem;
-            }
-
-            .visitor-info-item {
-                font-size: 0.75rem;
-            }
-        }
-
-        /* Support for browsers without backdrop-filter */
-        @supports not (backdrop-filter: blur(20px)) {
-            .visitor-panel {
-                background: rgba(22, 22, 22, 0.95);
-            }
-
-            [data-theme="light"] .visitor-panel {
-                background: rgba(255, 255, 255, 0.95);
+                padding: 2rem;
             }
         }
     </style>
 </head>
 <body>
-    <div class="visitor-panel" id="visitorPanel">
-        <div class="visitor-panel-header">
-            <div class="visitor-panel-icon">
-                <i class="fas fa-eye"></i>
-            </div>
-            <div class="visitor-panel-title">YOUR INFO</div>
-            <button class="visitor-panel-minimize" id="minimizeVisitorPanel" title="Minimize">
-                <i class="fas fa-minus"></i>
-            </button>
-        </div>
-        <div class="visitor-panel-content">
-            <div class="visitor-info-item">
-                <span class="visitor-info-label">
-                    <i class="fas fa-globe"></i>
-                    IP
-                </span>
-                <span class="visitor-info-value visitor-info-loading" id="visitorIP">Detecting...</span>
-            </div>
-            <div class="visitor-info-item">
-                <span class="visitor-info-label">
-                    <i class="fas fa-laptop"></i>
-                    Device
-                </span>
-                <span class="visitor-info-value" id="visitorDevice">Analyzing...</span>
-            </div>
-            <div class="visitor-info-item">
-                <span class="visitor-info-label">
-                    <i class="fas fa-browser"></i>
-                    Browser
-                </span>
-                <span class="visitor-info-value" id="visitorBrowser">Checking...</span>
-            </div>
-        </div>
-    </div>
-    <nav class="nav" id="navbar">
+    <div class="particle" style="left: 10%; animation-delay: 0s;"></div>
+    <div class="particle" style="left: 30%; animation-delay: 3s;"></div>
+    <div class="particle" style="left: 50%; animation-delay: 6s;"></div>
+    <div class="particle" style="left: 70%; animation-delay: 9s;"></div>
+    <div class="particle" style="left: 90%; animation-delay: 12s;"></div>
+
+    <nav class="nav">
         <div class="nav-content">
             <a href="#" class="logo">
                 <span class="logo-main">0xb0rn3</span>
-                <span class="logo-sub">シェルショック</span>
             </a>
-            <ul class="nav-links" id="navLinks">
+            <ul class="nav-links">
                 <li><a href="#about" class="nav-link">About</a></li>
                 <li><a href="#projects" class="nav-link">Projects</a></li>
-                <li><a href="#certifications" class="nav-link">Certifications</a></li>
+                <li><a href="#certifications" class="nav-link">Certs</a></li>
+                <li><a href="#platforms" class="nav-link">Platforms</a></li>
                 <li><a href="#contact" class="nav-link">Contact</a></li>
             </ul>
-            <div style="display: flex; gap: 1rem; align-items: center;">
-                <button class="theme-toggle" id="themeToggle">
-                    <i class="fas fa-moon"></i>
-                </button>
-                <button class="mobile-menu-btn" id="mobileMenuBtn">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </button>
-            </div>
+            <button class="theme-toggle" id="themeToggle">
+                <i class="fas fa-moon"></i>
+            </button>
         </div>
     </nav>
 
     <section class="hero" id="about">
         <div class="hero-content">
-            <div class="hero-badge">
+            <div class="hero-badge glass">
                 <span class="status-dot"></span>
                 Available for Security Research
             </div>
             
             <h1 class="hero-title">0xb0rn3</h1>
-            <p class="hero-alias">aka 0xbv1 | シェルショック (Shell Shock)</p>
             
             <p class="hero-description">
                 Building battle-tested security tools that bridge the gap between theory and real-world application. 
-                Focused on practical automation solutions that empower security teams to work smarter, not harder.
+                Focused on practical automation solutions that empower security teams.
             </p>
 
-            <div class="quote-container" id="quoteContainer">
-                <div>
-                    <div class="quote-text" id="quoteText">Loading inspirational quote...</div>
-                    <div class="quote-author" id="quoteAuthor"></div>
-                </div>
-            </div>
-
             <div class="badges">
-                <div class="badge">
+                <div class="badge glass">
                     <i class="fas fa-shield-alt"></i>
                     Security Researcher
                 </div>
-                <div class="badge">
+                <div class="badge glass">
                     <i class="fas fa-flag"></i>
                     CTF Player
                 </div>
-                <div class="badge">
+                <div class="badge glass">
                     <i class="fab fa-linux"></i>
                     Linux Advocate
                 </div>
-                <div class="badge">
-                    <i class="fas fa-robot"></i>
-                    Automation Specialist
-                </div>
-                <div class="badge">
+                <div class="badge glass">
                     <i class="fas fa-code-branch"></i>
                     45+ Repositories
-                </div>
-                <div class="badge">
-                    <i class="fas fa-star"></i>
-                    150+ OSS Contributions
                 </div>
             </div>
 
@@ -908,11 +648,7 @@
                     <i class="fas fa-code"></i>
                     View Projects
                 </a>
-                <a href="#certifications" class="btn btn-secondary">
-                    <i class="fas fa-certificate"></i>
-                    Certifications
-                </a>
-                <a href="https://github.com/0xb0rn3" target="_blank" class="btn btn-secondary">
+                <a href="https://github.com/0xb0rn3" target="_blank" class="btn btn-secondary glass">
                     <i class="fab fa-github"></i>
                     GitHub
                 </a>
@@ -920,236 +656,13 @@
         </div>
     </section>
 
-    <section class="stats-section">
-        <div class="stats-grid">
-            <div class="stat-card">
-                <img src="https://github-readme-stats.vercel.app/api?username=0xb0rn3&show_icons=true&theme=dark&hide_border=true&bg_color=161616&title_color=3b82f6&icon_color=3b82f6&text_color=f5f5f5&count_private=true" alt="GitHub Stats" />
-            </div>
-            <div class="stat-card">
-                <img src="https://github-readme-streak-stats.herokuapp.com/?user=0xb0rn3&theme=dark&hide_border=true&background=161616&stroke=3b82f6&ring=3b82f6&fire=3b82f6&currStreakLabel=f5f5f5" alt="GitHub Streak" />
-            </div>
-        </div>
-    </section>
-
-    <section class="section" id="projects">
-        <div class="section-header">
-            <h2 class="section-title">Featured Work</h2>
-            <p class="section-subtitle">Security automation and research projects</p>
-        </div>
-
-        <div class="cert-grid">
-            <div class="cert-card">
-                <div class="cert-icon" style="background: linear-gradient(135deg, #3b82f6, #8b5cf6);">
-                    <i class="fas fa-tools"></i>
-                </div>
-                <h3 class="cert-title">Security Automation Tools</h3>
-                <div class="cert-issuer">15+ Production-Ready Tools</div>
-                <p class="cert-description">
-                    Developed comprehensive suite of security automation tools for penetration testing, 
-                    reconnaissance, and vulnerability assessment. Built with focus on real-world application.
-                </p>
-                <a href="https://github.com/0xb0rn3?tab=repositories" target="_blank" class="cert-link">
-                    View Projects <i class="fas fa-arrow-right"></i>
-                </a>
-            </div>
-
-            <div class="cert-card">
-                <div class="cert-icon" style="background: linear-gradient(135deg, #10b981, #3b82f6);">
-                    <i class="fas fa-search"></i>
-                </div>
-                <h3 class="cert-title">OSINT Frameworks</h3>
-                <div class="cert-issuer">Advanced Intelligence Gathering</div>
-                <p class="cert-description">
-                    Built advanced OSINT collection pipelines for threat intelligence and reconnaissance. 
-                    Automated data gathering and analysis across multiple sources.
-                </p>
-                <a href="https://github.com/0xb0rn3?tab=repositories" target="_blank" class="cert-link">
-                    Explore Tools <i class="fas fa-arrow-right"></i>
-                </a>
-            </div>
-
-            <div class="cert-card">
-                <div class="cert-icon" style="background: linear-gradient(135deg, #f59e0b, #ef4444);">
-                    <i class="fas fa-shield-alt"></i>
-                </div>
-                <h3 class="cert-title">Penetration Testing Frameworks</h3>
-                <div class="cert-issuer">Comprehensive Security Testing</div>
-                <p class="cert-description">
-                    Created complete penetration testing frameworks following threat-informed defense 
-                    methodologies with automation-first approach.
-                </p>
-                <a href="https://github.com/0xb0rn3?tab=repositories" target="_blank" class="cert-link">
-                    View Framework <i class="fas fa-arrow-right"></i>
-                </a>
-            </div>
-        </div>
-
-        <div style="margin-top: 3rem; text-align: center;">
-            <div style="display: inline-block; background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 2rem;">
-                <h3 style="font-size: 1.5rem; margin-bottom: 1rem; color: var(--text-primary);">
-                    📊 GitHub Activity
-                </h3>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 2rem; margin-top: 1.5rem;">
-                    <div>
-                        <div style="font-size: 2.5rem; font-weight: 700; color: var(--accent);">45+</div>
-                        <div style="color: var(--text-secondary); font-size: 0.9rem;">Repositories</div>
-                    </div>
-                    <div>
-                        <div style="font-size: 2.5rem; font-weight: 700; color: var(--success);">25+</div>
-                        <div style="color: var(--text-secondary); font-size: 0.9rem;">Stars</div>
-                    </div>
-                    <div>
-                        <div style="font-size: 2.5rem; font-weight: 700; color: var(--warning);">150+</div>
-                        <div style="color: var(--text-secondary); font-size: 0.9rem;">Contributions</div>
-                    </div>
-                </div>
-                <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border);">
-                    <p style="color: var(--text-secondary); font-style: italic; font-size: 0.9rem;">
-                        "Security is not a product, but a process" — Every tool I build follows this philosophy
-                    </p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="section" id="certifications">
-        <div class="section-header">
-            <h2 class="section-title">Certifications & Achievements</h2>
-            <p class="section-subtitle">Professional credentials and platform recognition</p>
-        </div>
-
-        <div class="cert-grid">
-            <div class="cert-card">
-                <div class="cert-icon">
-                    <i class="fab fa-google"></i>
-                </div>
-                <h3 class="cert-title">Google Cybersecurity Certificate</h3>
-                <div class="cert-issuer">Google via Coursera</div>
-                <p class="cert-description">
-                    Comprehensive program covering incident response, network security, vulnerability assessment, 
-                    and security frameworks with Python automation and Linux administration.
-                </p>
-                <a href="https://coursera.org/" target="_blank" class="cert-link">
-                    View Certificate <i class="fas fa-arrow-right"></i>
-                </a>
-            </div>
-
-            <div class="cert-card">
-                <div class="cert-icon">
-                    <i class="fas fa-shield-alt"></i>
-                </div>
-                <h3 class="cert-title">Pre Security Path</h3>
-                <div class="cert-issuer">TryHackMe</div>
-                <p class="cert-description">
-                    Foundational knowledge covering network fundamentals, web security, 
-                    Linux basics, and Windows security essentials.
-                </p>
-                <a href="https://tryhackme-certificates.s3-eu-west-1.amazonaws.com/THM-JB3HSWBUVV.pdf" target="_blank" class="cert-link">
-                    View Certificate <i class="fas fa-arrow-right"></i>
-                </a>
-            </div>
-
-            <div class="cert-card">
-                <div class="cert-icon">
-                    <i class="fas fa-user-secret"></i>
-                </div>
-                <h3 class="cert-title">Introduction to Cyber Security</h3>
-                <div class="cert-issuer">TryHackMe</div>
-                <p class="cert-description">
-                    Introduction to offensive and defensive security, web application security, 
-                    and network security fundamentals.
-                </p>
-                <a href="https://tryhackme-certificates.s3-eu-west-1.amazonaws.com/THM-9BUCQG36LU.pdf" target="_blank" class="cert-link">
-                    View Certificate <i class="fas fa-arrow-right"></i>
-                </a>
-            </div>
-
-            <div class="cert-card">
-                <div class="cert-icon">
-                    <i class="fas fa-graduation-cap"></i>
-                </div>
-                <h3 class="cert-title">Academician Badge</h3>
-                <div class="cert-issuer">HackTheBox Academy</div>
-                <p class="cert-description">
-                    Recognition for completing comprehensive security training modules and demonstrating 
-                    cybersecurity competency.
-                </p>
-                <a href="https://academy.hackthebox.com/achievement/badge/a821772a-8fce-11ee-bfb6-bea50ffe6cb4" target="_blank" class="cert-link">
-                    View Badge <i class="fas fa-arrow-right"></i>
-                </a>
-            </div>
-
-            <div class="cert-card">
-                <div class="cert-icon">
-                    <i class="fas fa-book"></i>
-                </div>
-                <h3 class="cert-title">Philomath Badge</h3>
-                <div class="cert-issuer">HackTheBox Academy</div>
-                <p class="cert-description">
-                    Awarded for continuous learning and expanding cybersecurity knowledge 
-                    through diverse training modules.
-                </p>
-                <a href="https://academy.hackthebox.com/achievement/badge/f4d3d5a9-8fd1-11ee-bfb6-bea50ffe6cb4" target="_blank" class="cert-link">
-                    View Badge <i class="fas fa-arrow-right"></i>
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <section class="section" id="contact">
-        <div class="section-header">
-            <h2 class="section-title">Get In Touch</h2>
-            <p class="section-subtitle">Connect with me across platforms</p>
-        </div>
-
-        <div class="contact-grid">
-            <div class="contact-card">
-                <div class="contact-icon">
-                    <i class="fas fa-envelope"></i>
-                </div>
-                <h3 class="contact-title">Email</h3>
-                <div class="contact-info">
-                    <a href="mailto:oxbv1@proton.me">oxbv1@proton.me</a>
-                </div>
-            </div>
-
-            <div class="contact-card">
-                <div class="contact-icon">
-                    <i class="fab fa-github"></i>
-                </div>
-                <h3 class="contact-title">GitHub</h3>
-                <div class="contact-info">
-                    <a href="https://github.com/0xb0rn3" target="_blank">github.com/0xb0rn3</a>
-                </div>
-            </div>
-
-            <div class="contact-card">
-                <div class="contact-icon">
-                    <i class="fab fa-twitter"></i>
-                </div>
-                <h3 class="contact-title">X / Twitter</h3>
-                <div class="contact-info">
-                    <a href="https://x.com/oxbv1" target="_blank">@oxbv1</a>
-                </div>
-            </div>
-
-            <div class="contact-card">
-                <div class="contact-icon">
-                    <i class="fab fa-discord"></i>
-                </div>
-                <h3 class="contact-title">Discord</h3>
-                <div class="contact-info">0xbv1</div>
-            </div>
-        </div>
-    </section>
-
     <script>
-        // Theme Management
+        // Theme toggle
         const themeToggle = document.getElementById('themeToggle');
         const body = document.body;
         const icon = themeToggle.querySelector('i');
 
-        const savedTheme = localStorage.getItem('theme') || 'dark';
+        const savedTheme = sessionStorage.getItem('theme') || 'dark';
         body.setAttribute('data-theme', savedTheme);
         icon.className = savedTheme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
 
@@ -1158,70 +671,11 @@
             const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
             
             body.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
+            sessionStorage.setItem('theme', newTheme);
             icon.className = newTheme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
         });
 
-        // Mobile Menu
-        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-        const navLinks = document.getElementById('navLinks');
-
-        mobileMenuBtn.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
-        });
-
-        document.querySelectorAll('.nav-link').forEach(link => {
-            link.addEventListener('click', () => {
-                navLinks.classList.remove('active');
-            });
-        });
-
-        // Navbar Scroll Effect
-        let lastScroll = 0;
-        window.addEventListener('scroll', () => {
-            const navbar = document.getElementById('navbar');
-            const currentScroll = window.pageYOffset;
-            
-            if (currentScroll > 50) {
-                navbar.classList.add('scrolled');
-            } else {
-                navbar.classList.remove('scrolled');
-            }
-            
-            lastScroll = currentScroll;
-        });
-
-        // Dynamic Quote Fetching
-        async function fetchQuote() {
-            const quoteText = document.getElementById('quoteText');
-            const quoteAuthor = document.getElementById('quoteAuthor');
-            const container = document.getElementById('quoteContainer');
-            
-            try {
-                container.classList.add('loading');
-                
-                const response = await fetch('https://api.quotable.io/quotes/random?tags=technology|science|wisdom&maxLength=150');
-                const data = await response.json();
-                
-                if (data && data[0]) {
-                    quoteText.textContent = `"${data[0].content}"`;
-                    quoteAuthor.textContent = `— ${data[0].author}`;
-                } else {
-                    throw new Error('No quote data');
-                }
-            } catch (error) {
-                quoteText.textContent = '"The only way to do great work is to love what you do."';
-                quoteAuthor.textContent = '— Steve Jobs';
-            } finally {
-                container.classList.remove('loading');
-            }
-        }
-
-        // Fetch quote on load and every 30 seconds
-        fetchQuote();
-        setInterval(fetchQuote, 30000);
-
-        // Smooth scroll for anchor links
+        // Smooth scroll
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
@@ -1232,77 +686,369 @@
             });
         });
 
-        // Performance: Lazy load images
-        if ('IntersectionObserver' in window) {
-            const imageObserver = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const img = entry.target;
-                        if (img.dataset.src) {
-                            img.src = img.dataset.src;
-                            img.removeAttribute('data-src');
-                            observer.unobserve(img);
-                        }
-                    }
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all cards
+        document.querySelectorAll('.card, .contact-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px)';
+            card.style.transition = 'all 0.6s ease';
+            observer.observe(card);
+        });
+
+        // Parallax effect on scroll
+        let ticking = false;
+        window.addEventListener('scroll', () => {
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    const scrolled = window.pageYOffset;
+                    const parallaxElements = document.querySelectorAll('.hero-content');
+                    
+                    parallaxElements.forEach(el => {
+                        el.style.transform = `translateY(${scrolled * 0.3}px)`;
+                    });
+                    
+                    ticking = false;
                 });
-            });
+                ticking = true;
+            }
+        });
 
-            document.querySelectorAll('img[data-src]').forEach(img => {
-                imageObserver.observe(img);
+        // Add hover sound effect simulation with visual feedback
+        document.querySelectorAll('.btn, .card, .badge').forEach(element => {
+            element.addEventListener('mouseenter', () => {
+                element.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
             });
-        }
+        });
 
-        // Visitor OSINT Information
-        async function detectVisitorInfo() {
-            const userAgent = navigator.userAgent;
+        // Dynamic particle creation
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 20 + 's';
+            particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+            document.body.appendChild(particle);
             
-            // Detect Device Type
-            let deviceType = 'Desktop';
-            if (/Mobile|Android|iPhone/i.test(userAgent)) {
-                deviceType = 'Mobile';
-            } else if (/Tablet|iPad/i.test(userAgent)) {
-                deviceType = 'Tablet';
-            }
-            document.getElementById('visitorDevice').textContent = deviceType;
-
-            // Detect Browser
-            let browser = 'Unknown';
-            if (userAgent.indexOf('Edg') !== -1) browser = 'Edge';
-            else if (userAgent.indexOf('Chrome') !== -1) browser = 'Chrome';
-            else if (userAgent.indexOf('Safari') !== -1 && userAgent.indexOf('Chrome') === -1) browser = 'Safari';
-            else if (userAgent.indexOf('Firefox') !== -1) browser = 'Firefox';
-            else if (userAgent.indexOf('Opera') !== -1 || userAgent.indexOf('OPR') !== -1) browser = 'Opera';
-            document.getElementById('visitorBrowser').textContent = browser;
-
-            // Fetch IP Address
-            try {
-                const ipResponse = await fetch('https://api.ipify.org?format=json');
-                const ipData = await ipResponse.json();
-                document.getElementById('visitorIP').textContent = ipData.ip;
-                document.getElementById('visitorIP').classList.remove('visitor-info-loading');
-            } catch (error) {
-                document.getElementById('visitorIP').textContent = 'Hidden';
-                document.getElementById('visitorIP').classList.remove('visitor-info-loading');
-            }
+            setTimeout(() => particle.remove(), 25000);
         }
 
-        // Visitor Panel Controls
-        const visitorPanel = document.getElementById('visitorPanel');
-        const minimizeBtn = document.getElementById('minimizeVisitorPanel');
+        // Create particles periodically
+        setInterval(createParticle, 3000);
 
-        minimizeBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            visitorPanel.classList.toggle('minimized');
+        // Card tilt effect
+        document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const rotateX = (y - centerY) / 20;
+                const rotateY = (centerX - x) / 20;
+                
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-10px) scale(1.02)`;
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateY(0) scale(1)';
+            });
         });
 
-        visitorPanel.addEventListener('click', () => {
-            if (visitorPanel.classList.contains('minimized')) {
-                visitorPanel.classList.remove('minimized');
+        // Animated counter for stats
+        function animateCounter(element, target, duration = 2000) {
+            const start = 0;
+            const increment = target / (duration / 16);
+            let current = start;
+            
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    element.textContent = target + '+';
+                    clearInterval(timer);
+                } else {
+                    element.textContent = Math.floor(current) + '+';
+                }
+            }, 16);
+        }
+
+        // Observe stats and animate when visible
+        const statsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const statNumbers = entry.target.querySelectorAll('.stat-number');
+                    statNumbers.forEach((stat, index) => {
+                        const target = parseInt(stat.textContent);
+                        setTimeout(() => {
+                            animateCounter(stat, target);
+                        }, index * 200);
+                    });
+                    statsObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        const statsContainer = document.querySelector('.stats-container');
+        if (statsContainer) {
+            statsObserver.observe(statsContainer);
+        }
+
+        // Add ripple effect to buttons
+        document.querySelectorAll('.btn').forEach(button => {
+            button.addEventListener('click', function(e) {
+                const ripple = document.createElement('span');
+                const rect = this.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const x = e.clientX - rect.left - size / 2;
+                const y = e.clientY - rect.top - size / 2;
+                
+                ripple.style.width = ripple.style.height = size + 'px';
+                ripple.style.left = x + 'px';
+                ripple.style.top = y + 'px';
+                ripple.style.position = 'absolute';
+                ripple.style.borderRadius = '50%';
+                ripple.style.background = 'rgba(255, 255, 255, 0.5)';
+                ripple.style.transform = 'scale(0)';
+                ripple.style.animation = 'ripple 0.6s ease-out';
+                ripple.style.pointerEvents = 'none';
+                
+                this.appendChild(ripple);
+                
+                setTimeout(() => ripple.remove(), 600);
+            });
+        });
+
+        // Add CSS for ripple animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes ripple {
+                to {
+                    transform: scale(2);
+                    opacity: 0;
+                }
             }
-        });
+            
+            .btn {
+                position: relative;
+                overflow: hidden;
+            }
+        `;
+        document.head.appendChild(style);
 
-        // Initialize visitor detection
-        detectVisitorInfo();
+        console.log('%c0xb0rn3 Portfolio', 'color: #3b82f6; font-size: 20px; font-weight: bold;');
+        console.log('%cBuilt with passion for cybersecurity', 'color: #8b5cf6; font-size: 12px;');
     </script>
 </body>
 </html>
+
+    <section class="section" id="projects">
+        <h2 class="section-title">Featured Work</h2>
+
+        <div class="stats-container glass">
+            <div class="stat-item">
+                <div class="stat-number">45+</div>
+                <div class="stat-label">Repositories</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">25+</div>
+                <div class="stat-label">Stars</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">150+</div>
+                <div class="stat-label">Contributions</div>
+            </div>
+        </div>
+
+        <div class="cards-grid">
+            <div class="card glass">
+                <div class="card-icon">
+                    <i class="fas fa-tools"></i>
+                </div>
+                <h3 class="card-title">Security Automation</h3>
+                <div class="card-subtitle">15+ Production Tools</div>
+                <p class="card-description">
+                    Comprehensive suite of security automation tools for penetration testing, 
+                    reconnaissance, and vulnerability assessment.
+                </p>
+                <a href="https://github.com/0xb0rn3" target="_blank" class="card-link">
+                    Explore Tools <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+
+            <div class="card glass">
+                <div class="card-icon">
+                    <i class="fas fa-search"></i>
+                </div>
+                <h3 class="card-title">OSINT Frameworks</h3>
+                <div class="card-subtitle">Intelligence Gathering</div>
+                <p class="card-description">
+                    Advanced OSINT collection pipelines for threat intelligence and reconnaissance 
+                    with automated data analysis.
+                </p>
+                <a href="https://github.com/0xb0rn3" target="_blank" class="card-link">
+                    View Framework <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+
+            <div class="card glass">
+                <div class="card-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3 class="card-title">Pentest Frameworks</h3>
+                <div class="card-subtitle">Security Testing</div>
+                <p class="card-description">
+                    Complete penetration testing frameworks following threat-informed defense 
+                    methodologies with automation-first approach.
+                </p>
+                <a href="https://github.com/0xb0rn3" target="_blank" class="card-link">
+                    Learn More <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="certifications">
+        <h2 class="section-title">Certifications</h2>
+
+        <div class="cards-grid">
+            <div class="card glass">
+                <div class="card-icon">
+                    <i class="fab fa-google"></i>
+                </div>
+                <h3 class="card-title">Google Cybersecurity</h3>
+                <div class="card-subtitle">Google via Coursera</div>
+                <p class="card-description">
+                    Comprehensive program covering incident response, network security, 
+                    vulnerability assessment, and Python automation.
+                </p>
+                <a href="https://coursera.org/" target="_blank" class="card-link">
+                    View Certificate <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+
+            <div class="card glass">
+                <div class="card-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3 class="card-title">Pre Security Path</h3>
+                <div class="card-subtitle">TryHackMe</div>
+                <p class="card-description">
+                    Foundational knowledge covering network fundamentals, web security, 
+                    and Linux/Windows security essentials.
+                </p>
+                <a href="https://tryhackme-certificates.s3-eu-west-1.amazonaws.com/THM-JB3HSWBUVV.pdf" target="_blank" class="card-link">
+                    View Certificate <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+
+            <div class="card glass">
+                <div class="card-icon">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <h3 class="card-title">HTB Academician</h3>
+                <div class="card-subtitle">HackTheBox Academy</div>
+                <p class="card-description">
+                    Recognition for completing comprehensive security training modules 
+                    and demonstrating cybersecurity competency.
+                </p>
+                <a href="https://academy.hackthebox.com/achievement/badge/a821772a-8fce-11ee-bfb6-bea50ffe6cb4" target="_blank" class="card-link">
+                    View Badge <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="platforms">
+        <h2 class="section-title">Training Platforms</h2>
+
+        <div class="cards-grid">
+            <div class="card glass">
+                <div class="card-icon">
+                    <i class="fas fa-cube"></i>
+                </div>
+                <h3 class="card-title">HackTheBox</h3>
+                <div class="card-subtitle">Active Member</div>
+                <p class="card-description">
+                    Actively engaged in HackTheBox challenges, machines, and training paths 
+                    to sharpen offensive security skills.
+                </p>
+                <a href="https://app.hackthebox.com/profile/1762866" target="_blank" class="card-link">
+                    View Profile <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+
+            <div class="card glass">
+                <div class="card-icon">
+                    <i class="fas fa-flag"></i>
+                </div>
+                <h3 class="card-title">TryHackMe</h3>
+                <div class="card-subtitle">Active Learner</div>
+                <p class="card-description">
+                    Continuously learning through TryHackMe's hands-on cybersecurity training rooms 
+                    and practical challenges.
+                </p>
+                <div class="badge-container">
+                    <iframe src="https://tryhackme.com/api/v2/badges/public-profile?userPublicId=4139197"></iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="contact">
+        <h2 class="section-title">Get In Touch</h2>
+
+        <div class="contact-grid">
+            <div class="contact-card glass">
+                <div class="contact-icon">
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <h3 class="contact-title">Email</h3>
+                <div class="contact-info">
+                    <a href="mailto:oxbv1@proton.me">oxbv1@proton.me</a>
+                </div>
+            </div>
+
+            <div class="contact-card glass">
+                <div class="contact-icon">
+                    <i class="fab fa-github"></i>
+                </div>
+                <h3 class="contact-title">GitHub</h3>
+                <div class="contact-info">
+                    <a href="https://github.com/0xb0rn3" target="_blank">github.com/0xb0rn3</a>
+                </div>
+            </div>
+
+            <div class="contact-card glass">
+                <div class="contact-icon">
+                    <i class="fab fa-twitter"></i>
+                </div>
+                <h3 class="contact-title">X / Twitter</h3>
+                <div class="contact-info">
+                    <a href="https://x.com/oxbv1" target="_blank">@oxbv1</a>
+                </div>
+            </div>
+
+            <div class="contact-card glass">
+                <div class="contact-icon">
+                    <i class="fab fa-discord"></i>
+                </div>
+                <h3 class="contact-title">Discord</h3>
+                <div class="contact-info">0xbv1</div>
+            </div>
+        </div>
+    </section>
