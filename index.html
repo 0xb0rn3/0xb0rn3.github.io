@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome - 0xb0rn3</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono:wght@400&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #000000;
+            color: #ffffff;
+            font-family: 'Share Tech Mono', monospace;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Video background container */
+        .video-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .video-background video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            animation: fadeInVideo 1s ease-in forwards;
+        }
+
+        @keyframes fadeInVideo {
+            to { opacity: 1; }
+        }
+
+        /* Overlay gradient for better visibility */
+        .video-background::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                to bottom,
+                rgba(0, 0, 0, 0.3) 0%,
+                rgba(0, 0, 0, 0.5) 50%,
+                rgba(0, 0, 0, 0.7) 100%
+            );
+            pointer-events: none;
+        }
+
+        /* Welcome content */
+        .welcome-container {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 40px 20px;
+            animation: fadeInContent 1.5s ease-in 0.5s both;
+        }
+
+        @keyframes fadeInContent {
+            from { 
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo-text {
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(3rem, 10vw, 6rem);
+            color: #ffffff;
+            text-shadow: 
+                0 0 20px rgba(255, 255, 255, 0.8),
+                0 0 40px rgba(255, 255, 255, 0.5),
+                0 0 60px rgba(255, 255, 255, 0.3);
+            margin-bottom: 20px;
+            font-weight: 900;
+            letter-spacing: 8px;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { 
+                text-shadow: 
+                    0 0 20px rgba(255, 255, 255, 0.8),
+                    0 0 40px rgba(255, 255, 255, 0.5),
+                    0 0 60px rgba(255, 255, 255, 0.3);
+            }
+            to { 
+                text-shadow: 
+                    0 0 30px rgba(255, 255, 255, 1),
+                    0 0 60px rgba(255, 255, 255, 0.8),
+                    0 0 90px rgba(255, 255, 255, 0.5);
+            }
+        }
+
+        .subtitle {
+            font-size: clamp(1rem, 3vw, 1.5rem);
+            color: #ffffff;
+            margin-bottom: 40px;
+            font-weight: 400;
+            letter-spacing: 4px;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
+            text-transform: uppercase;
+        }
+
+        .loading-text {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 1rem;
+            color: #ffffff;
+            margin-top: 30px;
+            opacity: 0.8;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 1; }
+        }
+
+        /* Loading dots animation */
+        .loading-dots {
+            display: inline-block;
+        }
+
+        .loading-dots::after {
+            content: '.';
+            animation: dots 1.5s steps(4, end) infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+
+        /* Skip button (optional) */
+        .enter-button {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            background: #ffffff;
+            border: 3px solid #ffffff;
+            color: #000000;
+            padding: 18px 60px;
+            font-family: 'Orbitron', monospace;
+            font-size: 1.2rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.6);
+            animation: pulseButton 2s ease-in-out infinite;
+        }
+
+        @keyframes pulseButton {
+            0%, 100% { 
+                box-shadow: 0 0 30px rgba(255, 255, 255, 0.6);
+                transform: translateX(-50%) scale(1);
+            }
+            50% { 
+                box-shadow: 0 0 50px rgba(255, 255, 255, 0.9);
+                transform: translateX(-50%) scale(1.05);
+            }
+        }
+
+        .enter-button:hover {
+            background: #000000;
+            color: #ffffff;
+            box-shadow: 0 0 60px rgba(255, 255, 255, 1);
+            transform: translateX(-50%) translateY(-5px) scale(1.08);
+        }
+
+        .enter-button i {
+            font-size: 1.3rem;
+        }
+
+        /* Fade out animation */
+        .fade-out {
+            animation: fadeOut 0.8s ease-out forwards;
+        }
+
+        @keyframes fadeOut {
+            to {
+                opacity: 0;
+                visibility: hidden;
+            }
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .logo-text {
+                letter-spacing: 4px;
+            }
+
+            .subtitle {
+                letter-spacing: 2px;
+            }
+
+            .enter-button {
+                bottom: 20px;
+                padding: 15px 40px;
+                font-size: 1rem;
+            }
+
+            .enter-button i {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Video Background -->
+    <div class="video-background">
+        <video id="welcomeVideo" autoplay muted playsinline preload="auto">
+            <source src="oxbv1.mp4" type="video/mp4">
+        </video>
+    </div>
+
+    <!-- Welcome Content -->
+    <div class="welcome-container" id="welcomeContainer">
+        <h1 class="logo-text">0xb0rn3</h1>
+        <p class="subtitle">Cybersecurity Specialist</p>
+        <p class="loading-text">Initializing<span class="loading-dots"></span></p>
+    </div>
+
+    <!-- Enter Button -->
+    <a href="main.html" class="enter-button" id="enterButton">
+        <i class="fas fa-terminal"></i>
+        ENTER
+    </a>
+
+    <script>
+        const video = document.getElementById('welcomeVideo');
+        const welcomeContainer = document.getElementById('welcomeContainer');
+        const enterButton = document.getElementById('enterButton');
+
+        // Ensure video plays (especially important on mobile)
+        video.play().catch(error => {
+            console.log("Autoplay prevented:", error);
+            // If autoplay fails, try again after user interaction
+            document.addEventListener('touchstart', () => {
+                video.play();
+            }, { once: true });
+        });
+
+        // Loop the video continuously
+        video.addEventListener('ended', () => {
+            video.currentTime = 0;
+            video.play();
+        });
+
+        // Enter button functionality with fade out
+        enterButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            document.body.classList.add('fade-out');
+            setTimeout(() => {
+                window.location.href = 'main.html';
+            }, 800);
+        });
+    </script>
+</body>
+</html>
