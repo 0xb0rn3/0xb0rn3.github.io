@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome - 0xb0rn3</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono:wght@400&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         * {
@@ -24,7 +25,6 @@
             position: relative;
         }
 
-        /* Video background container */
         .video-background {
             position: fixed;
             top: 0;
@@ -47,7 +47,6 @@
             to { opacity: 1; }
         }
 
-        /* Overlay gradient for better visibility */
         .video-background::after {
             content: '';
             position: absolute;
@@ -64,7 +63,6 @@
             pointer-events: none;
         }
 
-        /* Welcome content */
         .welcome-container {
             position: relative;
             z-index: 10;
@@ -137,7 +135,6 @@
             50% { opacity: 1; }
         }
 
-        /* Loading dots animation */
         .loading-dots {
             display: inline-block;
         }
@@ -153,7 +150,6 @@
             60%, 100% { content: '...'; }
         }
 
-        /* Skip button (optional) */
         .enter-button {
             position: fixed;
             bottom: 40px;
@@ -201,7 +197,6 @@
             font-size: 1.3rem;
         }
 
-        /* Fade out animation */
         .fade-out {
             animation: fadeOut 0.8s ease-out forwards;
         }
@@ -213,7 +208,6 @@
             }
         }
 
-        /* Responsive design */
         @media (max-width: 768px) {
             .logo-text {
                 letter-spacing: 4px;
@@ -236,21 +230,18 @@
     </style>
 </head>
 <body>
-    <!-- Video Background -->
     <div class="video-background">
-        <video id="welcomeVideo" autoplay muted playsinline preload="auto">
+        <video id="welcomeVideo" autoplay muted loop playsinline preload="auto">
             <source src="oxbv1.mp4" type="video/mp4">
         </video>
     </div>
 
-    <!-- Welcome Content -->
     <div class="welcome-container" id="welcomeContainer">
         <h1 class="logo-text">0xb0rn3</h1>
         <p class="subtitle">Cybersecurity Specialist</p>
         <p class="loading-text">Initializing<span class="loading-dots"></span></p>
     </div>
 
-    <!-- Enter Button -->
     <a href="main.html" class="enter-button" id="enterButton">
         <i class="fas fa-terminal"></i>
         ENTER
@@ -258,25 +249,20 @@
 
     <script>
         const video = document.getElementById('welcomeVideo');
-        const welcomeContainer = document.getElementById('welcomeContainer');
         const enterButton = document.getElementById('enterButton');
 
-        // Ensure video plays (especially important on mobile)
         video.play().catch(error => {
             console.log("Autoplay prevented:", error);
-            // If autoplay fails, try again after user interaction
             document.addEventListener('touchstart', () => {
                 video.play();
             }, { once: true });
         });
 
-        // Loop the video continuously
         video.addEventListener('ended', () => {
             video.currentTime = 0;
             video.play();
         });
 
-        // Enter button functionality with fade out
         enterButton.addEventListener('click', (e) => {
             e.preventDefault();
             document.body.classList.add('fade-out');
