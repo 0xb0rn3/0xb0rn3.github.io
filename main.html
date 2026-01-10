@@ -18,8 +18,6 @@
             --text-secondary: #b0b0b0;
             --text-muted: #808080;
             --border: #333333;
-            --gruvbox-bg: #1d2021;
-            --gruvbox-fg: #ebdbb2;
         }
 
         * {
@@ -37,7 +35,6 @@
             position: relative;
         }
 
-        /* Video Background */
         .video-background {
             position: fixed;
             top: 0;
@@ -56,7 +53,6 @@
             filter: grayscale(1) contrast(1.3);
         }
 
-        /* Overlay for better text readability */
         .video-background::after {
             content: '';
             position: absolute;
@@ -73,7 +69,6 @@
             pointer-events: none;
         }
 
-        /* Binary rain effect overlay */
         body::before {
             content: "";
             position: fixed;
@@ -93,7 +88,6 @@
             100% { transform: translateY(20px); }
         }
 
-        /* Scroll Progress */
         .scroll-progress {
             position: fixed;
             top: 0;
@@ -106,7 +100,6 @@
             box-shadow: 0 0 10px var(--accent);
         }
 
-        /* Navigation */
         .nav {
             position: fixed;
             top: 0;
@@ -194,7 +187,114 @@
             color: var(--accent);
         }
 
-        /* Hero Section */
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--accent);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .mobile-menu-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        .mobile-menu-toggle.active {
+            transform: rotate(90deg);
+        }
+
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 280px;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.98);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-left: 2px solid var(--accent);
+            z-index: 2000;
+            padding: 5rem 2rem 2rem;
+            transition: right 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            overflow-y: auto;
+        }
+
+        .mobile-menu.active {
+            right: 0;
+        }
+
+        .mobile-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .mobile-menu-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .mobile-nav-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            list-style: none;
+        }
+
+        .mobile-nav-link {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 500;
+            font-family: 'Share Tech Mono', monospace;
+            padding: 1.25rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border-bottom: 1px solid var(--border);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .mobile-nav-link:hover {
+            color: var(--accent);
+            padding-left: 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .mobile-nav-link i {
+            font-size: 1.2rem;
+            width: 24px;
+        }
+
+        .mobile-menu-close {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: none;
+            border: none;
+            color: var(--accent);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .mobile-menu-close:hover {
+            transform: rotate(90deg);
+        }
+
         .hero {
             min-height: 100vh;
             display: flex;
@@ -401,7 +501,6 @@
             color: var(--bg-primary);
         }
 
-        /* Sections */
         .section {
             padding: 5rem 2rem;
             max-width: 1200px;
@@ -426,7 +525,6 @@
             font-family: 'Share Tech Mono', monospace;
         }
 
-        /* Cards */
         .cards-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -508,7 +606,6 @@
             gap: 1rem;
         }
 
-        /* Stats Container */
         .stats-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -543,7 +640,6 @@
             letter-spacing: 1px;
         }
 
-        /* Contact Grid */
         .contact-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -619,7 +715,6 @@
             height: 120px;
         }
 
-        /* Scroll to Top Button */
         .scroll-top {
             position: fixed;
             bottom: 2rem;
@@ -657,10 +752,13 @@
             color: var(--accent);
         }
 
-        /* Responsive Design */
         @media (max-width: 768px) {
             .nav-links {
                 display: none;
+            }
+
+            .mobile-menu-toggle {
+                display: block;
             }
 
             .hero {
@@ -678,6 +776,39 @@
             .stats-container {
                 grid-template-columns: 1fr;
                 padding: 2rem;
+            }
+
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .hero-actions {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .nav-content {
+                padding: 1rem 1.5rem;
+            }
+
+            .logo {
+                font-size: 1.1rem;
+            }
+
+            .mobile-menu {
+                width: 100%;
+                right: -100%;
+            }
+
+            .mobile-menu.active {
+                right: 0;
             }
         }
 
@@ -700,7 +831,6 @@
     </style>
 </head>
 <body>
-    <!-- Video Background -->
     <div class="video-background">
         <video autoplay muted loop playsinline>
             <source src="oxbv1.mp4" type="video/mp4">
@@ -726,8 +856,27 @@
                 <li><a href="blog.html" class="nav-link"><i class="fas fa-pen-nib"></i>Blog</a></li>
                 <li><a href="#contact" class="nav-link"><i class="fas fa-envelope"></i>Contact</a></li>
             </ul>
+            <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
         </div>
     </nav>
+
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+
+    <div class="mobile-menu" id="mobileMenu">
+        <button class="mobile-menu-close" id="mobileMenuClose">
+            <i class="fas fa-times"></i>
+        </button>
+        <ul class="mobile-nav-links">
+            <li><a href="#about" class="mobile-nav-link"><i class="fas fa-home"></i>About</a></li>
+            <li><a href="#projects" class="mobile-nav-link"><i class="fas fa-code"></i>Projects</a></li>
+            <li><a href="#certifications" class="mobile-nav-link"><i class="fas fa-certificate"></i>Certs</a></li>
+            <li><a href="#platforms" class="mobile-nav-link"><i class="fas fa-flag"></i>Platforms</a></li>
+            <li><a href="blog.html" class="mobile-nav-link"><i class="fas fa-pen-nib"></i>Blog</a></li>
+            <li><a href="#contact" class="mobile-nav-link"><i class="fas fa-envelope"></i>Contact</a></li>
+        </ul>
+    </div>
 
     <section class="hero" id="about">
         <div class="hero-content">
@@ -800,317 +949,4 @@
         </div>
 
         <div class="cards-grid">
-            <div class="card">
-                <div class="card-icon">
-                    <i class="fas fa-tools"></i>
-                </div>
-                <h3 class="card-title">Security Automation</h3>
-                <div class="card-subtitle">15+ Production Tools</div>
-                <p class="card-description">
-                    Comprehensive suite of security automation tools for penetration testing, 
-                    reconnaissance, and vulnerability assessment.
-                </p>
-                <a href="https://github.com/0xb0rn3" target="_blank" class="card-link">
-                    Explore Tools <i class="fas fa-arrow-right"></i>
-                </a>
-            </div>
-
-            <div class="card">
-                <div class="card-icon">
-                    <i class="fas fa-search"></i>
-                </div>
-                <h3 class="card-title">OSINT Frameworks</h3>
-                <div class="card-subtitle">Intelligence Gathering</div>
-                <p class="card-description">
-                    Advanced OSINT collection pipelines for threat intelligence and reconnaissance 
-                    with automated data analysis.
-                </p>
-                <a href="https://github.com/0xb0rn3" target="_blank" class="card-link">
-                    View Framework <i class="fas fa-arrow-right"></i>
-                </a>
-            </div>
-
-            <div class="card">
-                <div class="card-icon">
-                    <i class="fas fa-shield-alt"></i>
-                </div>
-                <h3 class="card-title">Pentest Frameworks</h3>
-                <div class="card-subtitle">Security Testing</div>
-                <p class="card-description">
-                    Complete penetration testing frameworks following threat-informed defense 
-                    methodologies with automation-first approach.
-                </p>
-                <a href="https://github.com/0xb0rn3" target="_blank" class="card-link">
-                    Learn More <i class="fas fa-arrow-right"></i>
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <section class="section" id="certifications">
-        <h2 class="section-title">Certifications</h2>
-        <p class="section-subtitle">0xb0rn3@security:~$ cat certifications.txt</p>
-
-        <div class="cards-grid">
-            <div class="card">
-                <div class="card-icon">
-                    <i class="fab fa-google"></i>
-                </div>
-                <h3 class="card-title">Google Cybersecurity</h3>
-                <div class="card-subtitle">Google via Coursera</div>
-                <p class="card-description">
-                    Comprehensive program covering incident response, network security, 
-                    vulnerability assessment, and Python automation.
-                </p>
-                <a href="https://coursera.org/" target="_blank" class="card-link">
-                    View Certificate <i class="fas fa-arrow-right"></i>
-                </a>
-            </div>
-
-            <div class="card">
-                <div class="card-icon">
-                    <i class="fas fa-shield-alt"></i>
-                </div>
-                <h3 class="card-title">Pre Security Path</h3>
-                <div class="card-subtitle">TryHackMe</div>
-                <p class="card-description">
-                    Foundational knowledge covering network fundamentals, web security, 
-                    and Linux/Windows security essentials.
-                </p>
-                <a href="https://tryhackme-certificates.s3-eu-west-1.amazonaws.com/THM-JB3HSWBUVV.pdf" target="_blank" class="card-link">
-                    View Certificate <i class="fas fa-arrow-right"></i>
-                </a>
-            </div>
-
-            <div class="card">
-                <div class="card-icon">
-                    <i class="fas fa-graduation-cap"></i>
-                </div>
-                <h3 class="card-title">HTB Academician</h3>
-                <div class="card-subtitle">HackTheBox Academy</div>
-                <p class="card-description">
-                    Recognition for completing comprehensive security training modules 
-                    and demonstrating cybersecurity competency.
-                </p>
-                <a href="https://academy.hackthebox.com/achievement/badge/a821772a-8fce-11ee-bfb6-bea50ffe6cb4" target="_blank" class="card-link">
-                    View Badge <i class="fas fa-arrow-right"></i>
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <section class="section" id="platforms">
-        <h2 class="section-title">Training Platforms</h2>
-        <p class="section-subtitle">0xb0rn3@security:~$ ./check_platforms.sh</p>
-
-        <div class="cards-grid">
-            <div class="card">
-                <div class="card-icon">
-                    <i class="fas fa-cube"></i>
-                </div>
-                <h3 class="card-title">HackTheBox</h3>
-                <div class="card-subtitle">Active Member</div>
-                <p class="card-description">
-                    Actively engaged in HackTheBox challenges, machines, and training paths 
-                    to sharpen offensive security skills.
-                </p>
-                <a href="https://app.hackthebox.com/profile/1762866" target="_blank" class="card-link">
-                    View Profile <i class="fas fa-arrow-right"></i>
-                </a>
-            </div>
-
-            <div class="card">
-                <div class="card-icon">
-                    <i class="fas fa-flag"></i>
-                </div>
-                <h3 class="card-title">TryHackMe</h3>
-                <div class="card-subtitle">Active Learner</div>
-                <p class="card-description">
-                    Continuously learning through TryHackMe's hands-on cybersecurity training rooms 
-                    and practical challenges.
-                </p>
-                <div class="badge-container">
-                    <iframe src="https://tryhackme.com/api/v2/badges/public-profile?userPublicId=4139197"></iframe>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="section" id="contact">
-        <h2 class="section-title">Get In Touch</h2>
-        <p class="section-subtitle">0xb0rn3@security:~$ cat contact.txt</p>
-
-        <div class="contact-grid">
-            <div class="contact-card">
-                <div class="contact-icon">
-                    <i class="fas fa-envelope"></i>
-                </div>
-                <h3 class="contact-title">Email</h3>
-                <div class="contact-info">
-                    <a href="mailto:oxbv1@proton.me">oxbv1@proton.me</a>
-                </div>
-            </div>
-
-            <div class="contact-card">
-                <div class="contact-icon">
-                    <i class="fab fa-github"></i>
-                </div>
-                <h3 class="contact-title">GitHub</h3>
-                <div class="contact-info">
-                    <a href="https://github.com/0xb0rn3" target="_blank">github.com/0xb0rn3</a>
-                </div>
-            </div>
-
-            <div class="contact-card">
-                <div class="contact-icon">
-                    <i class="fab fa-twitter"></i>
-                </div>
-                <h3 class="contact-title">X / Twitter</h3>
-                <div class="contact-info">
-                    <a href="https://x.com/oxbv1" target="_blank">@oxbv1</a>
-                </div>
-            </div>
-
-            <div class="contact-card">
-                <div class="contact-icon">
-                    <i class="fab fa-discord"></i>
-                </div>
-                <h3 class="contact-title">Discord</h3>
-                <div class="contact-info">0xbv1</div>
-            </div>
-        </div>
-    </section>
-
-    <script>
-        // Scroll progress bar
-        window.addEventListener('scroll', () => {
-            const scrollProgress = document.getElementById('scrollProgress');
-            const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
-            const scrolled = (window.scrollY / scrollHeight) * 100;
-            scrollProgress.style.width = scrolled + '%';
-
-            // Navbar scroll effect
-            const navbar = document.getElementById('navbar');
-            if (window.scrollY > 100) {
-                navbar.classList.add('scrolled');
-            } else {
-                navbar.classList.remove('scrolled');
-            }
-
-            // Show/hide scroll to top button
-            const scrollTopBtn = document.getElementById('scrollTopBtn');
-            if (window.scrollY > 500) {
-                scrollTopBtn.classList.add('visible');
-            } else {
-                scrollTopBtn.classList.remove('visible');
-            }
-        });
-
-        // Scroll to top functionality
-        document.getElementById('scrollTopBtn').addEventListener('click', () => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
-
-        // Smooth scroll
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-            });
-        });
-
-        // Intersection Observer for animations
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -100px 0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach((entry, index) => {
-                if (entry.isIntersecting) {
-                    setTimeout(() => {
-                        entry.target.style.opacity = '1';
-                        entry.target.style.transform = 'translateY(0)';
-                    }, index * 100);
-                }
-            });
-        }, observerOptions);
-
-        // Observe all animated elements
-        document.querySelectorAll('.card, .contact-card').forEach(element => {
-            element.style.opacity = '0';
-            element.style.transform = 'translateY(30px)';
-            element.style.transition = 'all 0.6s ease';
-            observer.observe(element);
-        });
-
-        // Enhanced parallax effect
-        let ticking = false;
-        let lastScrollY = 0;
-
-        window.addEventListener('scroll', () => {
-            lastScrollY = window.pageYOffset;
-            
-            if (!ticking) {
-                window.requestAnimationFrame(() => {
-                    const scrolled = lastScrollY;
-                    
-                    // Hero parallax
-                    const heroContent = document.querySelector('.hero-content');
-                    if (heroContent && scrolled < window.innerHeight) {
-                        heroContent.style.transform = `translateY(${scrolled * 0.3}px)`;
-                        heroContent.style.opacity = 1 - (scrolled / 600);
-                    }
-                    
-                    ticking = false;
-                });
-                ticking = true;
-            }
-        });
-
-        // Animated counter for stats
-        function animateCounter(element, target, duration = 2000) {
-            const start = 0;
-            const increment = target / (duration / 16);
-            let current = start;
-            
-            const timer = setInterval(() => {
-                current += increment;
-                if (current >= target) {
-                    element.textContent = target;
-                    clearInterval(timer);
-                } else {
-                    element.textContent = Math.floor(current);
-                }
-            }, 16);
-        }
-
-        // Observe stats and animate when visible
-        const statsObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const statNumbers = entry.target.querySelectorAll('.stat-number');
-                    statNumbers.forEach((stat, index) => {
-                        const target = parseInt(stat.textContent);
-                        setTimeout(() => {
-                            animateCounter(stat, target);
-                        }, index * 200);
-                    });
-                    statsObserver.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.5 });
-
-        const statsContainer = document.querySelector('.stats-container');
-        if (statsContainer) {
-            statsObserver.observe(statsContainer);
-        }
-
-        console.log('%c0xb0rn3 Portfolio', 'color: #ffffff; font-size: 20px; font-weight: bold;');
-        console.log('%cBuilt with passion for cybersecurity', 'color: #b0b0b0; font-size: 12px;');
-    </script>
-</body>
-</html>
+            <div class="car
