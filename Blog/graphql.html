@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GraphQL Introspection - 0xb0rn3</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Share+Tech+Mono:wght@400&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #000000;
+            --bg-card: #1a1a1a;
+            --accent: #ffffff;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+            --border: #333333;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.8;
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.08) 1px, transparent 0);
+            background-size: 20px 20px;
+            animation: binaryFlow 10s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes binaryFlow {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(20px); }
+        }
+
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            backdrop-filter: blur(20px);
+            background: rgba(0, 0, 0, 0.8);
+            border-bottom: 2px solid var(--border);
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-family: 'Share Tech Mono', monospace;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--accent);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 6rem 2rem 3rem;
+        }
+
+        .terminal-prompt {
+            color: var(--accent);
+            font-family: 'Share Tech Mono', monospace;
+            margin-bottom: 2rem;
+            opacity: 0.6;
+        }
+
+        h1 {
+            font-family: 'Orbitron', monospace;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--accent);
+        }
+
+        h2 {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.8rem;
+            margin: 2rem 0 1rem;
+            color: var(--accent);
+        }
+
+        h3 {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.3rem;
+            margin: 1.5rem 0 0.75rem;
+            color: var(--accent);
+        }
+
+        p {
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+            color: var(--text-secondary);
+        }
+
+        strong {
+            color: var(--text-primary);
+        }
+
+        ul, ol {
+            margin: 1rem 0 1.5rem 2rem;
+            color: var(--text-secondary);
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        code {
+            background: var(--bg-card);
+            padding: 0.2rem 0.5rem;
+            border-radius: 3px;
+            font-family: 'JetBrains Mono', monospace;
+            border: 1px solid var(--border);
+        }
+
+        figure {
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        figure img {
+            max-width: 100%;
+            border: 2px solid var(--border);
+            border-radius: 4px;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--accent);
+            text-decoration: none;
+            font-family: 'Share Tech Mono', monospace;
+            margin-top: 3rem;
+            transition: gap 0.3s ease;
+        }
+
+        .back-link:hover {
+            gap: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            h1 { font-size: 2rem; }
+            .container { padding: 5rem 1.5rem 2rem; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-content">
+            <a href="../main.html" class="logo">0xb0rn3</a>
+            <ul class="nav-links">
+                <li><a href="../main.html" class="nav-link">About</a></li>
+                <li><a href="../blog.html" class="nav-link">Blog</a></li>
+                <li><a href="../contact.html" class="nav-link">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="terminal-prompt">0xb0rn3@graphql:~$</div>
+        
+        <h1>GraphQL Introspection: When API Documentation Becomes a Security Risk</h1>
+
+        <h2>Understanding GraphQL</h2>
+        <p>GraphQL is a query language for APIs developed by Facebook. Unlike REST APIs with fixed endpoints, GraphQL lets clients request exactly what they need in a single query. This flexibility is powerful, but it comes with security implications when not properly configured.</p>
+
+        <h2>The Introspection Problem</h2>
+        <p>GraphQL introspection is a feature that allows clients to query the schema itself. While useful during development, leaving it enabled in production exposes your entire API structure to anyone who can reach the endpoint. Types, fields, arguments, queries, mutations—everything becomes visible.</p>
+
+        <h3>Why This Matters</h3>
+        <p>When introspection is enabled on a production endpoint, attackers gain several advantages:</p>
+        <ul>
+            <li><strong>Complete API mapping</strong> without any guesswork or fuzzing</li>
+            <li><strong>Discovery of hidden fields</strong> that might contain sensitive data</li>
+            <li><strong>Understanding data relationships</strong> for more targeted attacks</li>
+            <li><strong>Identifying potential vulnerabilities</strong> through field descriptions and types</li>
+        </ul>
+
+        <h2>Discovery & Reconnaissance</h2>
+        <p>I identified a production GraphQL endpoint at a target domain during routine reconnaissance. The endpoint was accessible without authentication, which immediately raised questions about its security posture.</p>
+
+        <p>Testing for introspection was straightforward. A simple query reveals whether the feature is enabled:</p>
+
+        <figure>
+            <img src="../Images/gsec.png" alt="GraphQL introspection query results">
+        </figure>
+
+        <p>The response came back with the complete schema. Every type definition, every field, every argument—all exposed. This wasn't documentation someone forgot to take down. This was the live API structure being served to anyone who asked.</p>
+
+        <h2>Exploitation & Impact</h2>
+        <p>With the schema in hand, I could see fields that weren't meant for public consumption. Internal identifiers, administrative flags, relationship mappings between data models. The kind of information that would normally require extensive probing to discover.</p>
+
+        <figure>
+            <img src="../Images/brupsuite.png" alt="Burp Suite intercepting GraphQL queries">
+        </figure>
+
+        <p>Using Burp Suite, I could craft precise queries targeting specific data points revealed through introspection. The target also had a GraphiQL endpoint enabled—an interactive playground for testing queries. What should have been a development tool was sitting in production, making exploitation even simpler.</p>
+
+        <figure>
+            <img src="../Images/yogagraphl.png" alt="GraphiQL interface for query testing">
+        </figure>
+
+        <h2>Real-World Consequences</h2>
+        <p>This vulnerability chain enables several attack vectors:</p>
+        <ul>
+            <li><strong>Data exfiltration</strong> through carefully crafted queries</li>
+            <li><strong>Business logic bypass</strong> by understanding field relationships</li>
+            <li><strong>Privilege escalation</strong> if admin-only fields are discoverable</li>
+            <li><strong>Further reconnaissance</strong> to identify injection points</li>
+        </ul>
+
+        <h2>Mitigation</h2>
+        <p>The fix is straightforward: disable introspection in production environments. GraphQL implementations typically provide configuration options to toggle this feature. Additionally:</p>
+        <ul>
+            <li>Remove GraphiQL and similar tools from production</li>
+            <li>Implement proper authentication before allowing API access</li>
+            <li>Use field-level permissions to restrict sensitive data</li>
+            <li>Monitor for introspection attempts in production</li>
+        </ul>
+
+        <p>GraphQL is a powerful technology, but like any tool, it requires proper security configuration. Introspection is useful during development. In production, it's an information disclosure vulnerability waiting to be exploited.</p>
+
+        <a href="../blog.html" class="back-link">
+            <i class="fas fa-arrow-left"></i>
+            Back to Blog
+        </a>
+    </div>
+</body>
+</html>
