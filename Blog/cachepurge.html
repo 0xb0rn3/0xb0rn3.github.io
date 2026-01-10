@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unauthorized Cache Purge - 0xb0rn3</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Share+Tech+Mono:wght@400&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #000000;
+            --bg-card: #1a1a1a;
+            --accent: #ffffff;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+            --border: #333333;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.8;
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.08) 1px, transparent 0);
+            background-size: 20px 20px;
+            animation: binaryFlow 10s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes binaryFlow {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(20px); }
+        }
+
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            backdrop-filter: blur(20px);
+            background: rgba(0, 0, 0, 0.8);
+            border-bottom: 2px solid var(--border);
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+        }
+
+        .logo {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 6rem 2rem 3rem;
+        }
+
+        .terminal-prompt {
+            color: var(--accent);
+            font-family: 'Share Tech Mono', monospace;
+            margin-bottom: 2rem;
+            opacity: 0.6;
+        }
+
+        h1, h2 {
+            font-family: 'Orbitron', monospace;
+            color: var(--accent);
+        }
+
+        h1 { font-size: 2.5rem; margin-bottom: 1rem; }
+        h2 { font-size: 1.8rem; margin: 2rem 0 1rem; }
+
+        p { margin-bottom: 1.5rem; color: var(--text-secondary); }
+        strong { color: var(--text-primary); }
+        ol, ul { margin: 1rem 0 1.5rem 2rem; color: var(--text-secondary); }
+        li { margin-bottom: 0.5rem; }
+
+        code {
+            background: var(--bg-card);
+            padding: 0.2rem 0.5rem;
+            border-radius: 3px;
+            font-family: 'JetBrains Mono', monospace;
+            border: 1px solid var(--border);
+        }
+
+        figure {
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        figure img {
+            max-width: 100%;
+            border: 2px solid var(--border);
+            border-radius: 4px;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--accent);
+            text-decoration: none;
+            font-family: 'Share Tech Mono', monospace;
+            margin-top: 3rem;
+            transition: gap 0.3s ease;
+        }
+
+        .back-link:hover { gap: 1rem; }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2rem; }
+            .container { padding: 5rem 1.5rem 2rem; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-content">
+            <a href="../main.html" class="logo">0xb0rn3</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="terminal-prompt">0xb0rn3@cache:~$</div>
+        
+        <h1>Unauthorized Cache Purge: DoS via HTTP Methods</h1>
+
+        <h2>Understanding Cache Purging</h2>
+        <p>Cache purging is a legitimate CDN and caching server feature that removes cached content on demand. It's designed for administrators to force cache refreshes when content updates, clear stale data, or manage cache policies. The PURGE HTTP method provides this functionality.</p>
+
+        <p>When properly configured, PURGE requests require authentication and authorization. When misconfigured, anyone can clear the cache.</p>
+
+        <h2>Discovery</h2>
+        <p>Testing for exposed HTTP methods is straightforward. A simple curl request reveals whether PURGE is accessible:</p>
+
+        <p><code>curl -X PURGE https://target.com</code></p>
+
+        <figure>
+            <img src="../Images/purge.png" alt="Successful PURGE response showing status ok">
+        </figure>
+
+        <p>The response came back with a status of "ok" and an operation ID. No authentication required. No authorization checks. The cache was cleared with a single unauthenticated request.</p>
+
+        <h2>Impact</h2>
+        <p>An accessible PURGE method enables several denial-of-service attack vectors:</p>
+
+        <ol>
+            <li><strong>Performance degradation:</strong> All requests bypass cache and hit the origin server directly</li>
+            <li><strong>Origin server overload:</strong> Sudden traffic spike as cache provides no protection</li>
+            <li><strong>Increased latency:</strong> Users experience slow load times without cached content</li>
+            <li><strong>Resource exhaustion:</strong> Origin servers may crash under unexpected load</li>
+            <li><strong>Cost implications:</strong> Cloud-hosted services incur higher bandwidth and compute costs</li>
+        </ol>
+
+        <h2>Scope Analysis</h2>
+        <p>The vulnerability wasn't limited to a single endpoint. Testing revealed that PURGE worked across multiple paths. The wildcard pattern <code>/*</code> meant entire sections of the site could be cleared with one request.</p>
+
+        <figure>
+            <img src="../Images/purge_patterns.png" alt="Python script showing PURGE working on multiple endpoints">
+        </figure>
+
+        <p>I wrote a Python script to automate testing across discovered endpoints. Every path responded successfully to PURGE requests. This wasn't a single misconfiguration—it was a systematic security failure across the entire caching infrastructure.</p>
+
+        <h2>Attack Scenarios</h2>
+        <p>An attacker exploiting this vulnerability could:</p>
+
+        <ul>
+            <li>Continuously purge cache to maintain denial-of-service conditions</li>
+            <li>Target specific high-traffic pages during peak usage times</li>
+            <li>Combine with other attacks to amplify impact</li>
+            <li>Use automated scripts to persistently clear cache</li>
+            <li>Focus on resource-intensive endpoints to maximize origin server load</li>
+        </ul>
+
+        <h2>Business Impact</h2>
+        <p>This isn't just a technical vulnerability. The business consequences are real:</p>
+
+        <ul>
+            <li><strong>Revenue loss</strong> from degraded user experience and site slowdowns</li>
+            <li><strong>Reputational damage</strong> as users encounter performance issues</li>
+            <li><strong>Increased operational costs</strong> from unexpected traffic patterns</li>
+            <li><strong>Service disruption</strong> affecting availability SLAs</li>
+        </ul>
+
+        <h2>Proper Configuration</h2>
+        <p>The PURGE method should be restricted to authorized administrative users. Proper security includes:</p>
+
+        <ul>
+            <li>Requiring authentication for all PURGE requests</li>
+            <li>Implementing IP allowlisting for cache management</li>
+            <li>Using API keys or tokens for cache operations</li>
+            <li>Logging all purge operations for audit trails</li>
+            <li>Rate limiting cache purge requests</li>
+            <li>Disabling PURGE entirely if not needed</li>
+        </ul>
+
+        <h2>Detection & Monitoring</h2>
+        <p>Organizations should monitor for unauthorized cache purge attempts:</p>
+
+        <ul>
+            <li>Alert on PURGE method usage from unexpected sources</li>
+            <li>Track cache hit ratios for sudden drops</li>
+            <li>Monitor origin server load for anomalous spikes</li>
+            <li>Log and review all cache management operations</li>
+        </ul>
+
+        <p>Cache purging is a powerful administrative function. Like any privileged operation, it requires proper access controls. Without them, it becomes a denial-of-service vulnerability affecting every user of the service.</p>
+
+        <a href="../blog.html" class="back-link">
+            <i class="fas fa-arrow-left"></i>
+            Back to Blog
+        </a>
+    </div>
+</body>
+</html>
