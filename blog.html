@@ -173,6 +173,105 @@
             color: var(--accent);
         }
 
+        /* Mobile Menu */
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 5px;
+            z-index: 1001;
+        }
+
+        .menu-toggle span {
+            width: 25px;
+            height: 2px;
+            background: var(--accent);
+            transition: all 0.3s ease;
+            display: block;
+        }
+
+        .menu-toggle.active span:nth-child(1) {
+            transform: rotate(45deg) translate(7px, 7px);
+        }
+
+        .menu-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .menu-toggle.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -7px);
+        }
+
+        .mobile-nav {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 80%;
+            max-width: 400px;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.98);
+            border-left: 2px solid var(--accent);
+            padding: 5rem 2rem 2rem;
+            transition: right 0.3s ease;
+            z-index: 999;
+            overflow-y: auto;
+        }
+
+        .mobile-nav.active {
+            right: 0;
+        }
+
+        .mobile-nav-links {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .mobile-nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 500;
+            font-family: 'Share Tech Mono', monospace;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border: 2px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .mobile-nav-link:hover {
+            color: var(--accent);
+            border-color: var(--accent);
+            background: var(--bg-card);
+            transform: translateX(5px);
+        }
+
+        .mobile-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.8);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 998;
+        }
+
+        .mobile-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
         /* Section */
         .section {
             padding: 5rem 2rem;
@@ -304,6 +403,10 @@
                 display: none;
             }
 
+            .menu-toggle {
+                display: flex;
+            }
+
             .section {
                 padding: 3rem 1.5rem;
             }
@@ -311,6 +414,22 @@
             .blog-grid {
                 grid-template-columns: 1fr;
             }
+        }
+
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-hover);
         }
     </style>
 </head>
@@ -322,6 +441,9 @@
         </video>
     </div>
 
+    <!-- Mobile Overlay -->
+    <div class="mobile-overlay" id="mobileOverlay"></div>
+
     <nav class="nav" id="navbar">
         <div class="nav-content">
             <a href="main.html" class="logo">
@@ -329,14 +451,33 @@
                 0xb0rn3
             </a>
             <ul class="nav-links">
-                <li><a href="main.html" class="nav-link">About</a></li>
-                <li><a href="projects.html" class="nav-link">Projects</a></li>
-                <li><a href="certifications.html" class="nav-link">Certs</a></li>
-                <li><a href="platforms.html" class="nav-link">Platforms</a></li>
+                <li><a href="main.html#about" class="nav-link">About</a></li>
+                <li><a href="https://github.com/0xb0rn3" target="_blank" class="nav-link">Projects</a></li>
+                <li><a href="main.html#certifications" class="nav-link">Certs</a></li>
+                <li><a href="main.html#platforms" class="nav-link">Platforms</a></li>
+                <li><a href="blog.html" class="nav-link">Blog</a></li>
                 <li><a href="contact.html" class="nav-link">Contact</a></li>
             </ul>
+
+            <button class="menu-toggle" id="menuToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
         </div>
     </nav>
+
+    <!-- Mobile Navigation -->
+    <div class="mobile-nav" id="mobileNav">
+        <ul class="mobile-nav-links">
+            <li><a href="main.html#about" class="mobile-nav-link"><i class="fas fa-home"></i>About</a></li>
+            <li><a href="https://github.com/0xb0rn3" target="_blank" class="mobile-nav-link"><i class="fas fa-code"></i>Projects</a></li>
+            <li><a href="main.html#certifications" class="mobile-nav-link"><i class="fas fa-certificate"></i>Certifications</a></li>
+            <li><a href="main.html#platforms" class="mobile-nav-link"><i class="fas fa-flag"></i>Platforms</a></li>
+            <li><a href="blog.html" class="mobile-nav-link"><i class="fas fa-pen-nib"></i>Blog</a></li>
+            <li><a href="contact.html" class="mobile-nav-link"><i class="fas fa-envelope"></i>Contact</a></li>
+        </ul>
+    </div>
 
     <section class="section">
         <h2 class="section-title">Security Research</h2>
@@ -418,6 +559,30 @@
     </section>
 
     <script>
+        // Mobile Menu Toggle
+        const menuToggle = document.getElementById('menuToggle');
+        const mobileNav = document.getElementById('mobileNav');
+        const mobileOverlay = document.getElementById('mobileOverlay');
+        const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+
+        function toggleMenu() {
+            menuToggle.classList.toggle('active');
+            mobileNav.classList.toggle('active');
+            mobileOverlay.classList.toggle('active');
+            document.body.style.overflow = mobileNav.classList.contains('active') ? 'hidden' : '';
+        }
+
+        menuToggle.addEventListener('click', toggleMenu);
+        mobileOverlay.addEventListener('click', toggleMenu);
+
+        mobileNavLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (!link.getAttribute('href').startsWith('http')) {
+                    toggleMenu();
+                }
+            });
+        });
+
         // Navbar scroll effect
         window.addEventListener('scroll', () => {
             const navbar = document.getElementById('navbar');
