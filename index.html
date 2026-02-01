@@ -454,22 +454,15 @@
         document.getElementById('os').textContent = getOSInfo();
         document.getElementById('screen').textContent = getScreenInfo();
 
-        // Fetch IP and Location Info
+        // Fetch IP and Location Info using free API (no key needed)
         async function fetchUserInfo() {
             try {
-                // Call your backend proxy instead of direct API
-                const response = await fetch('get-ip-info.php');
+                const response = await fetch('https://ipapi.co/json/');
                 const data = await response.json();
                 
-                // Handle both WhatIsMyIP and ipapi.co response formats
-                const ip = data.ip_address || data.ip || 'Unknown';
-                const city = data.city || 'Unknown';
-                const country = data.country || data.country_name || 'Unknown';
-                const isp = data.isp || data.org || 'Unknown';
-                
-                document.getElementById('ipAddress').textContent = ip;
-                document.getElementById('location').textContent = `${city}, ${country}`;
-                document.getElementById('isp').textContent = isp;
+                document.getElementById('ipAddress').textContent = data.ip || 'Unknown';
+                document.getElementById('location').textContent = `${data.city || 'Unknown'}, ${data.country_name || 'Unknown'}`;
+                document.getElementById('isp').textContent = data.org || 'Unknown';
             } catch (error) {
                 console.error('Error fetching IP info:', error);
                 document.getElementById('ipAddress').textContent = 'Unable to fetch';
