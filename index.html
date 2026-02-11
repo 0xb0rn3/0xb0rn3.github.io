@@ -2,754 +2,937 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome - 0xb0rn3</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Welcome — 0xb0rn3</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono:wght@400&family=Orbitron:wght@400;700;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=JetBrains+Mono:wght@300;400;500;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root {
+            --bg:          #000000;
+            --fg:          #ffffff;
+            --fg-dim:      rgba(255,255,255,.45);
+            --fg-ghost:    rgba(255,255,255,.1);
+            --accent:      #00ffa3;
+            --accent-dim:  rgba(0,255,163,.14);
+            --accent-glow: rgba(0,255,163,.5);
+            --red:         #ff4d6d;
+            --border:      rgba(255,255,255,.6);
+            --border-sub:  rgba(255,255,255,.14);
+            --panel-bg:    rgba(4,4,4,.93);
+            --r:           4px;
+            --r-lg:        12px;
         }
 
+        *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+        html { height:100%; }
+
         body {
-            background: #000000;
-            color: #ffffff;
-            font-family: 'Share Tech Mono', monospace;
-            min-height: 100vh;
+            background: var(--bg);
+            color: var(--fg);
+            font-family: 'JetBrains Mono', monospace;
+            min-height: 100dvh;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
             overflow-x: hidden;
             position: relative;
+            padding-bottom: 164px;
+            cursor: crosshair;
         }
 
-        /* Animated gradient background */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.08) 0%, transparent 70%);
-            animation: pulse-bg 5s ease-in-out infinite;
-            z-index: 1;
+        /* ─── BG: animated dot grid ─── */
+        .bg-grid {
+            position:fixed; inset:0; z-index:0; pointer-events:none;
+            background-image: radial-gradient(circle, rgba(255,255,255,.065) 1px, transparent 1px);
+            background-size: 36px 36px;
+            animation: gridDrift 28s linear infinite;
+        }
+        @keyframes gridDrift {
+            from { background-position: 0 0; }
+            to   { background-position: 36px 36px; }
         }
 
-        @keyframes pulse-bg {
-            0%, 100% { transform: scale(1); opacity: 0.5; }
-            50% { transform: scale(1.1); opacity: 1; }
+        /* ─── BG: vignette ─── */
+        .bg-vignette {
+            position:fixed; inset:0; z-index:1; pointer-events:none;
+            background: radial-gradient(ellipse 85% 75% at 50% 42%, transparent 28%, rgba(0,0,0,.88) 100%);
         }
 
-        /* User Info Panel - Compact & Rounded */
-        .user-info-panel {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 100;
-            background: rgba(0, 0, 0, 0.9);
-            border: 2px solid #ffffff;
-            border-radius: 20px;
-            padding: 12px 18px;
-            max-width: 280px;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
-            animation: slideInRight 1s ease-out;
+        /* ─── BG: CRT scanlines ─── */
+        .bg-scan {
+            position:fixed; inset:0; z-index:2; pointer-events:none;
+            background: repeating-linear-gradient(
+                to bottom, transparent 0, transparent 3px,
+                rgba(0,0,0,.15) 3px, rgba(0,0,0,.15) 4px
+            );
+            animation: scanDrift 10s linear infinite;
+        }
+        @keyframes scanDrift {
+            from { background-position: 0 0; }
+            to   { background-position: 0 80px; }
         }
 
-        @keyframes slideInRight {
-            from {
-                opacity: 0;
-                transform: translateX(100px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
+        /* ─── BG: accent bleed top ─── */
+        .bg-bleed {
+            position:fixed; top:-100px; left:50%; z-index:0; pointer-events:none;
+            width:700px; height:300px; transform:translateX(-50%);
+            background: radial-gradient(ellipse at center, rgba(0,255,163,.07) 0%, transparent 68%);
+            animation: bleedPulse 6s ease-in-out infinite;
+        }
+        @keyframes bleedPulse {
+            0%,100% { opacity:.7; transform:translateX(-50%) scaleX(1); }
+            50%      { opacity:1;  transform:translateX(-50%) scaleX(1.18); }
         }
 
-        .info-header {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 10px;
-            padding-bottom: 8px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+        /* ═══════════════════════════════════
+           PAGE LAYOUT
+        ═══════════════════════════════════ */
+        .page-wrap {
+            position:relative; z-index:10;
+            width:100%;
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            padding-top: clamp(30px,7vh,62px);
         }
 
-        .info-header i {
-            font-size: 0.9rem;
-            color: #ffffff;
+        /* ═══════════════════════════════════
+           BRAND
+        ═══════════════════════════════════ */
+        .brand-wrap {
+            text-align:center;
+            padding:0 20px;
+            animation: fadeUp 1s ease-out .2s both;
         }
-
-        .info-title {
-            font-family: 'Orbitron', monospace;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-        }
-
-        .info-grid {
-            display: grid;
-            grid-template-columns: auto 1fr;
-            gap: 4px 10px;
-            font-size: 0.7rem;
-        }
-
-        .info-label {
-            color: rgba(255, 255, 255, 0.6);
-            text-transform: uppercase;
-            font-size: 0.65rem;
-            letter-spacing: 0.5px;
-        }
-
-        .info-value {
-            color: #ffffff;
-            font-family: 'JetBrains Mono', monospace;
-            word-break: break-all;
-            font-size: 0.65rem;
-        }
-
-        .loading-indicator {
-            display: inline-block;
-            color: rgba(255, 255, 255, 0.6);
-        }
-
-        .loading-indicator::after {
-            content: '...';
-            animation: loadingDots 1.5s steps(4, end) infinite;
-        }
-
-        @keyframes loadingDots {
-            0%, 20% { content: '.'; }
-            40% { content: '..'; }
-            60%, 100% { content: '...'; }
-        }
-
-        /* Welcome content */
-        .welcome-container {
-            position: relative;
-            z-index: 10;
-            text-align: center;
-            padding: 40px 20px;
-            animation: fadeInContent 1.5s ease-in 0.5s both;
-        }
-
-        @keyframes fadeInContent {
-            from { 
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to { 
-                opacity: 1;
-                transform: translateY(0);
-            }
+        @keyframes fadeUp {
+            from { opacity:0; transform:translateY(26px); }
+            to   { opacity:1; transform:translateY(0); }
         }
 
         .logo-text {
-            font-family: 'Orbitron', monospace;
-            font-size: clamp(3rem, 10vw, 6rem);
-            color: #ffffff;
-            text-shadow: 
-                0 0 20px rgba(255, 255, 255, 0.8),
-                0 0 40px rgba(255, 255, 255, 0.5),
-                0 0 60px rgba(255, 255, 255, 0.3);
-            margin-bottom: 20px;
-            font-weight: 900;
-            letter-spacing: 8px;
-            animation: glow 2s ease-in-out infinite alternate, float 4s ease-in-out infinite;
+            font-family:'Orbitron', monospace;
+            font-size: clamp(2.8rem,11vw,6.4rem);
+            font-weight:900;
+            letter-spacing: clamp(4px,1.8vw,12px);
+            color: var(--fg);
+            line-height:1;
+            position:relative;
+            display:inline-block;
+            text-shadow:
+                0 0 18px rgba(255,255,255,.9),
+                0 0 44px rgba(255,255,255,.45),
+                0 0 80px rgba(255,255,255,.18);
+            animation: logoFloat 5s ease-in-out infinite, logoGlow 3s ease-in-out infinite alternate;
+        }
+        @keyframes logoFloat {
+            0%,100% { transform:translateY(0); }
+            50%      { transform:translateY(-7px); }
+        }
+        @keyframes logoGlow {
+            from { text-shadow:0 0 18px rgba(255,255,255,.9),0 0 44px rgba(255,255,255,.4),0 0 70px rgba(255,255,255,.15); }
+            to   { text-shadow:0 0 24px #fff,0 0 58px rgba(255,255,255,.7),0 0 100px rgba(255,255,255,.28); }
         }
 
-        @keyframes glow {
-            from { 
-                text-shadow: 
-                    0 0 20px rgba(255, 255, 255, 0.8),
-                    0 0 40px rgba(255, 255, 255, 0.5),
-                    0 0 60px rgba(255, 255, 255, 0.3);
-            }
-            to { 
-                text-shadow: 
-                    0 0 30px rgba(255, 255, 255, 1),
-                    0 0 60px rgba(255, 255, 255, 0.8),
-                    0 0 90px rgba(255, 255, 255, 0.5);
-            }
+        /* Glitch layers */
+        .logo-text::before,
+        .logo-text::after {
+            content:attr(data-text);
+            position:absolute; top:0; left:0;
+            width:100%; height:100%;
+            font-family:inherit; font-size:inherit; font-weight:inherit; letter-spacing:inherit;
+            pointer-events:none;
+        }
+        .logo-text::before {
+            color:var(--accent);
+            clip-path:polygon(0 28%, 100% 28%, 100% 46%, 0 46%);
+            animation:glitchA 8s infinite; mix-blend-mode:screen;
+        }
+        .logo-text::after {
+            color:var(--red);
+            clip-path:polygon(0 58%, 100% 58%, 100% 74%, 0 74%);
+            animation:glitchB 8s infinite; mix-blend-mode:screen;
+        }
+        @keyframes glitchA {
+            0%,93%,100% { transform:translateX(0); opacity:0; }
+            94% { transform:translateX(-4px); opacity:.8; }
+            96% { transform:translateX(3px); opacity:.5; }
+            98% { transform:translateX(-2px); opacity:.3; }
+        }
+        @keyframes glitchB {
+            0%,90%,100% { transform:translateX(0); opacity:0; }
+            91% { transform:translateX(4px); opacity:.7; }
+            93% { transform:translateX(-3px); opacity:.5; }
+            95% { transform:translateX(2px); opacity:.3; }
         }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+        .subtitles {
+            margin-top: clamp(10px,2vh,16px);
+            display:flex; flex-direction:column; align-items:center; gap:4px;
         }
-
         .subtitle {
-            font-size: clamp(0.85rem, 2.5vw, 1.2rem);
-            color: #ffffff;
-            margin-bottom: 40px;
-            font-weight: 400;
-            letter-spacing: 2px;
-            text-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
-            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(0.66rem,1.9vw,0.88rem);
+            color: var(--fg-dim);
+            letter-spacing: clamp(1px,.4vw,2px);
+            font-family:'Share Tech Mono', monospace;
+            line-height:1.6;
+        }
+        .accent-text { color:var(--accent); }
+
+        /* ═══════════════════════════════════
+           VISITOR INTEL PANEL
+        ═══════════════════════════════════ */
+        .panel-outer {
+            position:relative;
+            margin-top: clamp(22px,5vh,42px);
+            width: min(600px, calc(100vw - 28px));
+            animation: fadeUp 1s ease-out .6s both;
         }
 
-        /* Terminal Box - Rounded */
-        .terminal-container {
-            position: fixed;
-            bottom: 60px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 100;
-            background: rgba(0, 0, 0, 0.95);
-            border: 2px solid #ffffff;
-            border-radius: 15px;
-            padding: 15px 20px;
-            min-width: 400px;
-            max-width: 90%;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            box-shadow: 0 0 40px rgba(255, 255, 255, 0.4);
-            animation: slideUp 1s ease-out 0.5s both;
+        /* HUD corner brackets */
+        .panel-outer::before,
+        .panel-outer::after,
+        .panel-outer .cb, .panel-outer .cb2 {
+            content:'';
+            position:absolute;
+            width:20px; height:20px;
+            z-index:5; pointer-events:none;
+        }
+        .panel-outer::before { top:-2px; left:-2px; border-top:2px solid var(--accent); border-left:2px solid var(--accent); box-shadow:-2px -2px 14px var(--accent-glow); }
+        .panel-outer::after  { top:-2px; right:-2px; border-top:2px solid var(--accent); border-right:2px solid var(--accent); box-shadow:2px -2px 14px var(--accent-glow); }
+        .cb  { bottom:-2px; left:-2px; border-bottom:2px solid var(--accent); border-left:2px solid var(--accent); box-shadow:-2px 2px 14px var(--accent-glow); }
+        .cb2 { bottom:-2px; right:-2px; border-bottom:2px solid var(--accent); border-right:2px solid var(--accent); box-shadow:2px 2px 14px var(--accent-glow); }
+
+        .panel {
+            background: var(--panel-bg);
+            border:1px solid var(--border-sub);
+            border-radius: var(--r-lg);
+            padding: clamp(16px,3.5vw,26px) clamp(18px,4vw,30px);
+            backdrop-filter: blur(22px) saturate(1.3);
+            -webkit-backdrop-filter: blur(22px) saturate(1.3);
+            box-shadow:
+                inset 0 1px 0 rgba(255,255,255,.05),
+                0 0 0 1px rgba(0,0,0,.5),
+                0 10px 50px rgba(0,0,0,.85),
+                0 0 70px rgba(0,255,163,.05);
+            overflow:hidden;
+            position:relative;
+        }
+        /* top shimmer line */
+        .panel::before {
+            content:'';
+            position:absolute; top:0; left:8%; right:8%; height:1px;
+            background:linear-gradient(90deg, transparent, rgba(255,255,255,.2), transparent);
         }
 
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateX(-50%) translateY(50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(-50%) translateY(0);
-            }
+        /* ─ Panel header ─ */
+        .panel-head {
+            display:flex; align-items:center; gap:10px;
+            margin-bottom: clamp(12px,3vw,18px);
+            padding-bottom: clamp(10px,2.5vw,14px);
+            border-bottom:1px solid var(--border-sub);
         }
 
-        .terminal-header {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 10px;
-            font-size: 0.75rem;
-            color: rgba(255, 255, 255, 0.7);
-            font-family: 'JetBrains Mono', monospace;
+        .head-icon {
+            width: clamp(30px,7.5vw,36px);
+            height: clamp(30px,7.5vw,36px);
+            background: var(--accent-dim);
+            border:1px solid rgba(0,255,163,.4);
+            border-radius:8px;
+            display:flex; align-items:center; justify-content:center;
+            color:var(--accent);
+            font-size: clamp(.72rem,2vw,.88rem);
+            flex-shrink:0;
+            box-shadow:0 0 16px var(--accent-glow);
+            animation:iconPulse 3s ease-in-out infinite;
+        }
+        @keyframes iconPulse {
+            0%,100% { box-shadow:0 0 16px var(--accent-glow); }
+            50%      { box-shadow:0 0 30px var(--accent-glow), 0 0 55px rgba(0,255,163,.18); }
         }
 
-        .terminal-header i {
-            font-size: 0.85rem;
+        .head-text { flex:1; min-width:0; }
+        .head-title {
+            font-family:'Orbitron', monospace;
+            font-size: clamp(.62rem,1.8vw,.76rem);
+            font-weight:700;
+            text-transform:uppercase;
+            letter-spacing:2.5px;
+        }
+        .head-sub {
+            font-size: clamp(.52rem,1.3vw,.6rem);
+            color:var(--fg-dim);
+            letter-spacing:.8px;
+            margin-top:2px;
         }
 
-        .terminal-input-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.9rem;
+        .live-badge {
+            display:flex; align-items:center; gap:5px;
+            background:rgba(0,255,163,.07);
+            border:1px solid rgba(0,255,163,.28);
+            border-radius:20px;
+            padding:3px 10px;
+            font-size: clamp(.5rem,1.3vw,.58rem);
+            color:var(--accent);
+            letter-spacing:1px;
+            text-transform:uppercase;
+            flex-shrink:0;
+        }
+        .live-dot {
+            width:6px; height:6px; border-radius:50%;
+            background:var(--accent); box-shadow:0 0 6px var(--accent);
+            animation:livePulse 1.3s ease-in-out infinite;
+        }
+        @keyframes livePulse {
+            0%,100% { transform:scale(1); opacity:1; }
+            50%      { transform:scale(1.8); opacity:.3; }
         }
 
-        .terminal-prompt {
-            color: #ffffff;
-            white-space: nowrap;
+        /* ─ Info grid ─ */
+        .info-grid {
+            display:grid;
+            grid-template-columns:1fr 1fr;
+            gap: clamp(8px,2vw,14px) clamp(10px,2.5vw,18px);
         }
 
-        .terminal-input {
-            flex: 1;
-            background: transparent;
-            border: none;
-            color: #ffffff;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.9rem;
-            outline: none;
-            padding: 4px 0;
+        .info-field {
+            position:relative;
+            padding: clamp(9px,2vw,13px) clamp(10px,2.5vw,15px);
+            background: rgba(255,255,255,.025);
+            border:1px solid var(--border-sub);
+            border-radius:var(--r);
+            overflow:hidden;
+            opacity:0;
+            animation:fieldIn .5s ease-out forwards;
+            transition: border-color .25s, background .25s;
+        }
+        .info-field:nth-child(1) { animation-delay:.9s; }
+        .info-field:nth-child(2) { animation-delay:1.05s; }
+        .info-field:nth-child(3) { animation-delay:1.2s; }
+        .info-field:nth-child(4) { animation-delay:1.35s; }
+        .info-field:nth-child(5) { animation-delay:1.5s; }
+
+        @keyframes fieldIn {
+            from { opacity:0; transform:translateX(-8px); }
+            to   { opacity:1; transform:translateX(0); }
         }
 
-        .terminal-input::placeholder {
-            color: rgba(255, 255, 255, 0.3);
+        /* left accent stripe */
+        .info-field::before {
+            content:''; position:absolute;
+            left:0; top:18%; bottom:18%;
+            width:2px;
+            background:linear-gradient(to bottom, transparent, var(--accent), transparent);
+            opacity:0; transition:opacity .3s;
+            border-radius:2px;
+        }
+        /* hover shimmer sweep */
+        .info-field::after {
+            content:''; position:absolute; inset:0;
+            background:linear-gradient(110deg, transparent 30%, rgba(255,255,255,.04) 50%, transparent 70%);
+            transform:translateX(-100%); transition:transform .5s ease;
+        }
+        .info-field:hover::before { opacity:1; }
+        .info-field:hover::after  { transform:translateX(100%); }
+        .info-field:hover {
+            border-color:rgba(255,255,255,.24);
+            background:rgba(255,255,255,.04);
         }
 
-        .cursor {
-            display: inline-block;
-            width: 8px;
-            height: 16px;
-            background: #ffffff;
-            animation: blink 1s step-end infinite;
-            margin-left: 2px;
+        .info-field.full { grid-column:1/-1; }
+
+        .field-label {
+            font-size: clamp(.52rem,1.4vw,.6rem);
+            color:var(--accent);
+            text-transform:uppercase;
+            letter-spacing:1.5px;
+            margin-bottom:4px;
+            font-family:'Share Tech Mono', monospace;
+        }
+        .field-value {
+            font-size: clamp(.72rem,2vw,.83rem);
+            color:var(--fg);
+            font-weight:500;
+            letter-spacing:.3px;
+            word-break:break-all;
+            line-height:1.35;
+        }
+        .scanning {
+            color:var(--fg-dim);
+            font-size:.7rem;
+        }
+        .scanning::after {
+            content:'';
+            animation:scanText 1.8s steps(1) infinite;
+        }
+        @keyframes scanText {
+            0%   { content:'scanning.'; }
+            33%  { content:'scanning..'; }
+            66%  { content:'scanning...'; }
         }
 
-        @keyframes blink {
-            0%, 50% { opacity: 1; }
-            51%, 100% { opacity: 0; }
+        /* ═══════════════════════════════════
+           TERMINAL
+        ═══════════════════════════════════ */
+        .term-wrap {
+            position:fixed;
+            bottom: clamp(56px,11vw,72px);
+            left:50%; transform:translateX(-50%);
+            z-index:100;
+            width: min(560px, calc(100vw - 24px));
+            animation:termIn .9s ease-out .35s both;
+        }
+        @keyframes termIn {
+            from { opacity:0; transform:translateX(-50%) translateY(38px); }
+            to   { opacity:1; transform:translateX(-50%) translateY(0); }
         }
 
-        .terminal-error {
-            margin-top: 8px;
-            color: #ff6b6b;
-            font-size: 0.75rem;
-            font-family: 'JetBrains Mono', monospace;
-            display: none;
+        /* corner brackets on terminal */
+        .term-wrap::before,
+        .term-wrap::after,
+        .term-wrap .tc, .term-wrap .tc2 {
+            content:'';
+            position:absolute;
+            width:12px; height:12px;
+            pointer-events:none; z-index:5;
+        }
+        .term-wrap::before { top:-1px; left:-1px; border-top:1.5px solid var(--border); border-left:1.5px solid var(--border); }
+        .term-wrap::after  { top:-1px; right:-1px; border-top:1.5px solid var(--border); border-right:1.5px solid var(--border); }
+        .tc  { bottom:-1px; left:-1px; border-bottom:1.5px solid var(--border); border-left:1.5px solid var(--border); }
+        .tc2 { bottom:-1px; right:-1px; border-bottom:1.5px solid var(--border); border-right:1.5px solid var(--border); }
+
+        .term-box {
+            background:rgba(2,2,2,.97);
+            border:1px solid rgba(255,255,255,.2);
+            border-radius:var(--r-lg);
+            padding: clamp(12px,3vw,16px) clamp(14px,4vw,22px);
+            backdrop-filter:blur(16px);
+            -webkit-backdrop-filter:blur(16px);
+            box-shadow:
+                inset 0 1px 0 rgba(255,255,255,.04),
+                0 0 50px rgba(0,0,0,.9),
+                0 0 28px rgba(255,255,255,.04);
         }
 
-        .terminal-error.show {
-            display: block;
-            animation: shake 0.3s ease-in-out;
+        /* macOS-style title bar */
+        .term-bar {
+            display:flex; align-items:center; gap:8px;
+            margin-bottom:10px; padding-bottom:9px;
+            border-bottom:1px solid var(--border-sub);
         }
+        .dots { display:flex; gap:5px; }
+        .dot {
+            width:8px; height:8px; border-radius:50%;
+        }
+        .dot.r { background:#ff5f57; }
+        .dot.y { background:#febc2e; }
+        .dot.g { background:var(--accent); box-shadow:0 0 6px var(--accent); }
+
+        .term-title {
+            flex:1; text-align:center;
+            font-size: clamp(.55rem,1.5vw,.65rem);
+            color:var(--fg-dim);
+            letter-spacing:1.5px;
+            text-transform:uppercase;
+        }
+
+        /* signal bars */
+        .sig { display:flex; align-items:flex-end; gap:2px; }
+        .sig span {
+            width:3px; background:var(--fg-dim); border-radius:1px;
+        }
+        .sig span:nth-child(1) { height:5px; background:var(--accent); }
+        .sig span:nth-child(2) { height:8px; background:var(--accent); }
+        .sig span:nth-child(3) { height:11px; background:var(--accent); }
+        .sig span:nth-child(4) { height:14px; }
+
+        .term-line {
+            display:flex; align-items:center; gap:7px;
+            font-family:'JetBrains Mono', monospace;
+            font-size: clamp(.75rem,2.2vw,.9rem);
+        }
+        .p-user { color:var(--accent); font-weight:600; }
+        .p-sep  { color:var(--fg-dim); }
+        .p-sym  { color:var(--fg); }
+
+        .term-input {
+            flex:1; min-width:0;
+            background:transparent; border:none; outline:none;
+            color:var(--fg);
+            font-family:'JetBrains Mono', monospace;
+            font-size: clamp(.75rem,2.2vw,.9rem);
+            padding:3px 0;
+            caret-color:var(--accent);
+            -webkit-appearance:none;
+        }
+        .term-input::placeholder { color:rgba(255,255,255,.18); }
+
+        .cursor-blk {
+            display:inline-block;
+            width: clamp(6px,1.5vw,8px);
+            height:1.1em;
+            background:var(--accent);
+            box-shadow:0 0 8px var(--accent);
+            animation:blinkC .9s step-end infinite;
+            flex-shrink:0;
+        }
+        @keyframes blinkC {
+            0%,49% { opacity:1; }
+            50%,100% { opacity:0; }
+        }
+
+        .term-out {
+            margin-top:7px;
+            font-family:'JetBrains Mono', monospace;
+            font-size: clamp(.6rem,1.6vw,.7rem);
+            display:none;
+        }
+        .term-out.show { display:block; animation:shake .3s ease-in-out; }
+        .out-err { color:var(--red); }
+        .out-ok  { color:var(--accent); }
 
         @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
+            0%,100% { transform:translateX(0); }
+            25%     { transform:translateX(-5px); }
+            75%     { transform:translateX(5px); }
         }
 
-        /* Hint Button - Floating & Rounded */
-        .hint-button {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 101;
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            background: rgba(0, 0, 0, 0.9);
-            border: 2px solid #ffffff;
-            color: #ffffff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 1.2rem;
-            box-shadow: 0 0 30px rgba(255, 255, 255, 0.4);
-            transition: all 0.3s ease;
-            animation: pulse 2s ease-in-out infinite;
+        /* ═══════════════════════════════════
+           HINT BUTTON
+        ═══════════════════════════════════ */
+        .hint-btn {
+            position:fixed;
+            bottom: clamp(12px,3vw,18px);
+            right: clamp(12px,3vw,20px);
+            z-index:101;
+            width: clamp(40px,10vw,48px);
+            height: clamp(40px,10vw,48px);
+            border-radius:50%;
+            background:var(--bg);
+            border:1.5px solid var(--border);
+            color:var(--fg);
+            display:flex; align-items:center; justify-content:center;
+            cursor:pointer;
+            font-size: clamp(.9rem,2.5vw,1.1rem);
+            transition:all .25s ease;
+            animation:hintPulse 2.5s ease-in-out infinite;
+        }
+        @keyframes hintPulse {
+            0%,100% { box-shadow:0 0 16px rgba(255,255,255,.18); }
+            50%      { box-shadow:0 0 32px rgba(255,255,255,.42), 0 0 60px rgba(255,255,255,.1); }
+        }
+        .hint-btn:hover, .hint-btn:active {
+            background:var(--fg); color:var(--bg);
+            transform:scale(1.12) rotate(15deg);
+            box-shadow:0 0 40px rgba(255,255,255,.8);
         }
 
-        @keyframes pulse {
-            0%, 100% { 
-                box-shadow: 0 0 30px rgba(255, 255, 255, 0.4);
-                transform: scale(1);
-            }
-            50% { 
-                box-shadow: 0 0 50px rgba(255, 255, 255, 0.7);
-                transform: scale(1.05);
-            }
+        /* ═══════════════════════════════════
+           MODAL
+        ═══════════════════════════════════ */
+        .overlay {
+            display:none;
+            position:fixed; inset:0;
+            background:rgba(0,0,0,.78);
+            backdrop-filter:blur(5px);
+            z-index:199;
         }
+        .overlay.show { display:block; }
 
-        .hint-button:hover {
-            background: #ffffff;
-            color: #000000;
-            transform: scale(1.1);
-            box-shadow: 0 0 60px rgba(255, 255, 255, 1);
+        .modal {
+            display:none;
+            position:fixed; top:50%; left:50%;
+            transform:translate(-50%,-50%);
+            z-index:200;
+            width: min(480px, calc(100vw - 28px));
         }
-
-        /* Hint Modal - Rounded */
-        .hint-modal {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 200;
-            background: rgba(0, 0, 0, 0.95);
-            border: 2px solid #ffffff;
-            border-radius: 20px;
-            padding: 30px;
-            max-width: 500px;
-            width: 90%;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            box-shadow: 0 0 60px rgba(255, 255, 255, 0.5);
-        }
-
-        .hint-modal.show {
-            display: block;
-            animation: modalPop 0.3s ease-out;
-        }
+        .modal.show { display:block; animation:modalPop .3s cubic-bezier(.34,1.56,.64,1); }
 
         @keyframes modalPop {
-            0% {
-                opacity: 0;
-                transform: translate(-50%, -50%) scale(0.8);
-            }
-            100% {
-                opacity: 1;
-                transform: translate(-50%, -50%) scale(1);
-            }
+            from { opacity:0; transform:translate(-50%,-50%) scale(.85); }
+            to   { opacity:1; transform:translate(-50%,-50%) scale(1); }
         }
 
-        .hint-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+        .modal-outer { position:relative; }
+        .modal-outer::before, .modal-outer::after,
+        .modal-outer .mb, .modal-outer .mb2 {
+            content:''; position:absolute;
+            width:16px; height:16px; z-index:5;
+        }
+        .modal-outer::before { top:-2px; left:-2px; border-top:2px solid var(--accent); border-left:2px solid var(--accent); box-shadow:-1px -1px 12px var(--accent-glow); }
+        .modal-outer::after  { top:-2px; right:-2px; border-top:2px solid var(--accent); border-right:2px solid var(--accent); box-shadow:1px -1px 12px var(--accent-glow); }
+        .mb  { bottom:-2px; left:-2px; border-bottom:2px solid var(--accent); border-left:2px solid var(--accent); box-shadow:-1px 1px 12px var(--accent-glow); }
+        .mb2 { bottom:-2px; right:-2px; border-bottom:2px solid var(--accent); border-right:2px solid var(--accent); box-shadow:1px 1px 12px var(--accent-glow); }
+
+        .modal-box {
+            background:rgba(3,3,3,.97);
+            border:1px solid rgba(255,255,255,.18);
+            border-radius:var(--r-lg);
+            padding: clamp(20px,5vw,32px);
+            box-shadow:0 0 80px rgba(0,0,0,.95), 0 0 40px rgba(0,255,163,.07);
         }
 
-        .hint-header i {
-            font-size: 1.5rem;
-            color: #ffffff;
+        .modal-head {
+            display:flex; align-items:center; gap:12px;
+            margin-bottom:18px; padding-bottom:14px;
+            border-bottom:1px solid var(--border-sub);
+        }
+        .modal-icon {
+            width:36px; height:36px;
+            background:var(--accent-dim);
+            border:1px solid rgba(0,255,163,.35);
+            border-radius:8px;
+            display:flex; align-items:center; justify-content:center;
+            color:var(--accent); font-size:1rem;
+            box-shadow:0 0 16px var(--accent-glow);
+        }
+        .modal-title {
+            font-family:'Orbitron', monospace;
+            font-size: clamp(.85rem,2.5vw,1.1rem);
+            font-weight:700;
+            text-transform:uppercase; letter-spacing:2px;
+        }
+        .modal-body {
+            font-size: clamp(.72rem,2vw,.84rem);
+            color:var(--fg-dim);
+            line-height:1.65; margin-bottom:14px;
+        }
+        .modal-cmd {
+            background:rgba(0,255,163,.05);
+            border:1px solid rgba(0,255,163,.22);
+            border-radius:var(--r);
+            padding: clamp(10px,2.5vw,14px) 16px;
+            font-family:'JetBrains Mono', monospace;
+            font-size: clamp(.7rem,2vw,.86rem);
+            color:var(--accent);
+            margin-bottom:20px;
+            text-align:center; word-break:break-all;
+            box-shadow:inset 0 0 20px rgba(0,255,163,.04);
+        }
+        .modal-close {
+            width:100%;
+            background:var(--fg);
+            border:2px solid var(--fg);
+            border-radius:var(--r);
+            color:var(--bg);
+            padding: clamp(10px,2.5vw,13px) 20px;
+            font-family:'Orbitron', monospace;
+            font-size: clamp(.7rem,2vw,.84rem);
+            font-weight:700;
+            text-transform:uppercase; letter-spacing:2px;
+            cursor:pointer;
+            transition:all .25s ease;
+        }
+        .modal-close:hover, .modal-close:active {
+            background:var(--bg); color:var(--fg);
+            box-shadow:0 0 30px rgba(255,255,255,.28);
         }
 
-        .hint-title {
-            font-family: 'Orbitron', monospace;
-            font-size: 1.2rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 2px;
+        /* ═══════════════════════════════════
+           FADE OUT
+        ═══════════════════════════════════ */
+        .fade-out { animation:pageOut .8s ease-out forwards; }
+        @keyframes pageOut {
+            to { opacity:0; visibility:hidden; }
         }
 
-        .hint-content {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.9rem;
-            margin-bottom: 20px;
-            line-height: 1.6;
+        /* ═══════════════════════════════════
+           RESPONSIVE
+        ═══════════════════════════════════ */
+        @media (max-width:380px) {
+            .info-grid { grid-template-columns:1fr; }
+            .info-field.full { grid-column:1; }
         }
 
-        .hint-command {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 8px;
-            padding: 12px 15px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 1rem;
-            color: #ffffff;
-            margin-bottom: 20px;
-            text-align: center;
-            letter-spacing: 1px;
+        @media (max-height:520px) and (orientation:landscape) {
+            .page-wrap { padding-top:10px; }
+            .subtitles { display:none; }
+            .logo-text { font-size:2rem; }
+            .panel-outer { margin-top:10px; }
+            .info-grid { grid-template-columns:repeat(3,1fr); }
+            .info-field.full { grid-column:1/-1; }
+            body { padding-bottom:108px; }
+            .term-wrap { bottom:8px; }
         }
 
-        .hint-close {
-            background: #ffffff;
-            border: 2px solid #ffffff;
-            border-radius: 10px;
-            color: #000000;
-            padding: 10px 25px;
-            font-family: 'Orbitron', monospace;
-            font-size: 0.9rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            width: 100%;
-        }
-
-        .hint-close:hover {
-            background: #000000;
-            color: #ffffff;
-            box-shadow: 0 0 30px rgba(255, 255, 255, 0.6);
-        }
-
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 199;
-        }
-
-        .modal-overlay.show {
-            display: block;
-        }
-
-        /* Fade out animation */
-        .fade-out {
-            animation: fadeOut 0.8s ease-out forwards;
-        }
-
-        @keyframes fadeOut {
-            to {
-                opacity: 0;
-                visibility: hidden;
-            }
-        }
-
-        /* Responsive design */
-        @media (max-width: 768px) {
-            .user-info-panel {
-                top: 10px;
-                right: 10px;
-                max-width: 240px;
-                padding: 10px 15px;
-            }
-
-            .info-title {
-                font-size: 0.7rem;
-            }
-
-            .info-grid {
-                font-size: 0.65rem;
-                gap: 3px 8px;
-            }
-
-            .info-label, .info-value {
-                font-size: 0.6rem;
-            }
-
-            .terminal-container {
-                min-width: 90%;
-                bottom: 80px;
-            }
-
-            .terminal-input-wrapper {
-                font-size: 0.8rem;
-            }
-
-            .hint-button {
-                bottom: 15px;
-                right: 15px;
-                width: 40px;
-                height: 40px;
-                font-size: 1rem;
-            }
-
-            .hint-modal {
-                padding: 20px;
-            }
-
-            .hint-title {
-                font-size: 1rem;
-            }
-
-            .hint-content {
-                font-size: 0.8rem;
-            }
-
-            .hint-command {
-                font-size: 0.85rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .user-info-panel {
-                max-width: 200px;
-                padding: 8px 12px;
-            }
-
-            .info-grid {
-                grid-template-columns: 1fr;
-                gap: 3px;
-            }
-
-            .info-label {
-                margin-top: 6px;
-            }
-
-            .logo-text {
-                letter-spacing: 4px;
-            }
-
-            .subtitle {
-                letter-spacing: 1px;
-                font-size: 0.75rem;
-            }
-
-            .terminal-container {
-                padding: 12px 15px;
-            }
+        @media (hover:none) {
+            .info-field:active { border-color:rgba(255,255,255,.24); background:rgba(255,255,255,.045); }
+            .info-field:active::before { opacity:1; }
         }
     </style>
 </head>
 <body>
-    <!-- Modal Overlay -->
-    <div class="modal-overlay" id="modalOverlay"></div>
 
-    <!-- User Info Panel - Compact & Rounded -->
-    <div class="user-info-panel" id="userInfoPanel">
-        <div class="info-header">
-            <i class="fas fa-satellite-dish"></i>
-            <span class="info-title">Visitor Info</span>
-        </div>
-        <div class="info-grid">
-            <span class="info-label">IP:</span>
-            <span class="info-value" id="ipAddress"><span class="loading-indicator"></span></span>
-            
-            <span class="info-label">LOC:</span>
-            <span class="info-value" id="location"><span class="loading-indicator"></span></span>
-            
-            <span class="info-label">ISP:</span>
-            <span class="info-value" id="isp"><span class="loading-indicator"></span></span>
-            
-            <span class="info-label">DEV:</span>
-            <span class="info-value" id="device"><span class="loading-indicator"></span></span>
-            
-            <span class="info-label">OS:</span>
-            <span class="info-value" id="os"><span class="loading-indicator"></span></span>
+<!-- Background layers -->
+<div class="bg-grid"    aria-hidden="true"></div>
+<div class="bg-vignette" aria-hidden="true"></div>
+<div class="bg-scan"    aria-hidden="true"></div>
+<div class="bg-bleed"   aria-hidden="true"></div>
+
+<div class="overlay" id="overlay"></div>
+
+<!-- ══════════════════════════════════
+     MAIN
+══════════════════════════════════ -->
+<div class="page-wrap">
+
+    <!-- Brand -->
+    <div class="brand-wrap">
+        <h1 class="logo-text" data-text="0xb0rn3">0xb0rn3</h1>
+        <div class="subtitles">
+            <p class="subtitle">Oh! Hey citizen 👋 &nbsp;Need access? use a <span class="accent-text">KEY</span> 🤫</p>
+            <p class="subtitle">panic(<span class="accent-text">"Attempted to kill init! exitcode=0x%08x"</span>);</p>
         </div>
     </div>
 
-    <!-- Welcome Content -->
-    <div class="welcome-container" id="welcomeContainer">
-        <h1 class="logo-text">0xb0rn3</h1>
-        <p class="subtitle">Oh!Hey citizen,👋 Need access? use a KEY 🤫</p>
-        <p class="subtitle">panic(Attempted to kill init! exitcode=0x%08x");</p>
+    <!-- Visitor Intel -->
+    <div class="panel-outer" id="panelOuter">
+        <span class="cb"  aria-hidden="true"></span>
+        <span class="cb2" aria-hidden="true"></span>
+
+        <div class="panel">
+            <div class="panel-head">
+                <div class="head-icon" aria-hidden="true">
+                    <i class="fas fa-satellite-dish"></i>
+                </div>
+                <div class="head-text">
+                    <div class="head-title">Visitor Intel</div>
+                    <div class="head-sub">Passive recon — no interaction required</div>
+                </div>
+                <div class="live-badge">
+                    <span class="live-dot" aria-hidden="true"></span>
+                    LIVE
+                </div>
+            </div>
+
+            <div class="info-grid">
+                <div class="info-field">
+                    <div class="field-label">IP Address</div>
+                    <div class="field-value" id="fIP"><span class="scanning"></span></div>
+                </div>
+                <div class="info-field">
+                    <div class="field-label">Location</div>
+                    <div class="field-value" id="fLoc"><span class="scanning"></span></div>
+                </div>
+                <div class="info-field">
+                    <div class="field-label">Device</div>
+                    <div class="field-value" id="fDev"><span class="scanning"></span></div>
+                </div>
+                <div class="info-field">
+                    <div class="field-label">OS</div>
+                    <div class="field-value" id="fOS"><span class="scanning"></span></div>
+                </div>
+                <div class="info-field full">
+                    <div class="field-label">ISP / Organisation</div>
+                    <div class="field-value" id="fISP"><span class="scanning"></span></div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- Terminal Authentication Box - Rounded -->
-    <div class="terminal-container" id="terminalContainer">
-        <div class="terminal-header">
-            <i class="fas fa-terminal"></i>
-            <span>SYSTEM ACCESS REQUIRED</span>
+</div><!-- /page-wrap -->
+
+<!-- ══════════════════════════════════
+     TERMINAL
+══════════════════════════════════ -->
+<div class="term-wrap" id="termWrap">
+    <span class="tc"  aria-hidden="true"></span>
+    <span class="tc2" aria-hidden="true"></span>
+
+    <div class="term-box">
+        <div class="term-bar">
+            <div class="dots">
+                <span class="dot r"></span>
+                <span class="dot y"></span>
+                <span class="dot g"></span>
+            </div>
+            <span class="term-title">SYSTEM ACCESS — AUTHENTICATE</span>
+            <div class="sig" aria-hidden="true">
+                <span></span><span></span><span></span><span></span>
+            </div>
         </div>
-        <div class="terminal-input-wrapper">
-            <span class="terminal-prompt">visitor@root:~$</span>
-            <input type="text" class="terminal-input" id="terminalInput" autofocus>
-            <span class="cursor"></span>
+
+        <div class="term-line">
+            <span class="p-user">visitor</span>
+            <span class="p-sep">@</span>
+            <span class="p-sep">root</span>
+            <span class="p-sep">:</span>
+            <span class="p-sep">~</span>
+            <span class="p-sym">$</span>
+            <input
+                type="text"
+                class="term-input"
+                id="termInput"
+                autofocus
+                autocomplete="off"
+                autocorrect="off"
+                autocapitalize="off"
+                spellcheck="false"
+                inputmode="text"
+                placeholder="enter access key..."
+                aria-label="Access key input"
+            >
+            <span class="cursor-blk" aria-hidden="true"></span>
         </div>
-        <div class="terminal-error" id="terminalError"></div>
+
+        <div class="term-out" id="termOut"></div>
     </div>
+</div>
 
-    <!-- Hint Button - Floating & Rounded -->
-    <div class="hint-button" id="hintButton">
-        <i class="fas fa-key"></i>
+<!-- ══════════════════════════════════
+     HINT
+══════════════════════════════════ -->
+<button class="hint-btn" id="hintBtn" aria-label="Show access key hint">
+    <i class="fas fa-key"></i>
+</button>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+    <div class="modal-outer">
+        <span class="mb"  aria-hidden="true"></span>
+        <span class="mb2" aria-hidden="true"></span>
+
+        <div class="modal-box">
+            <div class="modal-head">
+                <div class="modal-icon" aria-hidden="true">
+                    <i class="fas fa-lightbulb"></i>
+                </div>
+                <span class="modal-title" id="mTitle">Access Key</span>
+            </div>
+            <p class="modal-body">Need help gaining access? Type this command <em>exactly</em> into the terminal:</p>
+            <div class="modal-cmd">setuid(0); execve("/bin/sh", NULL, NULL);</div>
+            <p class="modal-body" style="margin-bottom:20px;">
+                Submit with <kbd style="color:var(--fg);background:rgba(255,255,255,.08);padding:1px 6px;border-radius:3px;font-size:.85em;font-family:inherit;">Enter</kbd> to gain root access.
+            </p>
+            <button class="modal-close" id="modalClose">GOT IT</button>
+        </div>
     </div>
+</div>
 
-    <!-- Hint Modal - Rounded -->
-    <div class="hint-modal" id="hintModal">
-        <div class="hint-header">
-            <i class="fas fa-lightbulb"></i>
-            <span class="hint-title">Access Key</span>
-        </div>
-        <div class="hint-content">
-            Need help gaining access? Try this command:
-        </div>
-        <div class="hint-command">setuid(0); execve("/bin/sh", NULL, NULL);</div>
-        <div class="hint-content">
-            Type the command into the terminal to gain root access.
-        </div>
-        <button class="hint-close" id="hintClose">GOT IT</button>
-    </div>
+<script>
+'use strict';
 
-    <script>
-        // Correct access command
-        const ACCESS_COMMAND = 'setuid(0); execve("/bin/sh", NULL, NULL);';
+const ACCESS_CMD = 'setuid(0); execve("/bin/sh", NULL, NULL);';
 
-        // Error messages (Arch Linux style)
-        const ERROR_MESSAGES = [
-            'bash: permission denied: insufficient privileges',
-            'sudo: command not found. nice try, script kiddie',
-            'access denied: authorization required',
-            'error: invalid credentials. go read the docs',
-            'bash: command not recognized. rtfm',
-            'fatal: authentication failed. try harder',
-            'error: access violation. stop button mashing'
-        ];
+const ERRORS = [
+    'bash: permission denied: insufficient privileges',
+    'sudo: command not found — nice try, script kiddie',
+    'access denied: authorization required',
+    'error: invalid credentials — go read the docs',
+    'bash: command not recognized — rtfm',
+    'fatal: authentication failed — try harder',
+    'error: access violation — stop button mashing',
+    'segfault at 0x00000000 — null pointer dereference',
+    'EACCES: operation not permitted',
+];
 
-        // Device Detection
-        function getDeviceInfo() {
-            const ua = navigator.userAgent;
-            let device = 'Desktop';
-            
-            if (/mobile/i.test(ua)) device = 'Mobile';
-            else if (/tablet|ipad/i.test(ua)) device = 'Tablet';
-            
-            if (/iPhone/i.test(ua)) device = 'iPhone';
-            else if (/iPad/i.test(ua)) device = 'iPad';
-            else if (/Android/i.test(ua) && /mobile/i.test(ua)) device = 'Android';
-            else if (/Android/i.test(ua)) device = 'Tablet';
-            
-            return device;
+/* ── Device / OS ── */
+const ua = navigator.userAgent;
+
+function getDevice() {
+    if (/iPhone/i.test(ua))                         return 'iPhone';
+    if (/iPad/i.test(ua))                           return 'iPad';
+    if (/Android/i.test(ua) && /mobile/i.test(ua)) return 'Android Phone';
+    if (/Android/i.test(ua))                        return 'Android Tablet';
+    if (/mobile/i.test(ua))                         return 'Mobile';
+    return 'Desktop';
+}
+
+function getOS() {
+    if (/Windows NT 10/i.test(ua))        return 'Windows 10/11';
+    if (/Windows/i.test(ua))              return 'Windows';
+    if (/Mac OS X/i.test(ua))             return 'macOS';
+    if (/Android/i.test(ua))              return 'Android';
+    if (/iPhone|iPad|iPod/i.test(ua))     return 'iOS';
+    if (/Linux/i.test(ua))                return 'Linux';
+    if (/X11/i.test(ua))                  return 'UNIX';
+    return 'Unknown';
+}
+
+document.getElementById('fDev').textContent = getDevice();
+document.getElementById('fOS').textContent  = getOS();
+
+/* ── IP Fetch ── */
+(async () => {
+    try {
+        const d = await (await fetch('https://ipapi.co/json/')).json();
+        const ip  = d.ip || 'Hidden';
+        const loc = [d.city, d.region_code, d.country_name].filter(Boolean).slice(0,2).join(', ') || 'Unknown';
+        const isp = d.org ? (d.org.length > 44 ? d.org.slice(0,44)+'…' : d.org) : 'Unknown';
+        typeIn('fIP',  ip);
+        typeIn('fLoc', loc);
+        typeIn('fISP', isp);
+    } catch {
+        ['fIP','fLoc','fISP'].forEach(id => document.getElementById(id).textContent = 'Unavailable');
+    }
+})();
+
+function typeIn(id, text) {
+    const el = document.getElementById(id);
+    el.textContent = '';
+    let i = 0;
+    const tick = () => {
+        if (i < text.length) {
+            el.textContent += text[i++];
+            setTimeout(tick, 20 + Math.random() * 18);
         }
+    };
+    tick();
+}
 
-        // OS Detection
-        function getOSInfo() {
-            const ua = navigator.userAgent;
-            let os = 'Unknown';
-            
-            if (ua.indexOf('Win') > -1) os = 'Windows';
-            else if (ua.indexOf('Mac') > -1) os = 'macOS';
-            else if (ua.indexOf('X11') > -1) os = 'UNIX';
-            else if (ua.indexOf('Linux') > -1) os = 'Linux';
-            else if (/Android/i.test(ua)) os = 'Android';
-            else if (/iPhone|iPad|iPod/i.test(ua)) os = 'iOS';
-            
-            return os;
-        }
+/* ── Terminal ── */
+const termInput = document.getElementById('termInput');
+const termOut   = document.getElementById('termOut');
 
-        // Set device info immediately
-        document.getElementById('device').textContent = getDeviceInfo();
-        document.getElementById('os').textContent = getOSInfo();
+function handleCmd() {
+    const cmd = termInput.value.trim();
+    if (!cmd) return;
 
-        // Fetch IP and Location Info
-        async function fetchUserInfo() {
-            try {
-                const response = await fetch('https://ipapi.co/json/');
-                const data = await response.json();
-                
-                document.getElementById('ipAddress').textContent = data.ip || 'Unknown';
-                document.getElementById('location').textContent = `${data.city || '???'}, ${data.country_code || '??'}`;
-                document.getElementById('isp').textContent = data.org ? data.org.substring(0, 25) + '...' : 'Unknown';
-            } catch (error) {
-                console.error('Error fetching IP info:', error);
-                document.getElementById('ipAddress').textContent = 'Hidden';
-                document.getElementById('location').textContent = 'Unknown';
-                document.getElementById('isp').textContent = 'Unknown';
-            }
-        }
+    if (cmd === ACCESS_CMD) {
+        termOut.textContent = '▶ ACCESS GRANTED — initialising shell...';
+        termOut.className = 'term-out show out-ok';
+        termInput.disabled = true;
+        termInput.value = '';
+        setTimeout(() => {
+            document.body.classList.add('fade-out');
+            setTimeout(() => { window.location.href = 'main.html'; }, 800);
+        }, 600);
+    } else {
+        const msg = ERRORS[Math.floor(Math.random() * ERRORS.length)];
+        termOut.textContent = '✖ ' + msg;
+        termOut.className = 'term-out';
+        void termOut.offsetWidth;
+        termOut.classList.add('show', 'out-err');
+        termInput.value = '';
+    }
+}
 
-        // Initialize
-        fetchUserInfo();
+termInput.addEventListener('keypress', e => { if (e.key === 'Enter') handleCmd(); });
 
-        // Terminal Input Handler
-        const terminalInput = document.getElementById('terminalInput');
-        const terminalError = document.getElementById('terminalError');
+/* Tap anywhere → focus terminal */
+document.addEventListener('click', e => {
+    if (!document.getElementById('panelOuter').contains(e.target) &&
+        !document.getElementById('modal').contains(e.target) &&
+        !document.getElementById('hintBtn').contains(e.target)) {
+        termInput.focus();
+    }
+});
 
-        terminalInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                const command = terminalInput.value.trim();
-                
-                if (command === ACCESS_COMMAND) {
-                    // Correct command - grant access
-                    terminalError.classList.remove('show');
-                    terminalInput.disabled = true;
-                    terminalInput.value = 'ACCESS GRANTED...';
-                    
-                    setTimeout(() => {
-                        document.body.classList.add('fade-out');
-                        setTimeout(() => {
-                            window.location.href = 'main.html';
-                        }, 800);
-                    }, 500);
-                } else if (command.length > 0) {
-                    // Wrong command - show error
-                    const randomError = ERROR_MESSAGES[Math.floor(Math.random() * ERROR_MESSAGES.length)];
-                    terminalError.textContent = randomError;
-                    terminalError.classList.remove('show');
-                    
-                    // Force reflow to restart animation
-                    void terminalError.offsetWidth;
-                    terminalError.classList.add('show');
-                    
-                    terminalInput.value = '';
-                }
-            }
-        });
+/* ── Modal ── */
+const hintBtn    = document.getElementById('hintBtn');
+const modal      = document.getElementById('modal');
+const modalClose = document.getElementById('modalClose');
+const overlay    = document.getElementById('overlay');
 
-        // Hint Button Handler
-        const hintButton = document.getElementById('hintButton');
-        const hintModal = document.getElementById('hintModal');
-        const hintClose = document.getElementById('hintClose');
-        const modalOverlay = document.getElementById('modalOverlay');
+const openModal  = () => { modal.classList.add('show'); overlay.classList.add('show'); };
+const closeModal = () => { modal.classList.remove('show'); overlay.classList.remove('show'); };
 
-        hintButton.addEventListener('click', () => {
-            hintModal.classList.add('show');
-            modalOverlay.classList.add('show');
-        });
+hintBtn.addEventListener('click', openModal);
+modalClose.addEventListener('click', closeModal);
+overlay.addEventListener('click', closeModal);
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
-        hintClose.addEventListener('click', () => {
-            hintModal.classList.remove('show');
-            modalOverlay.classList.remove('show');
-        });
-
-        modalOverlay.addEventListener('click', () => {
-            hintModal.classList.remove('show');
-            modalOverlay.classList.remove('show');
-        });
-
-        // Console styling
-        console.log('%c0xb0rn3 - Access Terminal', 'color: #ffffff; font-size: 20px; font-weight: bold; background: #000; padding: 10px;');
-        console.log('%cHint: Try checking the bottom right corner...', 'color: #b0b0b0; font-size: 12px;');
-    </script>
+/* ── Console ── */
+console.log('%c0xb0rn3', 'color:#00ffa3;font-size:28px;font-weight:900;font-family:monospace;background:#000;padding:8px 20px;border-radius:4px;border:1px solid #00ffa3;');
+console.log('%c[*] hint: bottom-right corner holds the key...', 'color:#555;font-size:11px;font-family:monospace;');
+</script>
 </body>
 </html>
