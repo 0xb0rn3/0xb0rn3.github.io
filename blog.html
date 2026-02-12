@@ -532,11 +532,36 @@
             </p>
             <div class="post-count">
                 <i class="fas fa-file-code"></i>
-                4 posts published
+                5 posts published
             </div>
         </div>
 
         <div class="blog-grid" id="blogGrid">
+
+            <!-- Xpl0it — Sudo NSS Privesc -->
+            <article class="blog-card">
+                <div class="card-stripe" style="background:linear-gradient(90deg,var(--orange),var(--yellow));"></div>
+                <div class="card-inner">
+                    <div class="card-meta">
+                        <span class="card-date"><i class="fas fa-calendar-alt" style="margin-right:4px;font-size:.55rem;"></i>February 2026</span>
+                        <span class="card-read"><i class="fas fa-clock"></i>~10 min read</span>
+                    </div>
+                    <h2 class="card-title">Sudo NSS Library Hijack: From User to Root</h2>
+                    <p class="card-excerpt">
+                        Deep dive into Xpl0it — a PoC exploiting sudo's trust model when handling
+                        dynamic library loading in chroot environments. How <code style="font-size:.8em;color:var(--yellow);background:rgba(250,189,47,.08);border:1px solid rgba(250,189,47,.22);border-radius:6px;padding:1px 5px;">sudo -R</code>
+                        + a crafted nsswitch.conf delivers a root shell.
+                    </p>
+                    <div class="card-tags">
+                        <span class="card-tag tag-red">PrivEsc</span>
+                        <span class="card-tag tag-orange">Sudo</span>
+                        <span class="card-tag tag-yellow">NSS Hijack</span>
+                    </div>
+                    <a href="Blog/xpl0it.html" class="card-link link-yellow">
+                        Read More <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </article>
 
             <!-- GraphQL -->
             <article class="blog-card">
