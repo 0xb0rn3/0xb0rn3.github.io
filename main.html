@@ -410,12 +410,35 @@
             margin-top: .3rem;
         }
 
-        .hero-desc {
-            font-size: clamp(.78rem,2vw,.92rem);
-            color: var(--fg-muted);
-            line-height: 1.9; max-width: 560px;
+        /* Quote rotator */
+        .quote-box {
+            max-width: 580px;
+            min-height: 80px;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
             animation: heroFade .7s cubic-bezier(.16,1,.3,1) .8s both;
         }
+        .quote-text {
+            font-size: clamp(.78rem,2vw,.92rem);
+            color: var(--fg-muted);
+            line-height: 1.9;
+            text-align: center;
+            font-style: italic;
+            transition: opacity .5s ease;
+        }
+        .quote-text::before { content: '\201C'; color: var(--yellow); font-size: 1.2em; }
+        .quote-text::after  { content: '\201D'; color: var(--yellow); font-size: 1.2em; }
+        .quote-author {
+            font-size: clamp(.58rem,1.4vw,.66rem);
+            color: var(--yellow);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: .4rem;
+            transition: opacity .5s ease;
+        }
+        .quote-box.fade .quote-text,
+        .quote-box.fade .quote-author { opacity: 0; }
 
         /* Skill pills */
         .skill-row {
@@ -1031,9 +1054,10 @@
                 <p class="hero-subtitle">Cybersecurity Specialist &middot; Security Researcher</p>
             </div>
 
-            <p class="hero-desc">
-                Where theory ends, my tools take over. I design and develop cybersecurity solutions that merge technical depth with practical impact — focused on automation, precision, and real-world execution.
-            </p>
+            <div class="quote-box" id="quoteBox">
+                <p class="quote-text" id="quoteText"></p>
+                <p class="quote-author" id="quoteAuthor"></p>
+            </div>
 
             <div class="skill-row">
                 <div class="skill-pill"><i class="fas fa-shield-alt"></i>Security Researcher</div>
@@ -1224,6 +1248,32 @@
                     <a href="https://github.com/0xb0rn3" target="_blank" class="card-link aqua">
                         View on GitHub <i class="fas fa-arrow-right"></i>
                     </a>
+                </div>
+            </div>
+
+            <!-- CTF Autopwn Scripts -->
+            <div class="card">
+                <div class="card-accent red"></div>
+                <div class="card-body">
+                    <div class="card-icon red"><i class="fas fa-trophy"></i></div>
+                    <h3 class="card-title">CTF Autopwn Suite</h3>
+                    <div class="card-tag red">Automated Exploitation</div>
+                    <p class="card-desc">End-to-end CTF automation scripts that chain recon, enumeration, exploitation, and privilege escalation into single-command workflows. Includes rootmeautopwn — a full autopwner for TryHackMe's RootMe covering upload bypass, webshell deployment, and SUID escalation.</p>
+                    <div class="tech-stack">
+                        <span class="tech-tag lang-bash">Bash</span>
+                        <span class="tech-tag lang-py">Python</span>
+                        <span class="tech-tag">Nmap</span>
+                        <span class="tech-tag">Gobuster</span>
+                        <span class="tech-tag">GTFOBins</span>
+                    </div>
+                    <div style="display:flex;gap:.4rem;flex-wrap:wrap;">
+                        <a href="https://github.com/0xb0rn3/CTFS" target="_blank" class="card-link red">
+                            View Repo <i class="fas fa-arrow-right"></i>
+                        </a>
+                        <a href="CTF/rootme.html" class="card-link" style="color:var(--orange);border-color:rgba(254,128,25,.22);background:rgba(254,128,25,.04);">
+                            Writeup <i class="fas fa-pen-nib"></i>
+                        </a>
+                    </div>
                 </div>
             </div>
 
@@ -1456,9 +1506,9 @@
 
         const commands = [
             { cmd: 'whoami', out: '0xb0rn3 — security researcher & ethical hacker' },
-            { cmd: 'uname -a', out: 'Archcraft Linux · HP EliteBook 840 G6 · 32GB RAM' },
             { cmd: 'ls tools/', out: 'SecV  PhoneBookLOCA  kygoX  droidB  GitNav  ...' },
-            { cmd: 'cat mission.txt', out: 'automate. exploit. defend. repeat.' },
+            { cmd: 'cat /etc/motto', out: 'automate. exploit. defend. repeat.' },
+            { cmd: 'wc -l ~/repos/*', out: '45+ repositories · 150+ contributions' },
         ];
 
         let cmdIdx = 0;
@@ -1607,6 +1657,196 @@
             ticking = true;
         }
     }, { passive: true });
+
+    /* ── Quote Rotator (120+ quotes) ── */
+    (() => {
+        const Q = [
+            // ═══ LINUS TORVALDS ═══
+            ["Talk is cheap. Show me the code.", "Linus Torvalds"],
+            ["Bad programmers worry about the code. Good programmers worry about data structures and their relationships.", "Linus Torvalds"],
+            ["Theory and practice sometimes clash. And when that happens, theory loses. Every single time.", "Linus Torvalds"],
+            ["Intelligence is the ability to avoid doing work, yet getting the work done.", "Linus Torvalds"],
+            ["Most good programmers do programming not because they expect to get paid or get adulation by the public, but because it is fun to program.", "Linus Torvalds"],
+            ["Avoiding complexity reduces bugs.", "Linus Torvalds"],
+            ["If Microsoft ever does applications for Linux it means I've won.", "Linus Torvalds"],
+            ["Backups are for wimps. Real men upload their data to an FTP site and have everyone else mirror it.", "Linus Torvalds"],
+            ["The Linux philosophy is 'Laugh in the face of danger'. Oops. Wrong One. 'Do it yourself'. Yes, that's it.", "Linus Torvalds"],
+            ["My name is Linus Torvalds and I am your god.", "Linus Torvalds"],
+            ["Really, I'm not out to destroy Microsoft. That will just be a completely unintentional side effect.", "Linus Torvalds"],
+            ["Software is like sex: it's better when it's free.", "Linus Torvalds"],
+            ["Those that can, do. Those that can't, complain.", "Linus Torvalds"],
+            ["Don't hurry your code. Make sure it works well and is well designed. Don't worry about timing.", "Linus Torvalds"],
+            ["I'm an egotistical bastard, and I name all my projects after myself. First Linux, now git.", "Linus Torvalds"],
+            ["Nobody actually creates perfect code the first time around, except me. But there's only one of me.", "Linus Torvalds"],
+            ["If you think your users are idiots, only idiots will use it.", "Linus Torvalds"],
+            ["In real open source, you have the right to control your own destiny.", "Linus Torvalds"],
+            ["An individual developer like me cares about writing the new code and making it as interesting and efficient as possible.", "Linus Torvalds"],
+            ["I think of myself as an engineer, not as a visionary or 'big thinker.' I don't have any lofty goals.", "Linus Torvalds"],
+            ["On the internet nobody can hear you being subtle.", "Linus Torvalds"],
+            ["All operating systems suck, but Linux just sucks less.", "Linus Torvalds"],
+            ["Making Linux GPL'd was definitely the best thing I ever did.", "Linus Torvalds"],
+            ["Regression testing? What's that? If it compiles, it is good; if it boots up, it is perfect.", "Linus Torvalds"],
+            ["See, you not only have to be a good coder to create a system like Linux, you have to be a sneaky bastard too.", "Linus Torvalds"],
+            ["I'm doing a free operating system, just a hobby, won't be big and professional like gnu.", "Linus Torvalds"],
+            ["Microsoft isn't evil, they just make really crappy operating systems.", "Linus Torvalds"],
+            ["The way to do good basic design isn't actually to be really smart about it, but to try to have a few basic concepts.", "Linus Torvalds"],
+            ["I want my office to be quiet. The loudest thing in the room should be the occasional purring of the cat.", "Linus Torvalds"],
+            ["I very seldom worry about other systems. I concentrate pretty fully on just making Linux the best I can.", "Linus Torvalds"],
+            ["Once you start thinking more about where you want to be than about making the best product, you're screwed.", "Linus Torvalds"],
+            ["XML is crap. Really. There are no excuses.", "Linus Torvalds"],
+            ["When you say 'I wrote a program that crashed Windows,' people just stare at you blankly and say 'Hey, I got those with the system, for free.'", "Linus Torvalds"],
+            ["I try to avoid long-range plans and visions — that way I can more easily deal with anything new that comes up.", "Linus Torvalds"],
+            ["In many cases, the user interface to a program is the most important part for a commercial company: whether the program works correctly or not seems to be secondary.", "Linus Torvalds"],
+            ["I started Linux as a desktop operating system. And it's the only area where Linux hasn't completely taken over. That just annoys the hell out of me.", "Linus Torvalds"],
+            ["The thing with Linux is that the developers themselves are actually customers too.", "Linus Torvalds"],
+            ["There are lots of Linux users who don't care how the kernel works, but only want to use it. That is a tribute to how good Linux is.", "Linus Torvalds"],
+            ["Every time I see some piece of medical research saying that caffeine is good for you, I high-five myself. Because I'm going to live forever.", "Linus Torvalds"],
+            ["I am not a visionary. I'm an engineer. I'm happy with the people who are wandering around looking at the stars but I am looking at the ground and I want to fix the pothole before I fall in.", "Linus Torvalds"],
+            ["Any program is only as good as it is useful.", "Linus Torvalds"],
+            ["I do open source because it's fun and it works.", "Linus Torvalds"],
+            ["Real quality means making sure that people are proud of the code they write, that they're involved and taking it personally.", "Linus Torvalds"],
+            ["If you need to ask a lawyer whether what you do is 'right' or not, you are morally corrupt.", "Linus Torvalds"],
+            ["The economics of the security world are all horribly, horribly nasty and are largely based on fear, intimidation and blackmail.", "Linus Torvalds"],
+            ["I'm perfectly happy complaining, because it's cathartic.", "Linus Torvalds"],
+            ["By staying neutral, I end up being somebody that everybody can trust.", "Linus Torvalds"],
+            ["I wish everybody was as nice as I am.", "Linus Torvalds"],
+            ["I tend to call myself an anti-visionary. What is much more important than vision is execution.", "Linus Torvalds"],
+            ["Programmers are in the enviable position of not only getting to do what they want to, but because the end result is so important they get paid to do it.", "Linus Torvalds"],
+            ["In personal conversations with technical people, I call myself a hacker. But when I'm talking to journalists I just say 'programmer'.", "Linus Torvalds"],
+            ["I'm always right. This time I'm just even more right than usual.", "Linus Torvalds"],
+            // ═══ KEVIN MITNICK ═══
+            ["Companies spend millions of dollars on firewalls and secure access devices, and it's money wasted because none of these measures address the weakest link in the security chain.", "Kevin Mitnick"],
+            ["At the end of the day, my goal was to be the best hacker.", "Kevin Mitnick"],
+            ["My primary goal of hacking was the intellectual curiosity, the seduction of adventure.", "Kevin Mitnick"],
+            ["I was addicted to hacking, more for the intellectual challenge, the curiosity, the seduction of adventure; not for stealing, or causing damage.", "Kevin Mitnick"],
+            ["Social engineering is using deception, manipulation and influence to convince a human who has access to a computer system to do something.", "Kevin Mitnick"],
+            ["You can never protect yourself 100%. What you do is protect yourself as much as possible and mitigate risk to an acceptable degree.", "Kevin Mitnick"],
+            ["The human factor is truly security's weakest link.", "Kevin Mitnick"],
+            ["Security is always going to be a cat and mouse game.", "Kevin Mitnick"],
+            ["I'm still a hacker. I get paid for it now. I never received any monetary gain from the hacking I did before.", "Kevin Mitnick"],
+            ["Anyone who thinks that security products alone offer true security is settling for the illusion of security.", "Kevin Mitnick"],
+            ["Hackers are breaking the systems for profit. Before, it was about intellectual curiosity and pursuit of knowledge and thrill.", "Kevin Mitnick"],
+            ["The key to social engineering is influencing a person to do something that allows the hacker to gain access to information or your network.", "Kevin Mitnick"],
+            ["I got so passionate about technology. Hacking to me was like a video game. It was about getting trophies.", "Kevin Mitnick"],
+            ["I could have evaded the FBI a lot longer if I had been able to control my passion for hacking.", "Kevin Mitnick"],
+            ["Every hacker is to some extent a rebel who lives by different standards and enjoys beating the system.", "Kevin Mitnick"],
+            ["Beware of geeks bearing gifts.", "Kevin Mitnick"],
+            ["I get hired by companies to hack into their systems and break into their physical facilities to find security holes. Our success rate is 100%.", "Kevin Mitnick"],
+            ["In security, you are only as secure as the weakest link.", "Kevin Mitnick"],
+            ["Anything out there is vulnerable to attack given enough time and resources.", "Kevin Mitnick"],
+            ["It only takes one employee clicking on a malicious link to get access to an entire corporate network.", "Kevin Mitnick"],
+            // ═══ RICHARD STALLMAN ═══
+            ["People sometimes ask me if it is a sin in the Church of Emacs to use vi. Using a free version of vi is not a sin; it is a penance.", "Richard Stallman"],
+            ["Free software is a matter of liberty, not price. To understand the concept, you should think of 'free' as in 'free speech,' not as in 'free beer.'", "Richard Stallman"],
+            ["Sharing knowledge is the most fundamental act of friendship.", "Richard Stallman"],
+            ["To have the choice between proprietary software packages, is being able to choose your master. Freedom means not having a master.", "Richard Stallman"],
+            ["A hacker is someone who enjoys playful cleverness, not necessarily with computers.", "Richard Stallman"],
+            ["Value your freedom or you will lose it, teaches history.", "Richard Stallman"],
+            // ═══ BRUCE SCHNEIER ═══
+            ["Security is not a product, but a process.", "Bruce Schneier"],
+            ["The user's going to pick dancing pigs over security every time.", "Bruce Schneier"],
+            ["If you think technology can solve your security problems, then you don't understand the problems and you don't understand the technology.", "Bruce Schneier"],
+            ["People often represent the weakest link in the security chain.", "Bruce Schneier"],
+            ["Security is a state of mind.", "Bruce Schneier"],
+            ["The question is not whether you will be hacked, but when.", "Bruce Schneier"],
+            ["Amateurs hack systems, professionals hack people.", "Bruce Schneier"],
+            ["Complexity is the worst enemy of security.", "Bruce Schneier"],
+            // ═══ TSUTOMU SHIMOMURA ═══
+            ["The best way to find out if you can trust somebody is to trust them.", "Tsutomu Shimomura"],
+            // ═══ DENNIS RITCHIE ═══
+            ["UNIX is basically a simple operating system, but you have to be a genius to understand the simplicity.", "Dennis Ritchie"],
+            ["C is quirky, flawed, and an enormous success.", "Dennis Ritchie"],
+            // ═══ KEN THOMPSON ═══
+            ["It is only the inadequacy of the criminal code that saves the hackers from very serious prosecution.", "Ken Thompson"],
+            ["You can't trust code that you did not totally create yourself.", "Ken Thompson"],
+            // ═══ ALAN TURING ═══
+            ["Those who can imagine anything, can create the impossible.", "Alan Turing"],
+            ["Sometimes it is the people no one imagines anything of who do the things that no one can imagine.", "Alan Turing"],
+            // ═══ DAN KAMINSKY ═══
+            ["It is a fairly open secret that almost all systems can be hacked, somehow.", "Dan Kaminsky"],
+            // ═══ EMMANUEL GOLDSTEIN ═══
+            ["Most hackers are young because young people tend to be adaptable. As long as you remain adaptable, you can always be a good hacker.", "Emmanuel Goldstein"],
+            // ═══ TIM BERNERS-LEE ═══
+            ["A hacker to me is someone creative who does wonderful things.", "Tim Berners-Lee"],
+            ["The web as I envisaged it, we have not seen it yet. The future is still so much bigger than the past.", "Tim Berners-Lee"],
+            // ═══ JAMIE ZAWINSKI ═══
+            ["If you give a hacker a new toy, the first thing he'll do is take it apart to figure out how it works.", "Jamie Zawinski"],
+            ["Linux is only free if your time has no value.", "Jamie Zawinski"],
+            // ═══ ERIC S. RAYMOND ═══
+            ["Given enough eyeballs, all bugs are shallow.", "Eric S. Raymond"],
+            ["The best hacks start out as personal solutions to the author's everyday problems.", "Eric S. Raymond"],
+            ["Good programmers know what to write. Great ones know what to rewrite and reuse.", "Eric S. Raymond"],
+            // ═══ STEVE WOZNIAK ═══
+            ["All the best things that I did at Apple came from not having money and not having done it before.", "Steve Wozniak"],
+            ["Never trust a computer you can't throw out a window.", "Steve Wozniak"],
+            // ═══ THE MENTOR ═══
+            ["This is our world now. The world of the electron and the switch, the beauty of the baud.", "The Mentor"],
+            ["We exist without skin color, without nationality, without religious bias... and you call us criminals.", "The Mentor"],
+            ["My crime is that of curiosity.", "The Mentor"],
+            // ═══ JOHN DRAPER (CAPTAIN CRUNCH) ═══
+            ["The phone system is a lot like the computer. It's really a vast network.", "Captain Crunch"],
+            // ═══ DONALD KNUTH ═══
+            ["Premature optimization is the root of all evil in programming.", "Donald Knuth"],
+            ["Beware of bugs in the above code; I have only proved it correct, not tested it.", "Donald Knuth"],
+            ["The best programs are written so that computing machines can perform them quickly and so that human beings can understand them clearly.", "Donald Knuth"],
+            // ═══ LAURA CREIGHTON ═══
+            ["A hacker does for love what others would not do for money.", "Laura Creighton"],
+            // ═══ RAEL DORNFEST ═══
+            ["The difference between a hacker and a consumer is a consumer says 'I wish it would work this way.' A hacker says 'I've got a screwdriver and a few minutes.'", "Rael Dornfest"],
+            // ═══ VINTON CERF ═══
+            ["The hackers don't want to destroy the network. They want to keep it running, so they can keep making money from it.", "Vinton Cerf"],
+            // ═══ ALAN WATTS ═══
+            ["The truth is revealed by removing things that stand in its light, an art not unlike sculpture, in which the artist creates, not by building, but by hacking away.", "Alan Watts"],
+            // ═══ LARRY WALL ═══
+            ["The three chief virtues of a programmer are: laziness, impatience and hubris.", "Larry Wall"],
+            // ═══ EDSGER DIJKSTRA ═══
+            ["If debugging is the process of removing software bugs, then programming must be the process of putting them in.", "Edsger Dijkstra"],
+            ["Simplicity is a prerequisite for reliability.", "Edsger Dijkstra"],
+            // ═══ GRACE HOPPER ═══
+            ["The most dangerous phrase in the language is 'We've always done it this way.'", "Grace Hopper"],
+            ["It's easier to ask forgiveness than it is to get permission.", "Grace Hopper"],
+            // ═══ HENRY DAVID THOREAU ═══
+            ["There are a thousand hacking at the branches of evil to one who is striking at the root.", "Henry David Thoreau"],
+            // ═══ MISC HACKER WISDOM ═══
+            ["Hacking is not a crime, it's a profession till the time you play with it safely.", "Anonymous"],
+            ["Old hackers never die. They just go to bitnet.", "Hacker Proverb"],
+            ["Never underestimate the determination of a kid who is time-rich and cash-poor.", "Cory Doctorow"],
+            ["The best way to predict the future is to invent it.", "Alan Kay"],
+            ["In a world full of locked doors, the person with the key is king. And honey, you should see me in a crown.", "Jim Moriarty"],
+            ["Hardware: the parts of a computer that can be kicked.", "Jeff Pesis"],
+            ["Where there is a shell, there is a way.", "Hacker Proverb"],
+            ["The quieter you become, the more you are able to hear.", "Kali Linux"],
+        ];
+
+        const quoteBox    = document.getElementById('quoteBox');
+        const quoteText   = document.getElementById('quoteText');
+        const quoteAuthor = document.getElementById('quoteAuthor');
+
+        // Shuffle using Fisher-Yates
+        for (let i = Q.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [Q[i], Q[j]] = [Q[j], Q[i]];
+        }
+
+        let qi = 0;
+
+        function showQuote() {
+            quoteText.textContent   = Q[qi][0];
+            quoteAuthor.textContent = '— ' + Q[qi][1];
+            qi = (qi + 1) % Q.length;
+        }
+
+        function cycleQuote() {
+            quoteBox.classList.add('fade');
+            setTimeout(() => {
+                showQuote();
+                quoteBox.classList.remove('fade');
+            }, 500);
+        }
+
+        showQuote();
+        setInterval(cycleQuote, 8000);
+    })();
 
     console.log('%c[0xb0rn3]', 'color:#fabd2f;font-size:24px;font-weight:900;font-family:Orbitron,monospace;');
     console.log('%chack the planet.', 'color:#8ec07c;font-size:12px;font-family:JetBrains Mono,monospace;');
