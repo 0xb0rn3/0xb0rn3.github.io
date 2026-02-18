@@ -27,6 +27,7 @@
             --aqua:      #8ec07c;
             --red:       #fb4934;
             --blue:      #83a598;
+            --purple:    #d3869b;
 
             --border:    rgba(235,219,178,.15);
             --border-mid:rgba(235,219,178,.32);
@@ -68,7 +69,7 @@
             background-size: 200px;
         }
 
-        /* Top rainbow bar */
+        /* Rainbow bar */
         body::after {
             content: '';
             position: fixed; left: 0; right: 0; top: 0; height: 3px;
@@ -77,7 +78,32 @@
         }
 
         /* ═══════════════════════════
-           PAGE — single centered col
+           DATA RAIN (canvas)
+        ═══════════════════════════ */
+        #rain {
+            position: fixed; inset: 0;
+            z-index: 1; pointer-events: none;
+            opacity: .06;
+        }
+
+        /* ═══════════════════════════
+           BREACH PROGRESS BAR
+        ═══════════════════════════ */
+        .breach-bar {
+            position: fixed; bottom: 0; left: 0;
+            height: 2px; width: 0%;
+            background: linear-gradient(90deg, var(--yellow), var(--orange), var(--red));
+            z-index: 200;
+            transition: width .3s ease;
+            box-shadow: 0 0 12px rgba(250,189,47,.3);
+        }
+        .breach-bar.done {
+            background: var(--aqua);
+            box-shadow: 0 0 12px rgba(142,192,124,.4);
+        }
+
+        /* ═══════════════════════════
+           PAGE
         ═══════════════════════════ */
         .page {
             position: relative; z-index: 10;
@@ -85,8 +111,8 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: clamp(16px, 3vh, 24px);
-            padding: clamp(36px, 8vh, 64px) 16px clamp(20px, 4vh, 36px);
+            gap: clamp(14px, 2.8vh, 22px);
+            padding: clamp(32px, 7vh, 56px) 16px clamp(20px, 4vh, 36px);
         }
 
         /* ═══════════════════════════
@@ -105,19 +131,13 @@
         .logo {
             font-family: 'Orbitron', monospace;
             font-weight: 900;
-            font-size: clamp(2.8rem, 11vw, 6.2rem);
+            font-size: clamp(2.6rem, 10vw, 5.5rem);
             letter-spacing: clamp(3px, 1.5vw, 10px);
             color: var(--white);
             line-height: 1;
             position: relative;
             display: inline-block;
             text-shadow: 4px 4px 0 var(--gray-3), 8px 8px 0 rgba(0,0,0,.55);
-            animation: logoFloat 5s ease-in-out infinite;
-        }
-
-        @keyframes logoFloat {
-            0%,100% { transform: translateY(0); }
-            50%      { transform: translateY(-6px); }
         }
 
         .logo::before, .logo::after {
@@ -153,11 +173,11 @@
         }
 
         .taglines {
-            margin-top: clamp(8px, 1.5vh, 12px);
+            margin-top: clamp(6px, 1.2vh, 10px);
             display: flex; flex-direction: column; align-items: center; gap: 2px;
         }
         .tag {
-            font-size: clamp(.62rem, 1.7vw, .82rem);
+            font-size: clamp(.58rem, 1.5vw, .76rem);
             color: var(--fg-muted);
             letter-spacing: clamp(.6px, .3vw, 1.4px);
             line-height: 1.6;
@@ -166,10 +186,10 @@
         .hl2 { color: var(--orange); }
 
         /* ═══════════════════════════
-           SHARED CARD STYLES
+           SHARED CARD
         ═══════════════════════════ */
         .card {
-            width: min(520px, 100%);
+            width: min(540px, 100%);
             background: var(--bg-card);
             border: 2px solid var(--border-mid);
             border-radius: var(--r-lg);
@@ -183,11 +203,11 @@
         }
 
         .card-body {
-            padding: clamp(13px, 3vw, 20px) clamp(14px, 3.5vw, 22px);
+            padding: clamp(12px, 2.8vw, 18px) clamp(14px, 3.5vw, 22px);
         }
 
         /* ═══════════════════════════
-           VISITOR INTEL (compact)
+           VISITOR INTEL
         ═══════════════════════════ */
         .intel-card {
             animation: riseIn .9s cubic-bezier(.16,1,.3,1) .3s both;
@@ -195,8 +215,8 @@
 
         .intel-head {
             display: flex; align-items: center; gap: 9px;
-            margin-bottom: clamp(10px, 2vw, 14px);
-            padding-bottom: clamp(8px, 1.8vw, 11px);
+            margin-bottom: clamp(9px, 1.8vw, 13px);
+            padding-bottom: clamp(8px, 1.6vw, 11px);
             border-bottom: 1.5px solid var(--border);
         }
 
@@ -207,7 +227,7 @@
             border-radius: var(--r-pill);
             padding: 3px 11px;
             color: var(--yellow);
-            font-size: clamp(.52rem, 1.4vw, .6rem);
+            font-size: clamp(.5rem, 1.3vw, .58rem);
             font-weight: 700;
             text-transform: uppercase; letter-spacing: 1.2px;
             flex-shrink: 0;
@@ -216,7 +236,7 @@
         .head-title {
             flex: 1;
             font-family: 'Orbitron', monospace;
-            font-size: clamp(.6rem, 1.7vw, .7rem);
+            font-size: clamp(.58rem, 1.6vw, .68rem);
             font-weight: 700;
             color: var(--white);
             text-transform: uppercase; letter-spacing: 1.8px;
@@ -228,7 +248,7 @@
             border: 1.5px solid rgba(142,192,124,.28);
             border-radius: var(--r-pill);
             padding: 3px 9px;
-            font-size: clamp(.48rem, 1.2vw, .55rem);
+            font-size: clamp(.46rem, 1.1vw, .53rem);
             font-weight: 700; color: var(--aqua);
             letter-spacing: 1px; text-transform: uppercase;
             flex-shrink: 0;
@@ -247,23 +267,20 @@
         .fields {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: clamp(6px, 1.5vw, 9px);
+            gap: clamp(5px, 1.3vw, 8px);
         }
 
         .field {
             background: var(--bg-field);
             border: 1.5px solid var(--border);
             border-radius: var(--r-sm);
-            padding: clamp(7px, 1.6vw, 10px) clamp(9px, 2vw, 13px);
+            padding: clamp(6px, 1.4vw, 9px) clamp(9px, 2vw, 13px);
             opacity: 0;
-            animation: fieldSlide .4s cubic-bezier(.16,1,.3,1) forwards;
             transition: border-color .2s, background .2s;
         }
-        .field:nth-child(1) { animation-delay:.65s; }
-        .field:nth-child(2) { animation-delay:.78s; }
-        .field:nth-child(3) { animation-delay:.91s; }
-        .field:nth-child(4) { animation-delay:1.04s; }
-        .field:nth-child(5) { animation-delay:1.17s; }
+        .field.revealed {
+            animation: fieldSlide .4s cubic-bezier(.16,1,.3,1) forwards;
+        }
 
         @keyframes fieldSlide {
             from { opacity:0; transform:translateY(8px); }
@@ -274,13 +291,13 @@
         .field.wide  { grid-column: 1/-1; }
 
         .f-label {
-            font-size: clamp(.47rem, 1.2vw, .54rem);
+            font-size: clamp(.46rem, 1.1vw, .52rem);
             font-weight: 700; color: var(--yellow);
             text-transform: uppercase; letter-spacing: 1.5px;
-            margin-bottom: 3px;
+            margin-bottom: 2px;
         }
         .f-val {
-            font-size: clamp(.66rem, 1.8vw, .76rem);
+            font-size: clamp(.62rem, 1.7vw, .72rem);
             color: var(--fg); font-weight: 500;
             word-break: break-all; line-height: 1.3;
         }
@@ -301,10 +318,9 @@
             animation: riseIn .9s cubic-bezier(.16,1,.3,1) .5s both;
         }
 
-        /* macOS bar */
         .term-bar {
             display: flex; align-items: center; gap: 8px;
-            padding: clamp(8px, 1.8vw, 11px) clamp(14px, 3.5vw, 20px);
+            padding: clamp(7px, 1.6vw, 10px) clamp(14px, 3.5vw, 20px);
             background: var(--bg-raised);
             border-bottom: 1.5px solid var(--border);
         }
@@ -316,32 +332,76 @@
 
         .bar-title {
             flex: 1; text-align: center;
-            font-size: clamp(.5rem, 1.3vw, .58rem);
+            font-size: clamp(.48rem, 1.2vw, .56rem);
             color: var(--fg-dim);
             text-transform: uppercase; letter-spacing: 1.5px;
+            transition: color .3s;
         }
         .bar-status {
-            font-size: clamp(.48rem, 1.2vw, .56rem);
-            color: var(--aqua); font-weight: 700; letter-spacing: .8px;
+            font-size: clamp(.46rem, 1.1vw, .54rem);
+            font-weight: 700; letter-spacing: .8px;
+            transition: color .3s;
+        }
+        .status-ready    { color: var(--fg-dim); }
+        .status-running  { color: var(--orange); }
+        .status-granted  { color: var(--aqua); }
+        .status-manual   { color: var(--yellow); }
+
+        /* Terminal output lines */
+        .term-body {
+            padding: clamp(10px, 2.2vw, 15px) clamp(14px, 3.5vw, 20px);
+            min-height: 100px;
         }
 
-        /* Input row */
         .term-line {
-            display: flex; align-items: center; gap: 5px;
-            font-size: clamp(.74rem, 2.1vw, .9rem);
+            display: flex; align-items: center; gap: 4px;
+            font-size: clamp(.64rem, 1.8vw, .78rem);
+            line-height: 1.6;
+            flex-wrap: wrap;
         }
+
         .p-user   { color:var(--yellow); font-weight:700; }
         .p-sep    { color:var(--fg-dim); }
         .p-host   { color:var(--orange); font-weight:600; }
         .p-path   { color:var(--blue);   font-weight:500; }
         .p-dollar { color:var(--white);  font-weight:700; margin-right:2px; }
 
+        /* Auto-play log lines */
+        .log-line {
+            font-size: clamp(.58rem, 1.5vw, .68rem);
+            line-height: 1.65;
+            opacity: 0;
+            transition: opacity .25s;
+        }
+        .log-line.show { opacity: 1; }
+        .log-cmd  { color: var(--fg); }
+        .log-out  { color: var(--fg-dim); padding-left: 1em; }
+        .log-ok   { color: var(--aqua); font-weight: 600; }
+        .log-warn { color: var(--orange); }
+        .log-crit { color: var(--red); font-weight: 700; }
+        .log-flag {
+            color: var(--aqua); font-weight: 700;
+            text-shadow: 0 0 8px rgba(142,192,124,.3);
+        }
+
+        .prompt-prefix {
+            color: var(--fg-dim);
+            user-select: none;
+        }
+
+        /* Interactive input (manual mode) */
+        .manual-input-wrap {
+            display: none;
+            margin-top: 8px;
+        }
+        .manual-input-wrap.show { display: flex; }
+
         .term-input {
             flex:1; min-width:0;
             background:transparent; border:none; outline:none;
             color:var(--fg);
             font-family:'JetBrains Mono', monospace;
-            font-size: clamp(.74rem,2.1vw,.9rem);
+            font-size: clamp(.68rem,1.9vw,.82rem);
             padding:2px 0;
             caret-color:var(--yellow);
             -webkit-appearance:none;
@@ -360,17 +420,16 @@
             50%,100% { opacity:0; }
         }
 
-        .term-out {
-            margin-top:7px;
-            font-size: clamp(.58rem,1.5vw,.68rem);
+        .term-error {
+            margin-top:6px;
+            font-size: clamp(.56rem,1.4vw,.66rem);
             display:none;
-            padding:6px 10px;
+            padding:5px 10px;
             border-radius:var(--r-sm);
             font-weight:500;
+            color:var(--red); background:rgba(251,73,52,.07); border:1px solid rgba(251,73,52,.2);
         }
-        .term-out.show { display:block; animation:shake .28s ease-in-out; }
-        .out-err { color:var(--red); background:rgba(251,73,52,.07); border:1px solid rgba(251,73,52,.2); }
-        .out-ok  { color:var(--aqua); background:rgba(142,192,124,.07); border:1px solid rgba(142,192,124,.2); }
+        .term-error.show { display:block; animation:shake .28s ease-in-out; }
 
         @keyframes shake {
             0%,100% { transform:translateX(0); }
@@ -379,125 +438,65 @@
         }
 
         /* ═══════════════════════════
-           HINT BUTTON (fixed)
+           ACCESS GRANTED FLASH
         ═══════════════════════════ */
-        .hint-btn {
-            position:fixed;
-            bottom: clamp(12px,3vw,18px);
-            right:  clamp(12px,3vw,18px);
-            z-index:101;
-            width: clamp(40px,10vw,48px);
-            height:clamp(40px,10vw,48px);
-            border-radius:var(--r-pill);
-            background:var(--bg-card);
-            border:2px solid var(--border-mid);
-            color:var(--fg-muted);
-            display:flex; align-items:center; justify-content:center;
-            cursor:pointer;
-            font-size:clamp(.88rem,2.3vw,1.05rem);
-            transition:all .22s ease;
-            box-shadow:3px 3px 0 var(--gray-3);
+        .access-flash {
+            position: fixed; inset: 0; z-index: 150;
+            background: rgba(142,192,124,.04);
+            border: 3px solid var(--aqua);
+            pointer-events: none;
+            opacity: 0;
         }
-        .hint-btn:hover, .hint-btn:active {
-            background:var(--yellow); color:var(--black);
-            border-color:var(--yellow);
-            transform:translate(-2px,-2px);
-            box-shadow:5px 5px 0 var(--gray-2);
+        .access-flash.fire {
+            animation: flashPulse .6s ease-out;
+        }
+        @keyframes flashPulse {
+            0%   { opacity: 1; border-width: 3px; }
+            50%  { opacity: .6; border-width: 6px; }
+            100% { opacity: 0; border-width: 2px; }
         }
 
         /* ═══════════════════════════
-           MODAL
+           SKIP / HINT BUTTON
         ═══════════════════════════ */
-        .overlay {
-            display:none; position:fixed; inset:0;
-            background:rgba(0,0,0,.82);
-            backdrop-filter:blur(6px);
-            z-index:199;
+        .skip-btn {
+            position: fixed;
+            bottom: clamp(12px,3vw,18px);
+            right:  clamp(12px,3vw,18px);
+            z-index: 101;
+            display: flex; align-items: center; gap: 6px;
+            padding: 8px 16px;
+            border-radius: var(--r-pill);
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            color: var(--fg-dim);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(.52rem,1.3vw,.6rem);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            cursor: pointer;
+            opacity: 0;
+            transition: all .3s ease;
+            box-shadow: 3px 3px 0 var(--gray-3);
         }
-        .overlay.show { display:block; }
-
-        .modal {
-            display:none; position:fixed;
-            top:50%; left:50%;
-            transform:translate(-50%,-50%);
-            z-index:200;
-            width:min(460px, calc(100vw - 24px));
+        .skip-btn.show {
+            opacity: 1;
         }
-        .modal.show {
-            display:block;
-            animation:modalPop .3s cubic-bezier(.16,1,.3,1);
+        .skip-btn:hover {
+            background: var(--yellow); color: var(--black);
+            border-color: var(--yellow);
+            transform: translate(-2px,-2px);
+            box-shadow: 5px 5px 0 var(--gray-2);
         }
-        @keyframes modalPop {
-            from { opacity:0; transform:translate(-50%,-50%) scale(.88); }
-            to   { opacity:1; transform:translate(-50%,-50%) scale(1); }
-        }
-
-        .modal-box {
-            background:var(--bg-card);
-            border:2px solid var(--border-hi);
-            border-radius:var(--r-lg);
-            overflow:hidden;
-            box-shadow:7px 7px 0 var(--gray-3),14px 14px 0 rgba(0,0,0,.55);
-        }
-        .modal-inner { padding:clamp(18px,4.5vw,28px); }
-        .modal-head {
-            display:flex; align-items:center; gap:11px;
-            margin-bottom:16px; padding-bottom:13px;
-            border-bottom:1.5px solid var(--border);
-        }
-        .m-icon {
-            width:36px; height:36px;
-            background:rgba(250,189,47,.09);
-            border:1.5px solid rgba(250,189,47,.32);
-            border-radius:var(--r-sm);
-            display:flex; align-items:center; justify-content:center;
-            color:var(--yellow); font-size:.95rem; flex-shrink:0;
-        }
-        .m-title {
-            font-family:'Orbitron', monospace;
-            font-size:clamp(.82rem,2.3vw,1rem);
-            font-weight:700; color:var(--white);
-            text-transform:uppercase; letter-spacing:2px;
-        }
-        .m-body {
-            font-size:clamp(.68rem,1.8vw,.8rem);
-            color:var(--fg-muted); line-height:1.7; margin-bottom:13px;
-        }
-        .m-cmd {
-            background:var(--bg-raised);
-            border:1.5px solid var(--border-mid);
-            border-radius:var(--r-sm);
-            padding:clamp(9px,2vw,13px) 14px;
-            font-family:'JetBrains Mono', monospace;
-            font-size:clamp(.66rem,1.8vw,.82rem);
-            color:var(--yellow); font-weight:600;
-            margin-bottom:16px;
-            text-align:center; word-break:break-all;
-        }
-        .m-close {
-            width:100%;
-            background:var(--yellow);
-            border:2px solid var(--yellow);
-            border-radius:var(--r-pill);
-            color:var(--black);
-            padding:clamp(9px,2vw,12px) 20px;
-            font-family:'Orbitron', monospace;
-            font-size:clamp(.66rem,1.8vw,.8rem);
-            font-weight:900;
-            text-transform:uppercase; letter-spacing:2.5px;
-            cursor:pointer; transition:all .22s ease;
-            box-shadow:3px 3px 0 var(--gray-2);
-        }
-        .m-close:hover, .m-close:active {
-            background:var(--black); color:var(--yellow);
-            transform:translate(-2px,-2px);
-            box-shadow:5px 5px 0 var(--gray-3);
-        }
+        .skip-btn i { font-size: .6rem; }
 
         /* ═══════════════════════════
            FADE OUT
         ═══════════════════════════ */
-        .fade-out { animation:pageOut .7s ease-out forwards; }
+        .fade-out {
+            animation: pageOut .7s ease-out forwards;
+        }
         @keyframes pageOut { to { opacity:0; visibility:hidden; } }
 
         /* ═══════════════════════════
@@ -509,7 +508,7 @@
         }
 
         @media (max-height: 600px) and (orientation: landscape) {
-            .page { padding-top: 16px; gap: 12px; }
+            .page { padding-top: 16px; gap: 10px; }
             .taglines { display: none; }
             .logo { font-size: 2rem; }
             .fields { grid-template-columns: repeat(3,1fr); }
@@ -519,11 +518,21 @@
         @media (hover:none) {
             .field:active { border-color:var(--border-mid); background:var(--bg-raised); }
         }
+
+        /* ═══════════════════════════
+           SCROLLBAR
+        ═══════════════════════════ */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: var(--black); }
+        ::-webkit-scrollbar-thumb { background: var(--gray-2); border-radius: 99px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--yellow); }
     </style>
 </head>
 <body>
 
-<div class="overlay" id="overlay"></div>
+<canvas id="rain"></canvas>
+<div class="breach-bar" id="breachBar"></div>
+<div class="access-flash" id="accessFlash"></div>
 
 <main class="page">
 
@@ -531,8 +540,8 @@
     <div class="brand">
         <h1 class="logo" data-text="0xb0rn3">0xb0rn3</h1>
         <div class="taglines">
-            <p class="tag">Oh! Hey citizen 👋 &nbsp;Need access? use a <span class="hl">KEY</span> 🤫</p>
-            <p class="tag">panic(<span class="hl2">"Attempted to kill init! exitcode=0x%08x"</span>);</p>
+            <p class="tag"><span class="hl">security researcher</span> · <span class="hl2">exploit developer</span> · <span class="hl">ethical hacker</span></p>
+            <p class="tag" style="font-size:clamp(.5rem,1.3vw,.62rem);color:var(--fg-dim);">breach sequence initiating&hellip;</p>
         </div>
     </div>
 
@@ -553,24 +562,24 @@
                 </div>
             </div>
 
-            <div class="fields">
-                <div class="field">
-                    <div class="f-label">IP</div>
+            <div class="fields" id="fields">
+                <div class="field" id="fieldIP">
+                    <div class="f-label">IP Address</div>
                     <div class="f-val" id="fIP"><span class="scanning"></span></div>
                 </div>
-                <div class="field">
+                <div class="field" id="fieldLoc">
                     <div class="f-label">Location</div>
                     <div class="f-val" id="fLoc"><span class="scanning"></span></div>
                 </div>
-                <div class="field">
+                <div class="field" id="fieldDev">
                     <div class="f-label">Device</div>
                     <div class="f-val" id="fDev"><span class="scanning"></span></div>
                 </div>
-                <div class="field">
+                <div class="field" id="fieldOS">
                     <div class="f-label">OS</div>
                     <div class="f-val" id="fOS"><span class="scanning"></span></div>
                 </div>
-                <div class="field wide">
+                <div class="field wide" id="fieldISP">
                     <div class="f-label">ISP / Org</div>
                     <div class="f-val" id="fISP"><span class="scanning"></span></div>
                 </div>
@@ -579,9 +588,9 @@
         </div>
     </div>
 
-    <!-- ── System Access Terminal ── -->
+    <!-- ── Terminal ── -->
     <div class="card term-card">
-        <div class="card-stripe"></div>
+        <div class="card-stripe" style="background:linear-gradient(90deg,var(--red),var(--orange),var(--yellow));"></div>
 
         <div class="term-bar">
             <div class="dots">
@@ -589,91 +598,199 @@
                 <span class="dot y"></span>
                 <span class="dot g"></span>
             </div>
-            <span class="bar-title">SYSTEM ACCESS — AUTHENTICATE</span>
-            <span class="bar-status">● READY</span>
+            <span class="bar-title" id="barTitle">SYSTEM ACCESS — STANDBY</span>
+            <span class="bar-status status-ready" id="barStatus">● STANDBY</span>
         </div>
 
-        <div class="card-body">
-            <div class="term-line">
-                <span class="p-user">visitor</span>
-                <span class="p-sep">@</span>
-                <span class="p-host">root</span>
-                <span class="p-sep">:</span>
-                <span class="p-path">~</span>
-                <span class="p-dollar">$</span>
-                <input
-                    type="text"
-                    class="term-input"
-                    id="termInput"
-                    autofocus
-                    autocomplete="off"
-                    autocorrect="off"
-                    autocapitalize="off"
-                    spellcheck="false"
-                    inputmode="text"
-                    placeholder="enter access key..."
-                    aria-label="Access key input"
-                >
-                <span class="caret" aria-hidden="true"></span>
+        <div class="term-body" id="termBody">
+            <!-- Auto-play log lines injected by JS -->
+            <div id="autoLog"></div>
+
+            <!-- Manual mode input (hidden during auto) -->
+            <div class="manual-input-wrap" id="manualWrap">
+                <div class="term-line">
+                    <span class="p-user">visitor</span>
+                    <span class="p-sep">@</span>
+                    <span class="p-host">root</span>
+                    <span class="p-sep">:</span>
+                    <span class="p-path">~</span>
+                    <span class="p-dollar">$</span>
+                    <input
+                        type="text"
+                        class="term-input"
+                        id="termInput"
+                        autocomplete="off"
+                        autocorrect="off"
+                        autocapitalize="off"
+                        spellcheck="false"
+                        inputmode="text"
+                        placeholder="type command..."
+                        aria-label="Command input"
+                    >
+                    <span class="caret" aria-hidden="true"></span>
+                </div>
+                <div class="term-error" id="termError"></div>
             </div>
-            <div class="term-out" id="termOut"></div>
         </div>
     </div>
 
 </main>
 
-<!-- ── Hint ── -->
-<button class="hint-btn" id="hintBtn" aria-label="Show access key hint">
-    <i class="fas fa-key"></i>
+<!-- Skip intro -->
+<button class="skip-btn" id="skipBtn" aria-label="Skip intro">
+    <i class="fas fa-forward"></i>
+    Skip
 </button>
-
-<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle">
-    <div class="modal-box">
-        <div class="card-stripe"></div>
-        <div class="modal-inner">
-            <div class="modal-head">
-                <div class="m-icon"><i class="fas fa-lightbulb"></i></div>
-                <span class="m-title" id="mTitle">Access Key</span>
-            </div>
-            <p class="m-body">Need access? Type this command <strong style="color:var(--fg)">exactly</strong> into the terminal:</p>
-            <div class="m-cmd">setuid(0); execve("/bin/sh", NULL, NULL);</div>
-            <p class="m-body" style="margin-bottom:18px;">
-                Press <kbd style="color:var(--fg);background:var(--bg-raised);padding:2px 7px;border-radius:6px;border:1.5px solid var(--border-mid);font-size:.9em">Enter</kbd> to gain root access.
-            </p>
-            <button class="m-close" id="mClose">GOT IT</button>
-        </div>
-    </div>
-</div>
 
 <script>
 'use strict';
 
-const ACCESS = 'setuid(0); execve("/bin/sh", NULL, NULL);';
+/* ═══════════════════════════════════
+   CONFIG
+═══════════════════════════════════ */
+const ACCESS_KEY = 'setuid(0); execve("/bin/sh", NULL, NULL);';
+const DEST = 'main.html';
 
 const ERRORS = [
     'bash: permission denied: insufficient privileges',
     'sudo: command not found — nice try, script kiddie',
     'access denied: authorization required',
-    'error: invalid credentials — go read the docs',
+    'error: invalid credentials — try harder',
     'bash: command not recognized — rtfm',
-    'fatal: authentication failed — try harder',
-    'error: access violation — stop button mashing',
+    'fatal: authentication failed for visitor@root',
     'segfault at 0x00000000 — null pointer dereference',
     'EACCES: operation not permitted',
-    'kill: (1) — operation not permitted',
 ];
 
-const ua = navigator.userAgent;
+/* ═══════════════════════════════════
+   STATE
+═══════════════════════════════════ */
+let autoMode = true;
+let sequenceDone = false;
+let intelReady = false;
+let ipData = null;
 
-const getDevice = () => {
-    if (/iPhone/i.test(ua))                         return 'iPhone';
-    if (/iPad/i.test(ua))                           return 'iPad';
-    if (/Android/i.test(ua) && /mobile/i.test(ua)) return 'Android Phone';
-    if (/Android/i.test(ua))                        return 'Android Tablet';
-    if (/mobile/i.test(ua))                         return 'Mobile';
-    return 'Desktop';
+/* ═══════════════════════════════════
+   ELEMENTS
+═══════════════════════════════════ */
+const $  = id => document.getElementById(id);
+const breachBar  = $('breachBar');
+const barTitle   = $('barTitle');
+const barStatus  = $('barStatus');
+const autoLog    = $('autoLog');
+const manualWrap = $('manualWrap');
+const termInput  = $('termInput');
+const termError  = $('termError');
+const skipBtn    = $('skipBtn');
+const flash      = $('accessFlash');
+
+/* ═══════════════════════════════════
+   DATA RAIN (lightweight)
+═══════════════════════════════════ */
+(() => {
+    const canvas = $('rain');
+    const ctx = canvas.getContext('2d');
+    let cols, drops;
+
+    const resize = () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        cols = Math.floor(canvas.width / 18);
+        drops = Array.from({length: cols}, () => Math.random() * -50);
+    };
+    resize();
+    window.addEventListener('resize', resize);
+
+    const chars = '01アイウエオカキクケコ>_{}[];/\\'.split('');
+
+    const draw = () => {
+        ctx.fillStyle = 'rgba(0,0,0,.06)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#fabd2f';
+        ctx.font = '13px JetBrains Mono, monospace';
+
+        for (let i = 0; i < cols; i++) {
+            const ch = chars[Math.floor(Math.random() * chars.length)];
+            ctx.fillText(ch, i * 18, drops[i] * 18);
+            if (drops[i] * 18 > canvas.height && Math.random() > .975) {
+                drops[i] = 0;
+            }
+            drops[i]++;
+        }
+        requestAnimationFrame(draw);
+    };
+    draw();
+})();
+
+/* ═══════════════════════════════════
+   HELPERS
+═══════════════════════════════════ */
+const wait = ms => new Promise(r => setTimeout(r, ms));
+
+const typeText = (el, text, speed = 22) => new Promise(resolve => {
+    el.textContent = '';
+    let i = 0;
+    const tick = () => {
+        if (!autoMode && !sequenceDone) { el.textContent = text; resolve(); return; }
+        if (i < text.length) {
+            el.textContent += text[i++];
+            setTimeout(tick, speed + Math.random() * (speed * 0.6));
+        } else resolve();
+    };
+    tick();
+});
+
+const revealField = (fieldId, delay = 0) => {
+    setTimeout(() => {
+        document.getElementById(fieldId).classList.add('revealed');
+    }, delay);
 };
 
+const addLogLine = (html, cls = '') => {
+    const div = document.createElement('div');
+    div.className = `log-line ${cls}`;
+    div.innerHTML = html;
+    autoLog.appendChild(div);
+    // Trigger show
+    requestAnimationFrame(() => div.classList.add('show'));
+    return div;
+};
+
+const setProgress = pct => {
+    breachBar.style.width = pct + '%';
+};
+
+const setStatus = (title, status, cls) => {
+    barTitle.textContent = title;
+    barStatus.textContent = status;
+    barStatus.className = `bar-status ${cls}`;
+};
+
+const grantAccess = () => {
+    sequenceDone = true;
+    flash.classList.add('fire');
+    breachBar.classList.add('done');
+    setProgress(100);
+    setStatus('ACCESS GRANTED', '● ROOT', 'status-granted');
+
+    setTimeout(() => {
+        document.body.classList.add('fade-out');
+        setTimeout(() => { window.location.href = DEST; }, 750);
+    }, 800);
+};
+
+/* ═══════════════════════════════════
+   DEVICE DETECTION
+═══════════════════════════════════ */
+const ua = navigator.userAgent;
+const getDevice = () => {
+    if (/iPhone/i.test(ua))                        return 'iPhone';
+    if (/iPad/i.test(ua))                          return 'iPad';
+    if (/Android/i.test(ua) && /mobile/i.test(ua)) return 'Android Phone';
+    if (/Android/i.test(ua))                       return 'Android Tablet';
+    if (/mobile/i.test(ua))                        return 'Mobile';
+    return 'Desktop';
+};
 const getOS = () => {
     if (/Windows NT 10/i.test(ua))    return 'Windows 10/11';
     if (/Windows/i.test(ua))          return 'Windows';
@@ -681,77 +798,195 @@ const getOS = () => {
     if (/Android/i.test(ua))          return 'Android';
     if (/iPhone|iPad|iPod/i.test(ua)) return 'iOS';
     if (/Linux/i.test(ua))            return 'Linux';
-    if (/X11/i.test(ua))              return 'UNIX';
     return 'Unknown';
 };
 
-document.getElementById('fDev').textContent = getDevice();
-document.getElementById('fOS').textContent  = getOS();
+/* ═══════════════════════════════════
+   INTEL FETCH
+═══════════════════════════════════ */
+const fetchIntel = async () => {
+    // Reveal device + OS immediately (local)
+    revealField('fieldDev', 200);
+    revealField('fieldOS',  400);
+    await wait(250);
+    await typeText($('fDev'), getDevice(), 30);
+    await typeText($('fOS'),  getOS(), 30);
 
-const typeIn = (id, text) => {
-    const el = document.getElementById(id);
-    el.textContent = '';
-    let i = 0;
-    const tick = () => {
-        if (i < text.length) {
-            el.textContent += text[i++];
-            setTimeout(tick, 18 + Math.random() * 16);
-        }
-    };
-    tick();
+    // Fetch IP data
+    try {
+        const res = await fetch('https://ipapi.co/json/');
+        ipData = await res.json();
+
+        revealField('fieldIP',  100);
+        await wait(150);
+        await typeText($('fIP'), ipData.ip || 'Hidden', 20);
+
+        revealField('fieldLoc', 100);
+        await wait(100);
+        const loc = [ipData.city, ipData.region_code, ipData.country_name].filter(Boolean).slice(0,2).join(', ');
+        await typeText($('fLoc'), loc || 'Unknown', 20);
+
+        revealField('fieldISP', 100);
+        await wait(100);
+        const isp = ipData.org || 'Unknown';
+        await typeText($('fISP'), isp.length > 48 ? isp.slice(0,48) + '…' : isp, 15);
+    } catch {
+        revealField('fieldIP', 0);
+        revealField('fieldLoc', 0);
+        revealField('fieldISP', 0);
+        $('fIP').textContent  = 'Unavailable';
+        $('fLoc').textContent = 'Unavailable';
+        $('fISP').textContent = 'Unavailable';
+    }
+
+    intelReady = true;
 };
 
-(async () => {
-    try {
-        const d = await (await fetch('https://ipapi.co/json/')).json();
-        typeIn('fIP',  d.ip || 'Hidden');
-        typeIn('fLoc', [d.city, d.region_code, d.country_name].filter(Boolean).slice(0,2).join(', ') || 'Unknown');
-        typeIn('fISP', d.org ? (d.org.length > 48 ? d.org.slice(0,48)+'…' : d.org) : 'Unknown');
-    } catch {
-        ['fIP','fLoc','fISP'].forEach(id => document.getElementById(id).textContent = 'Unavailable');
-    }
-})();
+/* ═══════════════════════════════════
+   AUTO-BREACH SEQUENCE
+═══════════════════════════════════ */
+const runAutoSequence = async () => {
+    // Show skip button after a beat
+    await wait(600);
+    skipBtn.classList.add('show');
 
-const input   = document.getElementById('termInput');
-const termOut = document.getElementById('termOut');
+    // Wait for intel to finish
+    await fetchIntel();
+    if (!autoMode) return;
 
-const run = () => {
-    const cmd = input.value.trim();
+    await wait(600);
+    if (!autoMode) return;
+
+    // Phase 1: Reconnaissance
+    setStatus('BREACH SEQUENCE — RECON', '● ACTIVE', 'status-running');
+    setProgress(10);
+
+    const ipStr = ipData?.ip || '█.█.█.█';
+
+    addLogLine(`<span class="prompt-prefix">root@0xb0rn3:~$</span> <span class="log-cmd">nmap -sV -Pn ${ipStr}</span>`);
+    await wait(800);
+    if (!autoMode) return;
+
+    setProgress(25);
+    addLogLine(`<span class="log-out">PORT    STATE  SERVICE</span>`);
+    await wait(300);
+    addLogLine(`<span class="log-out">22/tcp  open   ssh</span>`);
+    await wait(200);
+    addLogLine(`<span class="log-out">80/tcp  open   http</span>`);
+    await wait(200);
+    addLogLine(`<span class="log-out">443/tcp open   https</span>`);
+    await wait(400);
+    if (!autoMode) return;
+
+    // Phase 2: Vulnerability scan
+    setProgress(40);
+    addLogLine(`<span class="prompt-prefix">root@0xb0rn3:~$</span> <span class="log-cmd">searchsploit --nmap visitor_scan.xml</span>`);
+    await wait(700);
+    if (!autoMode) return;
+
+    setProgress(55);
+    addLogLine(`<span class="log-warn">[!] Found: CVE-2025-32463 — sudo privilege escalation via NSS</span>`);
+    await wait(500);
+    if (!autoMode) return;
+
+    // Phase 3: Exploit
+    setStatus('BREACH SEQUENCE — EXPLOIT', '● EXPLOIT', 'status-running');
+    setProgress(70);
+    addLogLine(`<span class="prompt-prefix">root@0xb0rn3:~$</span> <span class="log-cmd">python3 exploit.py --target ${ipStr}</span>`);
+    await wait(600);
+    if (!autoMode) return;
+
+    addLogLine(`<span class="log-out">[*] Injecting payload into NSS library chain...</span>`);
+    await wait(500);
+    if (!autoMode) return;
+
+    setProgress(85);
+    addLogLine(`<span class="log-out">[*] Bypassing chroot sandbox...</span>`);
+    await wait(400);
+    if (!autoMode) return;
+
+    addLogLine(`<span class="log-crit">[!] Root shell obtained — uid=0(root)</span>`);
+    await wait(300);
+    if (!autoMode) return;
+
+    // Phase 4: Shell spawn
+    setProgress(95);
+    addLogLine(`<span class="prompt-prefix">root@0xb0rn3:~#</span> <span class="log-cmd">setuid(0); execve("/bin/sh", NULL, NULL);</span>`);
+    await wait(500);
+    if (!autoMode) return;
+
+    addLogLine(`<span class="log-flag">▶  ACCESS GRANTED — spawning root shell...</span>`);
+    await wait(300);
+
+    grantAccess();
+};
+
+/* ═══════════════════════════════════
+   MANUAL MODE
+═══════════════════════════════════ */
+const switchToManual = () => {
+    if (!autoMode || sequenceDone) return;
+    autoMode = false;
+
+    setStatus('SYSTEM ACCESS — MANUAL', '● MANUAL', 'status-manual');
+    skipBtn.classList.remove('show');
+
+    // Show manual input
+    manualWrap.classList.add('show');
+    termInput.focus();
+
+    // Add prompt to hint at manual mode
+    addLogLine(`<span class="log-warn">[!] Auto-breach interrupted — manual authentication required</span>`);
+    addLogLine(`<span class="log-out">Hint: the exploit is the key. Think syscalls.</span>`);
+};
+
+/* Manual submission */
+const submitManual = () => {
+    const cmd = termInput.value.trim();
     if (!cmd) return;
-    if (cmd === ACCESS) {
-        termOut.textContent = '▶  ACCESS GRANTED — spawning shell...';
-        termOut.className = 'term-out show out-ok';
-        input.disabled = true; input.value = '';
-        setTimeout(() => {
-            document.body.classList.add('fade-out');
-            setTimeout(() => { window.location.href = 'main.html'; }, 750);
-        }, 550);
+
+    if (cmd === ACCESS_KEY) {
+        termError.classList.remove('show');
+        addLogLine(`<span class="prompt-prefix">visitor@root:~$</span> <span class="log-cmd">${cmd}</span>`);
+        addLogLine(`<span class="log-flag">▶  ACCESS GRANTED — spawning root shell...</span>`);
+        termInput.disabled = true;
+        termInput.value = '';
+        grantAccess();
     } else {
         const msg = ERRORS[Math.floor(Math.random() * ERRORS.length)];
-        termOut.textContent = '✖  ' + msg;
-        termOut.className = 'term-out';
-        void termOut.offsetWidth;
-        termOut.classList.add('show', 'out-err');
-        input.value = '';
+        termError.textContent = '✖  ' + msg;
+        termError.classList.remove('show');
+        void termError.offsetWidth;
+        termError.classList.add('show');
+        termInput.value = '';
     }
 };
 
-input.addEventListener('keypress', e => { if (e.key === 'Enter') run(); });
+termInput.addEventListener('keypress', e => { if (e.key === 'Enter') submitManual(); });
 
-const hintBtn = document.getElementById('hintBtn');
-const modal   = document.getElementById('modal');
-const mClose  = document.getElementById('mClose');
-const overlay = document.getElementById('overlay');
+/* Click terminal to switch to manual */
+$('termBody').addEventListener('click', e => {
+    if (autoMode && !sequenceDone) {
+        switchToManual();
+    } else if (!autoMode) {
+        termInput.focus();
+    }
+});
 
-const openM  = () => { modal.classList.add('show'); overlay.classList.add('show'); };
-const closeM = () => { modal.classList.remove('show'); overlay.classList.remove('show'); };
+/* Skip button → go straight to main */
+skipBtn.addEventListener('click', () => {
+    sequenceDone = true;
+    document.body.classList.add('fade-out');
+    setTimeout(() => { window.location.href = DEST; }, 700);
+});
 
-hintBtn.addEventListener('click', openM);
-mClose.addEventListener('click', closeM);
-overlay.addEventListener('click', closeM);
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeM(); });
+/* ═══════════════════════════════════
+   INIT
+═══════════════════════════════════ */
+runAutoSequence();
 
 console.log('%c0xb0rn3', 'color:#fabd2f;font-size:26px;font-weight:900;font-family:monospace;background:#1d2021;padding:8px 20px;border-radius:8px;border:2px solid #fabd2f;');
+console.log('%c[*] breach sequence initiated | @0xb0rn3', 'color:#665c54;font-size:11px;font-family:monospace;');
 </script>
 </body>
 </html>
