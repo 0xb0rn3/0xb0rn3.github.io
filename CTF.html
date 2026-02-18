@@ -549,7 +549,7 @@
             </p>
             <div class="post-count">
                 <i class="fas fa-flag-checkered"></i>
-                2 rooms pwned
+                3 rooms pwned
             </div>
         </div>
 
@@ -567,6 +567,37 @@
         </div>
 
         <div class="blog-grid" id="blogGrid">
+
+            <!-- VulnNet: Internal — TryHackMe -->
+            <article class="blog-card" data-platform="thm">
+                <div class="card-stripe" style="background:linear-gradient(90deg,var(--orange),var(--yellow));"></div>
+                <div class="card-inner">
+                    <div class="card-meta">
+                        <span class="card-date"><i class="fas fa-cube" style="margin-right:4px;font-size:.55rem;color:var(--aqua);"></i>TryHackMe</span>
+                        <span class="card-read"><i class="fas fa-signal"></i>Medium</span>
+                    </div>
+                    <h2 class="card-title">VulnNet: Internal</h2>
+                    <p class="card-excerpt">
+                        Service-chaining across SMB, NFS, Redis, Rsync, and TeamCity CI/CD.
+                        Credential pivoting from NFS config leaks to Redis keystore to rsync SSH key injection.
+                        Final privesc via TeamCity build RCE as root. 4 flags captured.
+                    </p>
+                    <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin:.6rem 0 .8rem;">
+                        <span style="display:inline-flex;align-items:center;gap:4px;font-size:.58rem;color:var(--aqua);background:rgba(142,192,124,.07);border:1.5px solid rgba(142,192,124,.22);border-radius:var(--r-pill,999px);padding:2px 8px;font-weight:700;">
+                            <i class="fas fa-flag" style="font-size:.45rem;"></i>THM{e8996faea46df09dba5676dd271c60bd}
+                        </span>
+                    </div>
+                    <div class="card-tags">
+                        <span class="card-tag tag-orange">Credential Chain</span>
+                        <span class="card-tag tag-red">TeamCity RCE</span>
+                        <span class="card-tag tag-blue">SSH Injection</span>
+                        <span class="card-tag tag-yellow">Medium</span>
+                    </div>
+                    <a href="CTF/vulnnet-internal.html" class="card-link" style="color:var(--orange);border-color:rgba(254,128,25,.3);background:rgba(254,128,25,.07);">
+                        Read Writeup <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </article>
 
             <!-- Hidden Deep Into My Heart — TryHackMe -->
             <article class="blog-card" data-platform="thm">
