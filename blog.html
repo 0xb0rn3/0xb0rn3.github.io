@@ -320,6 +320,7 @@
         .stripe-yellow { background: linear-gradient(90deg,var(--yellow),var(--orange)); }
         .stripe-blue   { background: linear-gradient(90deg,var(--blue),var(--aqua)); }
         .stripe-purple { background: linear-gradient(90deg,var(--purple),var(--blue)); }
+        .stripe-aqua   { background: linear-gradient(90deg,var(--aqua),var(--blue)); }
 
         .card-inner {
             padding: clamp(1.2rem,3vw,1.8rem);
@@ -379,6 +380,7 @@
         .tag-blue   { color:var(--blue);   border-color:rgba(131,165,152,.28);  background:rgba(131,165,152,.07); }
         .tag-aqua   { color:var(--aqua);   border-color:rgba(142,192,124,.28);  background:rgba(142,192,124,.07); }
         .tag-orange { color:var(--orange); border-color:rgba(254,128,25,.28);   background:rgba(254,128,25,.07); }
+        .tag-dim    { color:var(--fg-dim); border-color:var(--border);            background:var(--bg-field); }
         .tag-purple { color:var(--purple); border-color:rgba(211,134,155,.28);  background:rgba(211,134,155,.07); }
 
         /* Read more link */
@@ -403,8 +405,12 @@
 
         .link-red    { color:var(--red);    border-color:rgba(251,73,52,.3);    background:rgba(251,73,52,.07); }
         .link-red:hover    { background:var(--red);    color:var(--black); }
+        .link-orange { color:var(--orange); border-color:rgba(254,128,25,.3);   background:rgba(254,128,25,.07); }
+        .link-orange:hover { background:var(--orange); color:var(--black); }
         .link-yellow { color:var(--yellow); border-color:rgba(250,189,47,.3);   background:rgba(250,189,47,.07); }
         .link-yellow:hover { background:var(--yellow); color:var(--black); }
+        .link-aqua   { color:var(--aqua);   border-color:rgba(142,192,124,.3);  background:rgba(142,192,124,.07); }
+        .link-aqua:hover   { background:var(--aqua);   color:var(--black); }
         .link-blue   { color:var(--blue);   border-color:rgba(131,165,152,.3);  background:rgba(131,165,152,.07); }
         .link-blue:hover   { background:var(--blue);   color:var(--black); }
         .link-purple { color:var(--purple); border-color:rgba(211,134,155,.3);  background:rgba(211,134,155,.07); }
@@ -534,11 +540,80 @@
             </p>
             <div class="post-count">
                 <i class="fas fa-file-code"></i>
-                5 posts published
+                12 posts published
             </div>
         </div>
 
         <div class="blog-grid" id="blogGrid">
+
+            <!-- React2Shell — CVE-2025-55182 -->
+            <article class="blog-card">
+                <div class="card-stripe" style="background:linear-gradient(90deg,var(--red),var(--orange));"></div>
+                <div class="card-inner">
+                    <div class="card-meta">
+                        <span class="card-date"><i class="fas fa-calendar-alt" style="margin-right:4px;font-size:.55rem;"></i>2026</span>
+                        <span class="card-read"><i class="fas fa-clock"></i>~7 min read</span>
+                    </div>
+                    <h2 class="card-title">React2Shell: Modern Web Frameworks as Attack Vectors</h2>
+                    <p class="card-excerpt">
+                        CVE-2025-55182 — critical unauthenticated RCE in React Server Components. Prototype pollution meets unsafe server-side deserialization in the Flight protocol, with ~436K exposed Next.js instances.
+                    </p>
+                    <div class="card-tags">
+                        <span class="card-tag tag-orange">React/Next.js</span>
+                        <span class="card-tag tag-red">RCE</span>
+                        <span class="card-tag tag-yellow">Proto Pollution</span>
+                    </div>
+                    <a href="Blog/react2shell.html" class="card-link link-orange">
+                        Read More <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </article>
+
+            <!-- XWiki — CVE-2025-24893 -->
+            <article class="blog-card">
+                <div class="card-stripe stripe-red"></div>
+                <div class="card-inner">
+                    <div class="card-meta">
+                        <span class="card-date"><i class="fas fa-calendar-alt" style="margin-right:4px;font-size:.55rem;"></i>2026</span>
+                        <span class="card-read"><i class="fas fa-clock"></i>~6 min read</span>
+                    </div>
+                    <h2 class="card-title">CVE-2025-24893: Unauthenticated RCE in XWiki</h2>
+                    <p class="card-excerpt">
+                        Remote code execution via the SolrSearch macro — a single HTTP GET request achieves full system compromise through Groovy template injection. No credentials required.
+                    </p>
+                    <div class="card-tags">
+                        <span class="card-tag tag-red">Groovy Injection</span>
+                        <span class="card-tag tag-orange">SolrSearch</span>
+                        <span class="card-tag tag-blue">RCE</span>
+                    </div>
+                    <a href="Blog/xwiki.html" class="card-link link-red">
+                        Read More <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </article>
+
+            <!-- Mirth Connect -->
+            <article class="blog-card">
+                <div class="card-stripe" style="background:linear-gradient(90deg,var(--red),var(--purple));"></div>
+                <div class="card-inner">
+                    <div class="card-meta">
+                        <span class="card-date"><i class="fas fa-calendar-alt" style="margin-right:4px;font-size:.55rem;"></i>2026</span>
+                        <span class="card-read"><i class="fas fa-clock"></i>~8 min read</span>
+                    </div>
+                    <h2 class="card-title">Mirth Connect RCE: Healthcare Meets Insecure Defaults</h2>
+                    <p class="card-excerpt">
+                        Exploiting CVE-2023-43208 — critical authentication bypass in NextGen Healthcare's Mirth Connect integration engine. From version detection to reverse shell on 272K+ exposed instances.
+                    </p>
+                    <div class="card-tags">
+                        <span class="card-tag tag-red">Healthcare</span>
+                        <span class="card-tag tag-orange">Auth Bypass</span>
+                        <span class="card-tag tag-yellow">Reverse Shell</span>
+                    </div>
+                    <a href="Blog/mirthconn.html" class="card-link link-red">
+                        Read More <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </article>
 
             <!-- Xpl0it — Sudo NSS Privesc -->
             <article class="blog-card">
@@ -560,6 +635,99 @@
                         <span class="card-tag tag-yellow">NSS Hijack</span>
                     </div>
                     <a href="Blog/xpl0it.html" class="card-link link-yellow">
+                        Read More <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </article>
+
+            <!-- Post-Exploit Part 1 -->
+            <article class="blog-card">
+                <div class="card-stripe" style="background:linear-gradient(90deg,var(--orange),var(--red));"></div>
+                <div class="card-inner">
+                    <div class="card-meta">
+                        <span class="card-date"><i class="fas fa-calendar-alt" style="margin-right:4px;font-size:.55rem;"></i>2026</span>
+                        <span class="card-read"><i class="fas fa-clock"></i>~12 min read</span>
+                    </div>
+                    <h2 class="card-title">Post-Exploitation Part 1: Privilege Escalation</h2>
+                    <p class="card-excerpt">
+                        Getting a shell is just a foothold. SUID abuse, kernel exploits (DirtyCow, PwnKit),
+                        and sudo misconfigurations that turn a low-priv user into root.
+                    </p>
+                    <div class="card-tags">
+                        <span class="card-tag tag-red">SUID</span>
+                        <span class="card-tag tag-orange">Kernel</span>
+                        <span class="card-tag tag-yellow">Sudo</span>
+                    </div>
+                    <a href="Blog/postexploitpart1.html" class="card-link link-orange">
+                        Read More <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </article>
+
+            <!-- Post-Exploit Part 2 -->
+            <article class="blog-card">
+                <div class="card-stripe stripe-blue"></div>
+                <div class="card-inner">
+                    <div class="card-meta">
+                        <span class="card-date"><i class="fas fa-calendar-alt" style="margin-right:4px;font-size:.55rem;"></i>2026</span>
+                        <span class="card-read"><i class="fas fa-clock"></i>~12 min read</span>
+                    </div>
+                    <h2 class="card-title">Post-Exploitation Part 2: Pivoting</h2>
+                    <p class="card-excerpt">
+                        Lateral movement through compromised networks — Living off the Land, SSH tunneling (local + remote port forwarding), SOCKS proxying, and persistence with autossh.
+                    </p>
+                    <div class="card-tags">
+                        <span class="card-tag tag-blue">LOLBins</span>
+                        <span class="card-tag tag-aqua">SSH Tunneling</span>
+                        <span class="card-tag tag-orange">SOCKS Proxy</span>
+                    </div>
+                    <a href="Blog/postexploitpart2.html" class="card-link link-blue">
+                        Read More <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </article>
+
+            <!-- Firewall Detection -->
+            <article class="blog-card">
+                <div class="card-stripe stripe-aqua"></div>
+                <div class="card-inner">
+                    <div class="card-meta">
+                        <span class="card-date"><i class="fas fa-calendar-alt" style="margin-right:4px;font-size:.55rem;"></i>2026</span>
+                        <span class="card-read"><i class="fas fa-clock"></i>~10 min read</span>
+                    </div>
+                    <h2 class="card-title">Detecting Firewalls Before They Detect You</h2>
+                    <p class="card-excerpt">
+                        Mapping the control plane during post-exploitation — understanding iptables, nftables, firewalld, and UFW. Automating Linux firewall detection with a custom script.
+                    </p>
+                    <div class="card-tags">
+                        <span class="card-tag tag-aqua">Firewalls</span>
+                        <span class="card-tag tag-blue">Linux</span>
+                        <span class="card-tag tag-yellow">Bash</span>
+                    </div>
+                    <a href="Blog/firewalldetect.html" class="card-link link-aqua">
+                        Read More <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </article>
+
+            <!-- Hacking Scene -->
+            <article class="blog-card">
+                <div class="card-stripe stripe-purple"></div>
+                <div class="card-inner">
+                    <div class="card-meta">
+                        <span class="card-date"><i class="fas fa-calendar-alt" style="margin-right:4px;font-size:.55rem;"></i>2026</span>
+                        <span class="card-read"><i class="fas fa-clock"></i>~5 min read</span>
+                    </div>
+                    <h2 class="card-title">The Death of the Underground Hacking Scene</h2>
+                    <p class="card-excerpt">
+                        What happened when exploits went from currency to content? The information trading economy that defined hacker culture collapsed — we gained access but lost something essential.
+                    </p>
+                    <div class="card-tags">
+                        <span class="card-tag tag-purple">Hacker Culture</span>
+                        <span class="card-tag tag-blue">History</span>
+                        <span class="card-tag tag-dim">Essay</span>
+                    </div>
+                    <a href="Blog/hackingscene.html" class="card-link link-purple">
                         Read More <i class="fas fa-arrow-right"></i>
                     </a>
                 </div>
