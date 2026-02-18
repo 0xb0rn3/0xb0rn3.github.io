@@ -410,6 +410,21 @@
         .link-purple { color:var(--purple); border-color:rgba(211,134,155,.3);  background:rgba(211,134,155,.07); }
         .link-purple:hover { background:var(--purple); color:var(--black); }
 
+        /* Flag pill for cards */
+        .card-flag {
+            display: inline-flex; align-items: center; gap: 5px;
+            font-size: clamp(.52rem,1.3vw,.58rem);
+            font-weight: 600;
+            color: var(--aqua);
+            background: rgba(142,192,124,.08);
+            border: 1px solid rgba(142,192,124,.22);
+            border-radius: var(--r-pill);
+            padding: 2px 10px;
+            font-family: 'JetBrains Mono', monospace;
+            letter-spacing: .5px;
+        }
+        .card-flag i { font-size: .5rem; }
+
         /* ════════════════════════════════════
            EMPTY STATE (if no posts)
         ════════════════════════════════════ */
@@ -499,7 +514,8 @@
                 <li><a href="https://github.com/0xb0rn3" target="_blank" class="nav-link"><i class="fas fa-code"></i>Projects</a></li>
                 <li><a href="main.html#certifications"  class="nav-link"><i class="fas fa-certificate"></i>Certs</a></li>
                 <li><a href="main.html#platforms"       class="nav-link"><i class="fas fa-flag"></i>Platforms</a></li>
-                <li><a href="blog.html"                 class="nav-link active"><i class="fas fa-pen-nib"></i>Blog</a></li>
+                <li><a href="blog.html"                 class="nav-link"><i class="fas fa-pen-nib"></i>Blog</a></li>
+                <li><a href="CTF.html"                  class="nav-link active"><i class="fas fa-trophy"></i>CTF</a></li>
                 <li><a href="contact.html"              class="nav-link"><i class="fas fa-envelope"></i>Contact</a></li>
             </ul>
             <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation">
@@ -515,6 +531,7 @@
             <li><a href="main.html#certifications" class="mobile-nav-link"><i class="fas fa-certificate"></i>Certifications</a></li>
             <li><a href="main.html#platforms"      class="mobile-nav-link"><i class="fas fa-flag"></i>Platforms</a></li>
             <li><a href="blog.html"                class="mobile-nav-link"><i class="fas fa-pen-nib"></i>Blog</a></li>
+            <li><a href="CTF.html"                 class="mobile-nav-link"><i class="fas fa-trophy"></i>CTF</a></li>
             <li><a href="contact.html"             class="mobile-nav-link"><i class="fas fa-envelope"></i>Contact</a></li>
         </ul>
     </div>
@@ -532,7 +549,7 @@
             </p>
             <div class="post-count">
                 <i class="fas fa-flag-checkered"></i>
-                1 room pwned
+                2 rooms pwned
             </div>
         </div>
 
@@ -551,6 +568,31 @@
 
         <div class="blog-grid" id="blogGrid">
 
+            <!-- Hidden Deep Into My Heart — TryHackMe -->
+            <article class="blog-card" data-platform="thm">
+                <div class="card-stripe" style="background:linear-gradient(90deg,var(--red),var(--orange));"></div>
+                <div class="card-inner">
+                    <div class="card-meta">
+                        <span class="card-date"><i class="fas fa-calendar-alt" style="margin-right:4px;font-size:.55rem;"></i>February 2026</span>
+                        <span class="card-read" style="background:rgba(142,192,124,.1);border:1.5px solid rgba(142,192,124,.28);padding:3px 10px;border-radius:var(--r-pill);"><i class="fas fa-cube" style="margin-right:4px;color:var(--aqua);"></i>TryHackMe</span>
+                    </div>
+                    <h2 class="card-title">Hidden Deep Into My Heart</h2>
+                    <p class="card-excerpt">
+                        Valentine's Day themed Flask app — <code style="font-size:.8em;color:var(--yellow);background:rgba(250,189,47,.08);border:1px solid rgba(250,189,47,.22);border-radius:6px;padding:1px 5px;">robots.txt</code> credential leak exposes a hidden vault path and plaintext password. Directory brute-force via Gobuster reveals an admin panel. Credential stuffing captures the flag.
+                    </p>
+                    <div class="card-flag"><i class="fas fa-flag"></i> THM{l0v3_is_in_th3_r0b0ts_txt}</div>
+                    <div class="card-tags">
+                        <span class="card-tag tag-red">Info Disclosure</span>
+                        <span class="card-tag tag-orange">Credential Leak</span>
+                        <span class="card-tag tag-blue">Dir Bruteforce</span>
+                        <span class="card-tag tag-yellow">Easy</span>
+                    </div>
+                    <a href="CTF/hidden-deep-into-my-heart.html" class="card-link link-red">
+                        Read Writeup <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </article>
+
             <!-- RootMe — TryHackMe -->
             <article class="blog-card" data-platform="thm">
                 <div class="card-stripe" style="background:linear-gradient(90deg,var(--aqua),var(--blue));"></div>
@@ -567,7 +609,7 @@
                         <span class="card-tag tag-aqua">File Upload</span>
                         <span class="card-tag tag-red">SUID Privesc</span>
                         <span class="card-tag tag-blue">Web Shell</span>
-                        <span class="card-tag" style="color:var(--yellow);border-color:rgba(250,189,47,.28);background:rgba(250,189,47,.07);">Easy</span>
+                        <span class="card-tag tag-yellow">Easy</span>
                     </div>
                     <a href="CTF/rootme.html" class="card-link" style="color:var(--aqua);border-color:rgba(142,192,124,.3);background:rgba(142,192,124,.07);">
                         Read Writeup <i class="fas fa-arrow-right"></i>
@@ -635,14 +677,12 @@
 
     filterBtns.forEach(btn => {
         btn.addEventListener('click', () => {
-            // Remove active from all buttons
             filterBtns.forEach(b => {
                 b.classList.remove('active');
                 b.style.background = 'var(--bg-card)';
                 b.style.borderColor = 'var(--border-mid)';
             });
 
-            // Add active to clicked button
             btn.classList.add('active');
             const filter = btn.dataset.filter;
 
@@ -657,13 +697,8 @@
                 btn.style.borderColor = 'var(--red)';
             }
 
-            // Filter cards
             ctfCards.forEach(card => {
-                if (filter === 'all' || card.dataset.platform === filter) {
-                    card.style.display = 'block';
-                } else {
-                    card.style.display = 'none';
-                }
+                card.style.display = (filter === 'all' || card.dataset.platform === filter) ? 'flex' : 'none';
             });
         });
     });
