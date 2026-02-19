@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CTF Writeups — 0xb0rn3</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --black:      #000000;
+            --bg:         #111010;
+            --bg-card:    #181716;
+            --bg-field:   #1e1c1b;
+            --bg-raised:  #252220;
+
+            --gray-2:     #504945;
+            --gray-3:     #3c3836;
+
+            --fg:         #ebdbb2;
+            --fg-muted:   #a89984;
+            --fg-dim:     #665c54;
+            --white:      #ffffff;
+
+            --yellow:     #fabd2f;
+            --orange:     #fe8019;
+            --aqua:       #8ec07c;
+            --red:        #fb4934;
+            --blue:       #83a598;
+            --purple:     #d3869b;
+
+            --border:     rgba(235,219,178,.13);
+            --border-mid: rgba(235,219,178,.28);
+            --border-hi:  rgba(235,219,178,.6);
+
+            --r-xs:   8px;
+            --r-sm:   14px;
+            --r:      20px;
+            --r-lg:   28px;
+            --r-xl:   36px;
+            --r-pill: 999px;
+        }
+
+        *, *::before, *::after {
+            margin: 0; padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--black);
+            color: var(--fg);
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Grain */
+        body::before {
+            content: '';
+            position: fixed; inset: 0; z-index: 0;
+            pointer-events: none; opacity: .028;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            background-size: 200px;
+        }
+
+        /* Dot grid */
+        body::after {
+            content: '';
+            position: fixed; inset: 0; z-index: 0; pointer-events: none;
+            background-image: radial-gradient(circle, rgba(235,219,178,.05) 1px, transparent 1px);
+            background-size: 32px 32px;
+            animation: gridDrift 30s linear infinite;
+        }
+        @keyframes gridDrift {
+            from { background-position: 0 0; }
+            to   { background-position: 32px 32px; }
+        }
+
+        /* Rainbow top bar */
+        .rainbow-bar {
+            position: fixed; top: 0; left: 0; right: 0; height: 3px;
+            background: linear-gradient(90deg, var(--yellow), var(--orange), var(--red), var(--aqua));
+            z-index: 9999;
+        }
+
+        /* Video bg */
+        .video-bg {
+            position: fixed; inset: 0; z-index: -1; overflow: hidden;
+        }
+        .video-bg video {
+            width: 100%; height: 100%;
+            object-fit: cover; opacity: .07;
+            filter: grayscale(1) contrast(1.2);
+        }
+        .video-bg::after {
+            content: '';
+            position: absolute; inset: 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,.88), rgba(0,0,0,.94));
+        }
+
+        /* ════════════════════════════════════
+           NAV
+        ════════════════════════════════════ */
+        .nav {
+            position: fixed; top: 3px; left: 0; right: 0;
+            z-index: 1000;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            background: rgba(0,0,0,.85);
+            border-bottom: 2px solid var(--border);
+            transition: all .3s ease;
+        }
+        .nav.scrolled {
+            background: rgba(0,0,0,.96);
+            border-bottom-color: var(--border-mid);
+            box-shadow: 0 4px 24px rgba(0,0,0,.8);
+        }
+
+        .nav-content {
+            max-width: 1200px; margin: 0 auto;
+            padding: .9rem 2rem;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+
+        .nav-logo {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.1rem; font-weight: 900;
+            color: var(--yellow);
+            text-decoration: none;
+            display: flex; align-items: center; gap: .6rem;
+            letter-spacing: 2px;
+            transition: color .2s;
+        }
+        .nav-logo:hover { color: var(--orange); }
+
+        .nav-links {
+            display: flex; gap: .25rem;
+            list-style: none; align-items: center;
+        }
+        .nav-link {
+            color: var(--fg-muted);
+            text-decoration: none;
+            font-size: .72rem; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 1.2px;
+            display: flex; align-items: center; gap: .4rem;
+            padding: .45rem .9rem;
+            border-radius: var(--r-pill);
+            border: 1.5px solid transparent;
+            transition: all .22s ease;
+        }
+        .nav-link:hover {
+            color: var(--yellow);
+            background: rgba(250,189,47,.07);
+            border-color: rgba(250,189,47,.28);
+        }
+        .nav-link.active {
+            color: var(--yellow);
+            background: rgba(250,189,47,.1);
+            border-color: rgba(250,189,47,.32);
+        }
+        .nav-link i { font-size: .7rem; }
+
+        .menu-toggle {
+            display: none; flex-direction: column; gap: 5px;
+            background: none; border: none; cursor: pointer; padding: 5px;
+            z-index: 1001;
+        }
+        .menu-toggle span {
+            width: 22px; height: 2px;
+            background: var(--fg); display: block;
+            transition: all .3s ease; border-radius: 2px;
+        }
+        .menu-toggle.active span:nth-child(1) { transform: rotate(45deg) translate(7px,7px); }
+        .menu-toggle.active span:nth-child(2) { opacity: 0; }
+        .menu-toggle.active span:nth-child(3) { transform: rotate(-45deg) translate(7px,-7px); }
+
+        .mobile-nav {
+            position: fixed; top: 0; right: -100%;
+            width: min(85%,380px); height: 100dvh;
+            background: rgba(0,0,0,.98);
+            border-left: 2px solid var(--border-mid);
+            padding: 5rem 1.5rem 2rem;
+            transition: right .3s ease; z-index: 999;
+            overflow-y: auto;
+        }
+        .mobile-nav.active { right: 0; }
+
+        .mobile-nav-links {
+            list-style: none;
+            display: flex; flex-direction: column; gap: .75rem;
+        }
+        .mobile-nav-link {
+            color: var(--fg-muted);
+            text-decoration: none;
+            font-size: .95rem; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 1px;
+            display: flex; align-items: center; gap: 1rem;
+            padding: .9rem 1.2rem;
+            border: 2px solid var(--border);
+            border-radius: var(--r);
+            transition: all .22s ease;
+        }
+        .mobile-nav-link:hover, .mobile-nav-link:active {
+            color: var(--yellow);
+            border-color: rgba(250,189,47,.4);
+            background: rgba(250,189,47,.06);
+            transform: translateX(4px);
+        }
+        .mobile-nav-link i { width: 20px; font-size: 1.05rem; }
+
+        .mobile-overlay {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,.7);
+            opacity: 0; visibility: hidden;
+            transition: all .3s ease; z-index: 998;
+            backdrop-filter: blur(3px);
+        }
+        .mobile-overlay.active { opacity: 1; visibility: visible; }
+
+        /* ════════════════════════════════════
+           PAGE
+        ════════════════════════════════════ */
+        .section {
+            padding: clamp(6rem,12vh,9rem) clamp(1rem,4vw,2rem) clamp(3rem,7vh,5rem);
+            max-width: 1200px; margin: 0 auto;
+            position: relative; z-index: 10;
+        }
+
+        /* ── Header ── */
+        .section-header {
+            text-align: center;
+            margin-bottom: clamp(2rem,5vh,3.5rem);
+            animation: riseIn .9s cubic-bezier(.16,1,.3,1) .1s both;
+        }
+
+        @keyframes riseIn {
+            from { opacity: 0; transform: translateY(28px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-tag {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: rgba(250,189,47,.08);
+            border: 1.5px solid rgba(250,189,47,.28);
+            border-radius: var(--r-pill);
+            padding: 4px 14px;
+            font-size: clamp(.55rem,1.4vw,.64rem);
+            font-weight: 700; color: var(--yellow);
+            text-transform: uppercase; letter-spacing: 1.5px;
+            margin-bottom: 12px;
+        }
+
+        .section-title {
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(1.9rem,6vw,3rem);
+            font-weight: 900; color: var(--white);
+            text-transform: uppercase; letter-spacing: .08em;
+            line-height: 1.05;
+            text-shadow: 4px 4px 0 var(--gray-3), 8px 8px 0 rgba(0,0,0,.5);
+            margin-bottom: 10px;
+        }
+
+        .term-prompt {
+            font-size: clamp(.62rem,1.7vw,.76rem);
+            color: var(--fg-dim); letter-spacing: 1px;
+        }
+        .p-user { color: var(--yellow); font-weight: 700; }
+        .p-host { color: var(--orange); }
+        .p-path { color: var(--blue); }
+
+        /* ── Post count pill ── */
+        .post-count {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: rgba(142,192,124,.07);
+            border: 1.5px solid rgba(142,192,124,.28);
+            border-radius: var(--r-pill);
+            padding: 4px 14px;
+            font-size: clamp(.52rem,1.3vw,.6rem);
+            font-weight: 700; color: var(--aqua);
+            text-transform: uppercase; letter-spacing: 1.2px;
+            margin-top: 10px;
+        }
+
+        /* ════════════════════════════════════
+           BLOG GRID
+        ════════════════════════════════════ */
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(310px,1fr));
+            gap: clamp(1rem,2.5vw,1.5rem);
+        }
+
+        /* Tag color map — used for stripe + tag pill accent */
+        .blog-card {
+            background: var(--bg-card);
+            border: 2px solid var(--border-mid);
+            border-radius: var(--r-lg);
+            overflow: hidden;
+            box-shadow: 4px 4px 0 var(--gray-3), 8px 8px 0 rgba(0,0,0,.4);
+            display: flex; flex-direction: column;
+            opacity: 0; transform: translateY(20px);
+            transition: transform .22s ease, box-shadow .22s ease, border-color .22s;
+        }
+        .blog-card.visible {
+            opacity: 1; transform: translateY(0);
+        }
+        .blog-card:hover {
+            transform: translate(-3px,-4px);
+            box-shadow: 7px 7px 0 var(--gray-2), 14px 14px 0 rgba(0,0,0,.4);
+            border-color: var(--border-hi);
+        }
+
+        /* Color stripe on top */
+        .card-stripe { height: 3px; flex-shrink: 0; }
+        .stripe-red    { background: linear-gradient(90deg,var(--red),var(--orange)); }
+        .stripe-yellow { background: linear-gradient(90deg,var(--yellow),var(--orange)); }
+        .stripe-blue   { background: linear-gradient(90deg,var(--blue),var(--aqua)); }
+        .stripe-purple { background: linear-gradient(90deg,var(--purple),var(--blue)); }
+
+        .card-inner {
+            padding: clamp(1.2rem,3vw,1.8rem);
+            display: flex; flex-direction: column;
+            gap: .75rem; flex: 1;
+        }
+
+        /* Date + read time row */
+        .card-meta {
+            display: flex; align-items: center;
+            justify-content: space-between; flex-wrap: wrap; gap: .4rem;
+        }
+        .card-date {
+            font-size: clamp(.54rem,1.4vw,.62rem);
+            color: var(--fg-dim);
+            text-transform: uppercase; letter-spacing: 1.2px;
+            font-weight: 600;
+        }
+        .card-read {
+            display: flex; align-items: center; gap: 4px;
+            font-size: clamp(.52rem,1.3vw,.6rem);
+            color: var(--fg-dim); letter-spacing: .8px;
+        }
+        .card-read i { font-size: .55rem; }
+
+        /* Title */
+        .card-title {
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(.85rem,2.2vw,1.05rem);
+            font-weight: 700; color: var(--white);
+            line-height: 1.35; letter-spacing: .3px;
+        }
+
+        /* Excerpt */
+        .card-excerpt {
+            font-size: clamp(.7rem,1.8vw,.8rem);
+            color: var(--fg-muted); line-height: 1.75;
+            flex: 1;
+        }
+
+        /* Tags */
+        .card-tags {
+            display: flex; flex-wrap: wrap; gap: .4rem;
+        }
+        .card-tag {
+            padding: 2px 10px;
+            border-radius: var(--r-pill);
+            font-size: clamp(.5rem,1.3vw,.57rem);
+            font-weight: 700;
+            text-transform: uppercase; letter-spacing: 1px;
+            border: 1.5px solid;
+        }
+
+        /* Tag theme variants */
+        .tag-red    { color:var(--red);    border-color:rgba(251,73,52,.28);    background:rgba(251,73,52,.07); }
+        .tag-yellow { color:var(--yellow); border-color:rgba(250,189,47,.28);   background:rgba(250,189,47,.07); }
+        .tag-blue   { color:var(--blue);   border-color:rgba(131,165,152,.28);  background:rgba(131,165,152,.07); }
+        .tag-aqua   { color:var(--aqua);   border-color:rgba(142,192,124,.28);  background:rgba(142,192,124,.07); }
+        .tag-orange { color:var(--orange); border-color:rgba(254,128,25,.28);   background:rgba(254,128,25,.07); }
+        .tag-purple { color:var(--purple); border-color:rgba(211,134,155,.28);  background:rgba(211,134,155,.07); }
+
+        /* Read more link */
+        .card-link {
+            display: inline-flex; align-items: center; gap: .5rem;
+            font-size: clamp(.6rem,1.5vw,.68rem);
+            font-weight: 700;
+            text-decoration: none;
+            text-transform: uppercase; letter-spacing: 1px;
+            padding: .4rem 1rem;
+            border-radius: var(--r-pill);
+            border: 1.5px solid;
+            transition: all .22s ease;
+            box-shadow: 2px 2px 0 var(--gray-3);
+            align-self: flex-start;
+        }
+        .card-link:hover {
+            gap: .85rem;
+            transform: translate(-1px,-1px);
+            box-shadow: 3px 3px 0 var(--gray-2);
+        }
+
+        .link-red    { color:var(--red);    border-color:rgba(251,73,52,.3);    background:rgba(251,73,52,.07); }
+        .link-red:hover    { background:var(--red);    color:var(--black); }
+        .link-yellow { color:var(--yellow); border-color:rgba(250,189,47,.3);   background:rgba(250,189,47,.07); }
+        .link-yellow:hover { background:var(--yellow); color:var(--black); }
+        .link-blue   { color:var(--blue);   border-color:rgba(131,165,152,.3);  background:rgba(131,165,152,.07); }
+        .link-blue:hover   { background:var(--blue);   color:var(--black); }
+        .link-purple { color:var(--purple); border-color:rgba(211,134,155,.3);  background:rgba(211,134,155,.07); }
+        .link-purple:hover { background:var(--purple); color:var(--black); }
+
+        /* Flag pill for cards */
+        .card-flag {
+            display: inline-flex; align-items: center; gap: 5px;
+            font-size: clamp(.52rem,1.3vw,.58rem);
+            font-weight: 600;
+            color: var(--aqua);
+            background: rgba(142,192,124,.08);
+            border: 1px solid rgba(142,192,124,.22);
+            border-radius: var(--r-pill);
+            padding: 2px 10px;
+            font-family: 'JetBrains Mono', monospace;
+            letter-spacing: .5px;
+        }
+        .card-flag i { font-size: .5rem; }
+
+        /* ════════════════════════════════════
+           EMPTY STATE (if no posts)
+        ════════════════════════════════════ */
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: clamp(2rem,6vh,4rem) 1rem;
+            background: var(--bg-card);
+            border: 2px solid var(--border-mid);
+            border-radius: var(--r-lg);
+            box-shadow: 4px 4px 0 var(--gray-3);
+        }
+        .empty-icon {
+            font-size: clamp(2rem,6vw,3rem);
+            color: var(--fg-dim); margin-bottom: .75rem;
+        }
+        .empty-text {
+            font-size: clamp(.72rem,1.9vw,.85rem);
+            color: var(--fg-dim);
+        }
+
+        /* ════════════════════════════════════
+           FOOTER
+        ════════════════════════════════════ */
+        .footer {
+            border-top: 2px solid var(--border);
+            background: var(--bg-card);
+            padding: clamp(1.2rem,3vh,2rem) clamp(1rem,4vw,2rem);
+            text-align: center;
+            position: relative; z-index: 10;
+        }
+        .footer-text {
+            font-size: clamp(.56rem,1.4vw,.65rem);
+            color: var(--fg-dim); letter-spacing: 1px;
+        }
+        .footer-text span { color: var(--yellow); }
+
+        /* ════════════════════════════════════
+           SCROLLBAR
+        ════════════════════════════════════ */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--black); }
+        ::-webkit-scrollbar-thumb { background: var(--gray-2); border-radius: var(--r-pill); }
+        ::-webkit-scrollbar-thumb:hover { background: var(--yellow); }
+
+        /* ════════════════════════════════════
+           RESPONSIVE
+        ════════════════════════════════════ */
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .menu-toggle { display: flex; }
+            .blog-grid { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 480px) {
+            .blog-grid { grid-template-columns: 1fr; }
+        }
+
+        @media (hover: none) {
+            .blog-card:active { transform: translate(-1px,-2px); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="rainbow-bar" aria-hidden="true"></div>
+
+    <div class="video-bg">
+        <video autoplay muted loop playsinline>
+            <source src="oxbv1.mp4" type="video/mp4">
+        </video>
+    </div>
+
+    <div class="mobile-overlay" id="mobileOverlay"></div>
+
+    <!-- ═══════════════════════════════════════
+         NAV
+    ═══════════════════════════════════════ -->
+    <nav class="nav" id="navbar">
+        <div class="nav-content">
+            <a href="main.html" class="nav-logo">
+                <i class="fas fa-terminal"></i>
+                0xb0rn3
+            </a>
+            <ul class="nav-links">
+                <li><a href="main.html#about"          class="nav-link"><i class="fas fa-home"></i>About</a></li>
+                <li><a href="https://github.com/0xb0rn3" target="_blank" class="nav-link"><i class="fas fa-code"></i>Projects</a></li>
+                <li><a href="main.html#certifications"  class="nav-link"><i class="fas fa-certificate"></i>Certs</a></li>
+                <li><a href="main.html#platforms"       class="nav-link"><i class="fas fa-flag"></i>Platforms</a></li>
+                <li><a href="blog.html"                 class="nav-link"><i class="fas fa-pen-nib"></i>Blog</a></li>
+                <li><a href="CTF.html"                  class="nav-link active"><i class="fas fa-trophy"></i>CTF</a></li>
+                <li><a href="contact.html"              class="nav-link"><i class="fas fa-envelope"></i>Contact</a></li>
+            </ul>
+            <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <div class="mobile-nav" id="mobileNav">
+        <ul class="mobile-nav-links">
+            <li><a href="main.html#about"         class="mobile-nav-link"><i class="fas fa-home"></i>About</a></li>
+            <li><a href="https://github.com/0xb0rn3" target="_blank" class="mobile-nav-link"><i class="fas fa-code"></i>Projects</a></li>
+            <li><a href="main.html#certifications" class="mobile-nav-link"><i class="fas fa-certificate"></i>Certifications</a></li>
+            <li><a href="main.html#platforms"      class="mobile-nav-link"><i class="fas fa-flag"></i>Platforms</a></li>
+            <li><a href="blog.html"                class="mobile-nav-link"><i class="fas fa-pen-nib"></i>Blog</a></li>
+            <li><a href="CTF.html"                 class="mobile-nav-link"><i class="fas fa-trophy"></i>CTF</a></li>
+            <li><a href="contact.html"             class="mobile-nav-link"><i class="fas fa-envelope"></i>Contact</a></li>
+        </ul>
+    </div>
+
+    <!-- ═══════════════════════════════════════
+         CONTENT
+    ═══════════════════════════════════════ -->
+    <section class="section">
+
+        <div class="section-header">
+            <div class="section-tag"><i class="fas fa-trophy"></i>Challenges</div>
+            <h1 class="section-title">CTF Writeups</h1>
+            <p class="term-prompt">
+                <span class="p-user">0xb0rn3</span>@<span class="p-host">tryhackme</span>:<span class="p-path">~</span>$ cat completed_rooms.txt
+            </p>
+            <div class="post-count">
+                <i class="fas fa-flag-checkered"></i>
+                7 rooms pwned
+            </div>
+        </div>
+
+        <!-- Platform Filters -->
+        <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:2rem;align-items:center;">
+            <button class="filter-btn active" data-filter="all" style="padding:.6rem 1.2rem;background:var(--bg-card);color:var(--fg);border:2px solid var(--border-mid);border-radius:var(--r);font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;cursor:pointer;transition:all .22s ease;">
+                All Platforms
+            </button>
+            <button class="filter-btn" data-filter="thm" style="padding:.6rem 1.2rem;background:var(--bg-card);color:var(--aqua);border:2px solid rgba(142,192,124,.28);border-radius:var(--r);font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;cursor:pointer;transition:all .22s ease;">
+                <i class="fas fa-cube" style="margin-right:6px;"></i>TryHackMe
+            </button>
+            <button class="filter-btn" data-filter="htb" style="padding:.6rem 1.2rem;background:var(--bg-card);color:var(--red);border:2px solid rgba(251,73,52,.28);border-radius:var(--r);font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;cursor:pointer;transition:all .22s ease;">
+                <i class="fas fa-cube" style="margin-right:6px;"></i>HackTheBox
+            </button>
+        </div>
+
+        <div class="blog-grid" id="blogGrid">
+
+            <!-- VulnNet: Internal — TryHackMe -->
+            <article class="blog-card" data-platform="thm">
+                <div class="card-stripe" style="background:linear-gradient(90deg,var(--orange),var(--yellow));"></div>
+                <div class="card-inner">
+                    <div class="card-meta">
+                        <span class="card-date"><i class="fas fa-cube" style="margin-right:4px;font-size:.55rem;color:var(--aqua);"></i>TryHackMe</span>
+                        <span class="card-read"><i class="fas fa-signal"></i>Medium</span>
+                    </div>
+                    <h2 class="card-title">VulnNet: Internal</h2>
+                    <p class="card-excerpt">
+                        Service-chaining across SMB, NFS, Redis, Rsync, and TeamCity CI/CD.
+                        Credential pivoting from NFS config leaks to Redis keystore to rsync SSH key injection.
+                        Final privesc via TeamCity build RCE as root. 4 flags captured.
+                    </p>
+                    <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin:.6rem 0 .8rem;">
+                        <span style="display:inline-flex;align-items:center;gap:4px;font-size:.58rem;color:var(--aqua);background:rgba(142,192,124,.07);border:1.5px solid rgba(142,192,124,.22);border-radius:var(--r-pill,999px);padding:2px 8px;font-weight:700;">
+                            <i class="fas fa-flag" style="font-size:.45rem;"></i>THM{e8996faea46df09dba5676dd271c60bd}
+                        </span>
+                    </div>
+                    <div class="card-tags">
+                        <span class="card-tag tag-orange">Credential Chain</span>
+                        <span class="card-tag tag-red">TeamCity RCE</span>
+                        <span class="card-tag tag-blue">SSH Injection</span>
+                        <span class="card-tag tag-yellow">Medium</span>
+                    </div>
+                    <a href="CTF/vulnnet-internal.html" class="card-link" style="color:var(--orange);border-color:rgba(254,128,25,.3);background:rgba(254,128,25,.07);">
+                        Read Writeup <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </article>
+
+            <!-- Pickle Rick — TryHackMe -->
+            <article class="blog-card" data-platform="thm">
+                <div class="card-stripe" style="background:linear-gradient(90deg,var(--aqua),var(--yellow));"></div>
+                <div class="card-inner">
+                    <div class="card-meta">
+                        <span class="card-date"><i class="fas fa-cube" style="margin-right:4px;font-size:.55rem;color:var(--aqua);"></i>TryHackMe</span>
+                        <span class="card-read"><i class="fas fa-signal"></i>Easy</span>
+                    </div>
+                    <h2 class="card-title">Pickle Rick</h2>
+                    <p class="card-excerpt">
+                        Credentials leaked in HTML comments and robots.txt, leading to a command execution
+                        panel with a blacklisted <code style="font-size:.8em;color:var(--yellow);background:rgba(250,189,47,.08);border:1px solid rgba(250,189,47,.22);border-radius:6px;padding:1px 5px;">cat</code>
+                        trivially bypassed with <code style="font-size:.8em;color:var(--yellow);background:rgba(250,189,47,.08);border:1px solid rgba(250,189,47,.22);border-radius:6px;padding:1px 5px;">less</code>.
+                        www-data has NOPASSWD sudo ALL — instant root. 3 ingredients found.
+                    </p>
+                    <div class="card-tags">
+                        <span class="card-tag tag-red">Command Injection</span>
+                        <span class="card-tag tag-orange">Sudo Abuse</span>
+                        <span class="card-tag tag-aqua">Web Exploit</span>
+                        <span class="card-tag" style="color:var(--aqua);border-color:rgba(142,192,124,.28);background:rgba(142,192,124,.07);">Easy</span>
+                    </div>
+                    <a href="CTF/pickle-rick.html" class="card-link" style="color:var(--aqua);border-color:rgba(142,192,124,.3);background:rgba(142,192,124,.07);">
+                        Read Writeup <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </article>
+
+            <!-- Simple CTF — TryHackMe -->
+            <article class="blog-card" data-platform="thm">
+                <div class="card-stripe" style="background:linear-gradient(90deg,var(--red),var(--purple));"></div>
+                <div class="card-inner">
+                    <div class="card-meta">
+                        <span class="card-date"><i class="fas fa-cube" style="margin-right:4px;font-size:.55rem;color:var(--aqua);"></i>TryHackMe</span>
+                        <span class="card-read"><i class="fas fa-signal"></i>Easy</span>
+                    </div>
+                    <h2 class="card-title">Simple CTF</h2>
+                    <p class="card-excerpt">
+                        FTP anonymous intel leak reveals weak reused password. Time-based blind SQLi
+                        (CVE-2019-9053) in CMS Made Simple 2.2.8 extracts salted MD5 hash. Cracked
+                        creds give SSH access. Privilege escalation via vim sudo NOPASSWD — GTFOBins
+                        one-liner to root.
+                    </p>
+                    <div class="card-tags">
+                        <span class="card-tag tag-red">CVE-2019-9053</span>
+                        <span class="card-tag tag-orange">Blind SQLi</span>
+                        <span class="card-tag tag-purple">vim PrivEsc</span>
+                        <span class="card-tag" style="color:var(--aqua);border-color:rgba(142,192,124,.28);background:rgba(142,192,124,.07);">Easy</span>
+                    </div>
+                    <a href="CTF/simple-ctf.html" class="card-link link-red">
+                        Read Writeup <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </article>
+
+            <!-- Bounty Hacker — TryHackMe -->
+            <article class="blog-card" data-platform="thm">
+                <div class="card-stripe" style="background:linear-gradient(90deg,var(--red),var(--yellow));"></div>
+                <div class="card-inner">
+                    <div class="card-meta">
+                        <span class="card-date"><i class="fas fa-cube" style="margin-right:4px;font-size:.55rem;color:var(--aqua);"></i>TryHackMe</span>
+                        <span class="card-read"><i class="fas fa-signal"></i>Easy</span>
+                    </div>
+                    <h2 class="card-title">Bounty Hacker</h2>
+                    <p class="card-excerpt">
+                        Anonymous FTP leaks a username and custom password wordlist. Hydra brute-forces
+                        SSH in 10 attempts. Sudo <code style="font-size:.8em;color:var(--yellow);background:rgba(250,189,47,.08);border:1px solid rgba(250,189,47,.22);border-radius:6px;padding:1px 5px;">/bin/tar</code>
+                        with GTFOBins checkpoint callback gives instant root.
+                    </p>
+                    <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin:.6rem 0 .8rem;">
+                        <span style="display:inline-flex;align-items:center;gap:4px;font-size:.58rem;color:var(--aqua);background:rgba(142,192,124,.07);border:1.5px solid rgba(142,192,124,.22);border-radius:var(--r-pill,999px);padding:2px 8px;font-weight:700;">
+                            <i class="fas fa-flag" style="font-size:.45rem;"></i>THM{80UN7Y_h4cK3r}
+                        </span>
+                    </div>
+                    <div class="card-tags">
+                        <span class="card-tag tag-red">SSH Brute-Force</span>
+                        <span class="card-tag tag-orange">GTFOBins tar</span>
+                        <span class="card-tag tag-yellow">FTP Enum</span>
+                        <span class="card-tag" style="color:var(--aqua);border-color:rgba(142,192,124,.28);background:rgba(142,192,124,.07);">Easy</span>
+                    </div>
+                    <a href="CTF/bounty-hacker.html" class="card-link" style="color:var(--red);border-color:rgba(251,73,52,.3);background:rgba(251,73,52,.07);">
+                        Read Writeup <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </article>
+
+            <!-- W1seGuy — TryHackMe -->
+            <article class="blog-card" data-platform="thm">
+                <div class="card-stripe" style="background:linear-gradient(90deg,var(--purple),var(--blue));"></div>
+                <div class="card-inner">
+                    <div class="card-meta">
+                        <span class="card-date"><i class="fas fa-cube" style="margin-right:4px;font-size:.55rem;color:var(--aqua);"></i>TryHackMe</span>
+                        <span class="card-read"><i class="fas fa-signal"></i>Easy</span>
+                    </div>
+                    <h2 class="card-title">W1seGuy</h2>
+                    <p class="card-excerpt">
+                        Weak XOR encryption with a 5-byte repeating key. Known-plaintext attack using
+                        the <code style="font-size:.8em;color:var(--yellow);background:rgba(250,189,47,.08);border:1px solid rgba(250,189,47,.22);border-radius:6px;padding:1px 5px;">THM{...}</code>
+                        flag format recovers all key bytes with zero brute-force. 2 flags captured.
+                    </p>
+                    <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin:.6rem 0 .8rem;">
+                        <span style="display:inline-flex;align-items:center;gap:4px;font-size:.58rem;color:var(--aqua);background:rgba(142,192,124,.07);border:1.5px solid rgba(142,192,124,.22);border-radius:var(--r-pill,999px);padding:2px 8px;font-weight:700;">
+                            <i class="fas fa-flag" style="font-size:.45rem;"></i>THM{BrUt3_ForC1nG_XOR_cAn_B3_FuN_nO?}
+                        </span>
+                    </div>
+                    <div class="card-tags">
+                        <span class="card-tag" style="color:var(--purple);border-color:rgba(211,134,155,.28);background:rgba(211,134,155,.07);">Cryptography</span>
+                        <span class="card-tag tag-blue">XOR Attack</span>
+                        <span class="card-tag tag-yellow">Known-Plaintext</span>
+                        <span class="card-tag" style="color:var(--aqua);border-color:rgba(142,192,124,.28);background:rgba(142,192,124,.07);">Easy</span>
+                    </div>
+                    <a href="CTF/w1seguy.html" class="card-link" style="color:var(--purple);border-color:rgba(211,134,155,.3);background:rgba(211,134,155,.07);">
+                        Read Writeup <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </article>
+
+            <!-- Hidden Deep Into My Heart — TryHackMe -->
+            <article class="blog-card" data-platform="thm">
+                <div class="card-stripe" style="background:linear-gradient(90deg,var(--red),var(--orange));"></div>
+                <div class="card-inner">
+                    <div class="card-meta">
+                        <span class="card-date"><i class="fas fa-calendar-alt" style="margin-right:4px;font-size:.55rem;"></i>February 2026</span>
+                        <span class="card-read" style="background:rgba(142,192,124,.1);border:1.5px solid rgba(142,192,124,.28);padding:3px 10px;border-radius:var(--r-pill);"><i class="fas fa-cube" style="margin-right:4px;color:var(--aqua);"></i>TryHackMe</span>
+                    </div>
+                    <h2 class="card-title">Hidden Deep Into My Heart</h2>
+                    <p class="card-excerpt">
+                        Valentine's Day themed Flask app — <code style="font-size:.8em;color:var(--yellow);background:rgba(250,189,47,.08);border:1px solid rgba(250,189,47,.22);border-radius:6px;padding:1px 5px;">robots.txt</code> credential leak exposes a hidden vault path and plaintext password. Directory brute-force via Gobuster reveals an admin panel. Credential stuffing captures the flag.
+                    </p>
+                    <div class="card-flag"><i class="fas fa-flag"></i> THM{l0v3_is_in_th3_r0b0ts_txt}</div>
+                    <div class="card-tags">
+                        <span class="card-tag tag-red">Info Disclosure</span>
+                        <span class="card-tag tag-orange">Credential Leak</span>
+                        <span class="card-tag tag-blue">Dir Bruteforce</span>
+                        <span class="card-tag tag-yellow">Easy</span>
+                    </div>
+                    <a href="CTF/hidden-deep-into-my-heart.html" class="card-link link-red">
+                        Read Writeup <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </article>
+
+            <!-- RootMe — TryHackMe -->
+            <article class="blog-card" data-platform="thm">
+                <div class="card-stripe" style="background:linear-gradient(90deg,var(--aqua),var(--blue));"></div>
+                <div class="card-inner">
+                    <div class="card-meta">
+                        <span class="card-date"><i class="fas fa-calendar-alt" style="margin-right:4px;font-size:.55rem;"></i>February 2026</span>
+                        <span class="card-read" style="background:rgba(142,192,124,.1);border:1.5px solid rgba(142,192,124,.28);padding:3px 10px;border-radius:var(--r-pill);"><i class="fas fa-cube" style="margin-right:4px;color:var(--aqua);"></i>TryHackMe</span>
+                    </div>
+                    <h2 class="card-title">RootMe — Full Exploitation Chain</h2>
+                    <p class="card-excerpt">
+                        Complete walkthrough from recon to root: File upload filter bypass with <code style="font-size:.8em;color:var(--aqua);background:rgba(142,192,124,.08);border:1px solid rgba(142,192,124,.22);border-radius:6px;padding:1px 5px;">.php5</code> extension + Python SUID privilege escalation. Includes automation script.
+                    </p>
+                    <div class="card-tags">
+                        <span class="card-tag tag-aqua">File Upload</span>
+                        <span class="card-tag tag-red">SUID Privesc</span>
+                        <span class="card-tag tag-blue">Web Shell</span>
+                        <span class="card-tag tag-yellow">Easy</span>
+                    </div>
+                    <a href="CTF/rootme.html" class="card-link" style="color:var(--aqua);border-color:rgba(142,192,124,.3);background:rgba(142,192,124,.07);">
+                        Read Writeup <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </article>
+
+        </div>
+    </section>
+
+    <footer class="footer">
+        <p class="footer-text">
+            <span>0xb0rn3</span> &nbsp;·&nbsp; built with precision &amp; intent &nbsp;·&nbsp;
+            <span>$ echo "hack the planet"</span>
+        </p>
+    </footer>
+
+    <script>
+    'use strict';
+
+    /* ── Mobile nav ── */
+    const menuToggle    = document.getElementById('menuToggle');
+    const mobileNav     = document.getElementById('mobileNav');
+    const mobileOverlay = document.getElementById('mobileOverlay');
+
+    const toggleMenu = () => {
+        const open = mobileNav.classList.toggle('active');
+        menuToggle.classList.toggle('active');
+        mobileOverlay.classList.toggle('active');
+        document.body.style.overflow = open ? 'hidden' : '';
+    };
+
+    menuToggle.addEventListener('click', toggleMenu);
+    mobileOverlay.addEventListener('click', toggleMenu);
+
+    document.querySelectorAll('.mobile-nav-link').forEach(l => {
+        l.addEventListener('click', () => {
+            if (!l.href?.startsWith('http')) toggleMenu();
+        });
+    });
+
+    /* ── Navbar scroll ── */
+    window.addEventListener('scroll', () => {
+        document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 80);
+    }, { passive: true });
+
+    /* ── Card stagger reveal ── */
+    const io = new IntersectionObserver((entries) => {
+        entries.forEach((entry, i) => {
+            if (!entry.isIntersecting) return;
+            setTimeout(() => {
+                entry.target.classList.add('visible');
+                entry.target.style.transition =
+                    `opacity .5s ease ${i * 90}ms, transform .5s ease ${i * 90}ms, box-shadow .22s ease, border-color .22s`;
+            }, i * 70);
+            io.unobserve(entry.target);
+        });
+    }, { threshold: .08, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.blog-card').forEach(el => io.observe(el));
+
+    /* ── CTF Platform Filters ── */
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const ctfCards = document.querySelectorAll('.blog-card[data-platform]');
+
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            filterBtns.forEach(b => {
+                b.classList.remove('active');
+                b.style.background = 'var(--bg-card)';
+                b.style.borderColor = 'var(--border-mid)';
+            });
+
+            btn.classList.add('active');
+            const filter = btn.dataset.filter;
+
+            if (filter === 'all') {
+                btn.style.background = 'var(--bg-card)';
+                btn.style.borderColor = 'var(--yellow)';
+            } else if (filter === 'thm') {
+                btn.style.background = 'rgba(142,192,124,.1)';
+                btn.style.borderColor = 'var(--aqua)';
+            } else if (filter === 'htb') {
+                btn.style.background = 'rgba(251,73,52,.1)';
+                btn.style.borderColor = 'var(--red)';
+            }
+
+            ctfCards.forEach(card => {
+                card.style.display = (filter === 'all' || card.dataset.platform === filter) ? 'flex' : 'none';
+            });
+        });
+    });
+
+    console.log('%c0xb0rn3', 'color:#fabd2f;font-size:26px;font-weight:900;font-family:monospace;background:#1d2021;padding:8px 20px;border-radius:8px;border:2px solid #fabd2f;');
+    console.log('%c[*] ctf writeups | @0xb0rn3', 'color:#665c54;font-size:11px;font-family:monospace;');
+    </script>
+</body>
+</html>
