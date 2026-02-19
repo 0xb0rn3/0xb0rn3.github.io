@@ -549,7 +549,7 @@
             </p>
             <div class="post-count">
                 <i class="fas fa-flag-checkered"></i>
-                7 rooms pwned
+                8 rooms pwned
             </div>
         </div>
 
@@ -710,6 +710,38 @@
                         <span class="card-tag" style="color:var(--aqua);border-color:rgba(142,192,124,.28);background:rgba(142,192,124,.07);">Easy</span>
                     </div>
                     <a href="CTF/w1seguy.html" class="card-link" style="color:var(--purple);border-color:rgba(211,134,155,.3);background:rgba(211,134,155,.07);">
+                        Read Writeup <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </article>
+
+            <!-- Agent Sudo — TryHackMe -->
+            <article class="blog-card" data-platform="thm">
+                <div class="card-stripe" style="background:linear-gradient(90deg,var(--green),var(--aqua));"></div>
+                <div class="card-inner">
+                    <div class="card-meta">
+                        <span class="card-date"><i class="fas fa-cube" style="margin-right:4px;font-size:.55rem;color:var(--aqua);"></i>TryHackMe</span>
+                        <span class="card-read"><i class="fas fa-signal"></i>Easy</span>
+                    </div>
+                    <h2 class="card-title">Agent Sudo</h2>
+                    <p class="card-excerpt">
+                        User-Agent header fuzzing reveals agent identity. FTP brute-force, steganography
+                        chain (ZIP &rarr; Base64 &rarr; steghide) extracts SSH creds.
+                        <code style="font-size:.8em;color:var(--yellow);background:rgba(250,189,47,.08);border:1px solid rgba(250,189,47,.22);border-radius:6px;padding:1px 5px;">CVE-2019-14287</code>
+                        sudo !root bypass gives instant root.
+                    </p>
+                    <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin:.6rem 0 .8rem;">
+                        <span style="display:inline-flex;align-items:center;gap:4px;font-size:.58rem;color:var(--aqua);background:rgba(142,192,124,.07);border:1.5px solid rgba(142,192,124,.22);border-radius:var(--r-pill,999px);padding:2px 8px;font-weight:700;">
+                            <i class="fas fa-flag" style="font-size:.45rem;"></i>root flag
+                        </span>
+                    </div>
+                    <div class="card-tags">
+                        <span class="card-tag tag-red">CVE-2019-14287</span>
+                        <span class="card-tag tag-orange">Steganography</span>
+                        <span class="card-tag tag-yellow">User-Agent Abuse</span>
+                        <span class="card-tag" style="color:var(--aqua);border-color:rgba(142,192,124,.28);background:rgba(142,192,124,.07);">Easy</span>
+                    </div>
+                    <a href="CTF/agent-sudo.html" class="card-link" style="color:var(--green);border-color:rgba(142,192,124,.3);background:rgba(142,192,124,.07);">
                         Read Writeup <i class="fas fa-arrow-right"></i>
                     </a>
                 </div>
