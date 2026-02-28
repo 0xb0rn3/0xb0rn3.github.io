@@ -549,7 +549,7 @@
             </p>
             <div class="post-count">
                 <i class="fas fa-flag-checkered"></i>
-                9 rooms pwned
+                12 rooms pwned
             </div>
         </div>
 
@@ -567,6 +567,39 @@
         </div>
 
         <div class="blog-grid" id="blogGrid">
+
+            <!-- Snowy ARMageddon — TryHackMe AoC 2023 -->
+            <article class="blog-card" data-platform="thm">
+                <div class="card-stripe" style="background:linear-gradient(90deg,var(--red),var(--orange),var(--red));"></div>
+                <div class="card-inner">
+                    <div class="card-meta">
+                        <span class="card-date"><i class="fas fa-cube" style="margin-right:4px;font-size:.55rem;color:var(--aqua);"></i>TryHackMe &mdash; AoC 2023</span>
+                        <span class="card-read" style="color:var(--red);font-weight:900;"><i class="fas fa-signal"></i>Insane</span>
+                    </div>
+                    <h2 class="card-title">Snowy ARMageddon</h2>
+                    <p class="card-excerpt">
+                        ARMv5 IoT camera exploitation. Port knock bypass via full nmap sweep,
+                        stack buffer overflow in embedded web server with custom ARM shellcode
+                        (bad char avoidance, ROP to <code style="font-size:.8em;color:var(--yellow);background:rgba(250,189,47,.08);border:1px solid rgba(250,189,47,.22);border-radius:6px;padding:1px 5px;">bx sp</code>),
+                        credential harvest from firmware, visual flag from MJPEG stream, then
+                        MongoDB NoSQL injection for the second key.
+                    </p>
+                    <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin:.6rem 0 .8rem;">
+                        <span style="display:inline-flex;align-items:center;gap:4px;font-size:.58rem;color:var(--aqua);background:rgba(142,192,124,.07);border:1.5px solid rgba(142,192,124,.22);border-radius:var(--r-pill,999px);padding:2px 8px;font-weight:700;">
+                            <i class="fas fa-flag" style="font-size:.45rem;"></i>2 flags
+                        </span>
+                    </div>
+                    <div class="card-tags">
+                        <span class="card-tag tag-red">ARM Buffer Overflow</span>
+                        <span class="card-tag tag-orange">IoT / Shellcode</span>
+                        <span class="card-tag tag-yellow">NoSQL Injection</span>
+                        <span class="card-tag" style="color:var(--red);border-color:rgba(251,73,52,.28);background:rgba(251,73,52,.07);font-weight:900;">Insane</span>
+                    </div>
+                    <a href="CTF/snowy-armageddon.html" class="card-link link-red">
+                        Read Writeup <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </article>
 
             <!-- VulnNet: Internal — TryHackMe -->
             <article class="blog-card" data-platform="thm">
@@ -747,7 +780,7 @@
                 </div>
             </article>
 
-            <!-- Chill Hack — MO CTF -->
+            <!-- Chill Hack — TryHackMe -->
             <article class="blog-card" data-platform="thm">
                 <div class="card-stripe" style="background:linear-gradient(90deg,var(--orange),var(--red));"></div>
                 <div class="card-inner">
@@ -774,6 +807,71 @@
                         <span class="card-tag" style="color:var(--orange);border-color:rgba(254,128,25,.28);background:rgba(254,128,25,.07);">Medium</span>
                     </div>
                     <a href="CTF/chill-hack.html" class="card-link link-red">
+                        Read Writeup <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </article>
+
+            <!-- Crypto Failures — TryHackMe -->
+            <article class="blog-card" data-platform="thm">
+                <div class="card-stripe" style="background:linear-gradient(90deg,var(--purple),var(--blue));"></div>
+                <div class="card-inner">
+                    <div class="card-meta">
+                        <span class="card-date"><i class="fas fa-cube" style="margin-right:4px;font-size:.55rem;color:var(--aqua);"></i>TryHackMe</span>
+                        <span class="card-read"><i class="fas fa-signal"></i>Medium</span>
+                    </div>
+                    <h2 class="card-title">Crypto Failures</h2>
+                    <p class="card-excerpt">
+                        PHP DES-crypt cookie scheme in ECB mode. Source backup disclosure reveals
+                        block-independent hashing. ECB block-swap forges admin session, then a
+                        chosen-plaintext DES oracle recovers the full encryption key byte-by-byte.
+                        OWASP A02:2021.
+                    </p>
+                    <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin:.6rem 0 .8rem;">
+                        <span style="display:inline-flex;align-items:center;gap:4px;font-size:.58rem;color:var(--aqua);background:rgba(142,192,124,.07);border:1.5px solid rgba(142,192,124,.22);border-radius:var(--r-pill,999px);padding:2px 8px;font-weight:700;">
+                            <i class="fas fa-key" style="font-size:.45rem;"></i>key recovered
+                        </span>
+                    </div>
+                    <div class="card-tags">
+                        <span class="card-tag" style="color:var(--purple);border-color:rgba(211,134,155,.28);background:rgba(211,134,155,.07);">ECB Block-Swap</span>
+                        <span class="card-tag tag-red">DES Oracle</span>
+                        <span class="card-tag tag-yellow">Chosen-Plaintext</span>
+                        <span class="card-tag" style="color:var(--orange);border-color:rgba(254,128,25,.28);background:rgba(254,128,25,.07);">Medium</span>
+                    </div>
+                    <a href="CTF/crypto-failures.html" class="card-link" style="color:var(--purple);border-color:rgba(211,134,155,.3);background:rgba(211,134,155,.07);">
+                        Read Writeup <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </article>
+
+            <!-- Silver Platter — TryHackMe -->
+            <article class="blog-card" data-platform="thm">
+                <div class="card-stripe" style="background:linear-gradient(90deg,var(--fg),var(--aqua));"></div>
+                <div class="card-inner">
+                    <div class="card-meta">
+                        <span class="card-date"><i class="fas fa-cube" style="margin-right:4px;font-size:.55rem;color:var(--aqua);"></i>TryHackMe</span>
+                        <span class="card-read"><i class="fas fa-signal"></i>Medium</span>
+                    </div>
+                    <h2 class="card-title">Silver Platter</h2>
+                    <p class="card-excerpt">
+                        Two chained CVEs in Silverpeas 6.3.1:
+                        <code style="font-size:.8em;color:var(--yellow);background:rgba(250,189,47,.08);border:1px solid rgba(250,189,47,.22);border-radius:6px;padding:1px 5px;">CVE-2024-36042</code>
+                        auth bypass +
+                        <code style="font-size:.8em;color:var(--yellow);background:rgba(250,189,47,.08);border:1px solid rgba(250,189,47,.22);border-radius:6px;padding:1px 5px;">CVE-2023-47323</code>
+                        IDOR leaks SSH creds. Journal log analysis exposes Docker DB password &rarr; credential reuse &rarr; sudo root.
+                    </p>
+                    <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin:.6rem 0 .8rem;">
+                        <span style="display:inline-flex;align-items:center;gap:4px;font-size:.58rem;color:var(--aqua);background:rgba(142,192,124,.07);border:1.5px solid rgba(142,192,124,.22);border-radius:var(--r-pill,999px);padding:2px 8px;font-weight:700;">
+                            <i class="fas fa-flag" style="font-size:.45rem;"></i>root flag
+                        </span>
+                    </div>
+                    <div class="card-tags">
+                        <span class="card-tag tag-red">CVE-2024-36042</span>
+                        <span class="card-tag tag-orange">CVE-2023-47323</span>
+                        <span class="card-tag tag-yellow">Credential Reuse</span>
+                        <span class="card-tag" style="color:var(--orange);border-color:rgba(254,128,25,.28);background:rgba(254,128,25,.07);">Medium</span>
+                    </div>
+                    <a href="CTF/silver-platter.html" class="card-link">
                         Read Writeup <i class="fas fa-arrow-right"></i>
                     </a>
                 </div>
