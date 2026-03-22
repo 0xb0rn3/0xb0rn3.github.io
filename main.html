@@ -2363,8 +2363,27 @@
     };
     menuToggle.addEventListener('click', toggleMenu);
     mobileOverlay.addEventListener('click', toggleMenu);
-    document.querySelectorAll('.mobile-nav-link').forEach(l => {
-        l.addEventListener('click', () => { if (!l.href.includes('http')) toggleMenu(); });
+    document.querySelectorAll('.mobile-nav-link').forEach(link => {
+        link.addEventListener('click', e => {
+            const href = link.getAttribute('href');
+            const isExternal = link.hasAttribute('target');
+
+            // Always close menu
+            toggleMenu();
+
+            // Same-page hash link: smooth scroll
+            if (href && href.startsWith('#')) {
+                e.preventDefault();
+                const target = document.querySelector(href);
+                if (target) {
+                    setTimeout(() => {
+                        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }, 350); // wait for menu close animation
+                }
+            }
+            // Cross-page link (main.html#section): let browser navigate
+            // External link: let browser handle (target=_blank)
+        });
     });
 
     /* ══════════════════════════════════
