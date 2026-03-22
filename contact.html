@@ -538,6 +538,103 @@
         @media (hover: none) {
             .c-card:active { transform: translate(-1px,-2px); }
         }
+
+        /* ══════════════ GLASS + FLUID ANIMATIONS ══════════════ */
+
+        /* Glass nav */
+        .nav {
+            background: rgba(0,0,0,.6) !important;
+            backdrop-filter: blur(20px) saturate(1.4) !important;
+            -webkit-backdrop-filter: blur(20px) saturate(1.4) !important;
+            border-bottom: 1px solid rgba(235,219,178,.08) !important;
+        }
+        .nav.scrolled {
+            background: rgba(0,0,0,.82) !important;
+            box-shadow: 0 6px 30px rgba(0,0,0,.6);
+        }
+
+        /* Glass cards */
+        .c-card {
+            background: rgba(24,23,22,.55) !important;
+            border: 1px solid rgba(235,219,178,.08) !important;
+            border-top: 1px solid rgba(235,219,178,.13) !important;
+            box-shadow: 0 4px 20px rgba(0,0,0,.3), inset 0 1px 0 rgba(235,219,178,.05) !important;
+            transition: transform .3s ease, box-shadow .3s ease, border-color .3s ease !important;
+        }
+        .c-card:hover {
+            transform: translateY(-4px) !important;
+            box-shadow: 0 12px 36px rgba(0,0,0,.5), 0 0 20px rgba(250,189,47,.06), inset 0 1px 0 rgba(235,219,178,.08) !important;
+            border-color: rgba(235,219,178,.16) !important;
+        }
+
+        /* Glass collab card */
+        .collab-card {
+            background: rgba(24,23,22,.55) !important;
+            border: 1px solid rgba(235,219,178,.08) !important;
+            border-top: 1px solid rgba(235,219,178,.13) !important;
+            box-shadow: 0 4px 20px rgba(0,0,0,.3), inset 0 1px 0 rgba(235,219,178,.05) !important;
+        }
+
+        /* Glass footer */
+        .footer {
+            background: rgba(24,23,22,.55) !important;
+            border-top: 1px solid rgba(235,219,178,.08) !important;
+        }
+
+        /* Glass mobile nav */
+        .mobile-nav {
+            background: rgba(10,9,8,.85) !important;
+            backdrop-filter: blur(20px) saturate(1.4);
+            -webkit-backdrop-filter: blur(20px) saturate(1.4);
+        }
+        .mobile-nav.active .mobile-nav-link {
+            animation: mobileSlide .3s ease backwards;
+        }
+        .mobile-nav.active .mobile-nav-link:nth-child(1){animation-delay:.04s}
+        .mobile-nav.active .mobile-nav-link:nth-child(2){animation-delay:.08s}
+        .mobile-nav.active .mobile-nav-link:nth-child(3){animation-delay:.12s}
+        .mobile-nav.active .mobile-nav-link:nth-child(4){animation-delay:.16s}
+        .mobile-nav.active .mobile-nav-link:nth-child(5){animation-delay:.2s}
+        .mobile-nav.active .mobile-nav-link:nth-child(6){animation-delay:.24s}
+        .mobile-nav.active .mobile-nav-link:nth-child(7){animation-delay:.28s}
+        @keyframes mobileSlide{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+
+        /* Footer shimmer */
+        .footer-text span {
+            background: linear-gradient(90deg, var(--yellow), var(--orange), var(--yellow));
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: footerShimmer 3s linear infinite;
+        }
+        @keyframes footerShimmer{0%{background-position:0% center}100%{background-position:200% center}}
+
+        /* Page header reveal */
+        .page-header {
+            opacity: 0; transform: translateY(20px);
+            animation: revealUp .6s ease .15s forwards;
+        }
+        @keyframes revealUp{to{opacity:1;transform:translateY(0)}}
+
+        /* Icon hover spin */
+        .c-card:hover .c-icon {
+            transform: rotateY(180deg) !important;
+            transition: transform .5s ease !important;
+        }
+        .c-icon { transition: transform .5s ease !important; transform-style: preserve-3d; }
+
+        /* Social btn hover glow */
+        .social-btn:hover {
+            box-shadow: 0 0 16px rgba(250,189,47,.2);
+        }
+
+        /* Click ripple */
+        .click-ripple{position:fixed;z-index:99;border-radius:50%;border:1px solid var(--aqua);pointer-events:none;animation:rip .4s ease forwards}
+        @keyframes rip{0%{width:0;height:0;opacity:.5}100%{width:50px;height:50px;opacity:0}}
+
+        /* Smooth hover */
+        a, button { transition: all .25s ease; }
     </style>
 </head>
 <body>
@@ -626,8 +723,8 @@
                         <div class="c-label">Email</div>
                         <div class="c-value">
                             <a href="mailto:contact@oxborn3.com">contact@oxborn3.com</a>
-                        </div>    
-                         <a href="mailto:contact@oxborn3.com" class="c-btn btn-yellow">
+                        </div>
+                        <a href="mailto:contact@oxborn3.com" class="c-btn btn-yellow">
                             <i class="fas fa-paper-plane"></i> Send Email
                         </a>
                     </div>
@@ -691,7 +788,7 @@
                         in offensive security — don't hesitate to reach out.
                     </p>
                     <div class="social-row">
-                        <a href="/cdn-cgi/l/email-protection#8fe0f7edf9becffffde0fbe0e1a1e2ea" class="social-btn" title="Email"><i class="fas fa-envelope"></i></a>
+                        <a href="mailto:contact@oxborn3.com" class="social-btn" title="Email"><i class="fas fa-envelope"></i></a>
                         <a href="https://github.com/0xb0rn3"          target="_blank"             class="social-btn" title="GitHub"><i class="fab fa-github"></i></a>
                         <a href="https://x.com/oxbv1"                 target="_blank"             class="social-btn" title="Twitter"><i class="fab fa-twitter"></i></a>
                         <a href="https://app.hackthebox.com/profile/1762866" target="_blank"      class="social-btn" title="HackTheBox"><i class="fas fa-cube"></i></a>
@@ -714,7 +811,7 @@
     <!-- ═══════════════════════════════════════
          JS
     ═══════════════════════════════════════ -->
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    <script>
     'use strict';
 
     /* ── Mobile nav ── */
@@ -759,4 +856,19 @@
         }).catch(() => {});
     }
 
-    console.log('%c0xb0rn3', 'color:#fa
+
+    /* ── Click ripple ── */
+    document.addEventListener('click', e => {
+        const r = document.createElement('div');
+        r.className = 'click-ripple';
+        r.style.left = (e.clientX - 25) + 'px';
+        r.style.top = (e.clientY - 25) + 'px';
+        document.body.appendChild(r);
+        r.addEventListener('animationend', () => r.remove());
+    });
+
+    console.log('%c0xb0rn3', 'color:#fabd2f;font-size:20px;font-weight:900;font-family:monospace;');
+    console.log('%c[*] contact page loaded', 'color:#665c54;font-size:11px;');
+    </script>
+</body>
+</html>
