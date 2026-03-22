@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>oxborn3 | Cybersecurity Enthusiast</title>
+    <title>0xb0rn3 | Cybersecurity Enthusiast</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=JetBrains+Mono:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -68,9 +68,6 @@
         html {
             scroll-behavior: smooth;
             scroll-padding-top: 70px;
-        }
-        @media (prefers-reduced-motion: no-preference) {
-            html { scroll-behavior: auto; /* we handle it in JS with faster easing */ }
         }
 
         body {
@@ -363,10 +360,7 @@
         .status-pill {
             display: inline-flex; align-items: center; gap: 7px;
             background: rgba(142,192,124,.05);
-            backdrop-filter: blur(12px) saturate(1.2);
-            -webkit-backdrop-filter: blur(12px) saturate(1.2);
             border: 1px solid rgba(142,192,124,.18);
-            border-top: 1px solid rgba(142,192,124,.28);
             border-radius: var(--r-pill);
             padding: 4px 14px;
             font-size: clamp(.56rem,1.4vw,.65rem);
@@ -478,10 +472,7 @@
         .skill-pill {
             display: flex; align-items: center; gap: 6px;
             background: rgba(20,18,16,.45);
-            backdrop-filter: blur(12px) saturate(1.2);
-            -webkit-backdrop-filter: blur(12px) saturate(1.2);
             border: 1px solid rgba(235,219,178,.08);
-            border-top: 1px solid rgba(235,219,178,.12);
             border-radius: var(--r-pill);
             padding: .35rem .9rem;
             font-size: clamp(.58rem,1.5vw,.68rem);
@@ -538,8 +529,6 @@
         }
         .btn-ghost {
             background: rgba(20,18,16,.35);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
             color: var(--fg-muted);
             border-color: rgba(235,219,178,.14);
             border-top-color: rgba(235,219,178,.20);
@@ -615,10 +604,7 @@
         .section-tag {
             display: inline-flex; align-items: center; gap: 6px;
             background: rgba(250,189,47,.05);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
             border: 1px solid rgba(250,189,47,.18);
-            border-top: 1px solid rgba(250,189,47,.25);
             border-radius: var(--r-pill);
             padding: 3px 12px;
             font-size: clamp(.52rem,1.3vw,.6rem);
@@ -652,11 +638,8 @@
 
         .card {
             background: var(--glass-bg);
-            backdrop-filter: var(--glass-blur);
-            -webkit-backdrop-filter: var(--glass-blur);
             border: 1px solid rgba(235,219,178,.08);
             border-top: 1px solid rgba(235,219,178,.14);
-            border-left: 1px solid rgba(235,219,178,.10);
             border-radius: var(--r);
             overflow: hidden;
             transition: all .3s cubic-bezier(.4,0,.2,1);
@@ -699,10 +682,7 @@
             height: clamp(42px,7vw,50px);
             border-radius: var(--r-sm);
             background: rgba(250,189,47,.06);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
             border: 1px solid rgba(250,189,47,.18);
-            border-top: 1px solid rgba(250,189,47,.25);
             display: flex; align-items: center; justify-content: center;
             font-size: clamp(1rem,2.2vw,1.25rem);
             color: var(--yellow);
@@ -751,8 +731,7 @@
             border: 1px solid rgba(250,189,47,.18);
             border-top: 1px solid rgba(250,189,47,.25);
             background: rgba(250,189,47,.04);
-            backdrop-filter: blur(6px);
-            -webkit-backdrop-filter: blur(6px);
+            
             transition: all .2s ease;
         }
         .card-link:hover {
@@ -902,11 +881,8 @@
         }
         .contact-card {
             background: var(--glass-bg);
-            backdrop-filter: var(--glass-blur);
-            -webkit-backdrop-filter: var(--glass-blur);
             border: 1px solid rgba(235,219,178,.08);
             border-top: 1px solid rgba(235,219,178,.14);
-            border-left: 1px solid rgba(235,219,178,.10);
             border-radius: var(--r);
             padding: clamp(1.2rem,3vw,1.6rem);
             text-align: center;
@@ -926,10 +902,7 @@
             height: clamp(42px,7vw,48px);
             border-radius: var(--r-sm);
             background: rgba(250,189,47,.06);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
             border: 1px solid rgba(250,189,47,.18);
-            border-top: 1px solid rgba(250,189,47,.25);
             display: flex; align-items: center; justify-content: center;
             font-size: clamp(.95rem,2vw,1.15rem);
             color: var(--yellow); margin: 0 auto .85rem;
@@ -1044,19 +1017,10 @@
            MODERN ANIMATIONS & PERF
         ══════════════════════════════════ */
 
-        /* GPU layers for animated elements */
-        .card, .contact-card, .project-featured, .hero-inner,
-        .section-header, .stats-bar, .nav, .scroll-top,
-        .skill-pill, .btn, .card-icon, .contact-icon-wrap {
-            will-change: transform;
-            transform: translateZ(0);
-        }
+        /* GPU layers — only on actually animated elements */
+        .nav, .scroll-top { will-change: transform; }
 
-        /* Off-screen rendering optimization */
-        .section {
-            content-visibility: auto;
-            contain-intrinsic-size: auto 600px;
-        }
+
 
         /* ── Section reveal ── */
         .section-header {
@@ -1565,13 +1529,7 @@
             100% { text-shadow: none; clip-path: none; }
         }
 
-        /* ── Aurora Background ── */
-        #auroraCanvas {
-            position: fixed; inset: 0; z-index: 0;
-            pointer-events: none;
-            opacity: .06;
-            mix-blend-mode: screen;
-        }
+
 
         /* ── Magnetic Nav Links ── */
         .nav-link {
@@ -1647,7 +1605,6 @@
     <!-- Matrix rain canvas -->
     <canvas id="matrixCanvas"></canvas>
     <canvas id="particleCanvas"></canvas>
-    <canvas id="auroraCanvas"></canvas>
 
     <div class="grain"></div>
     <div class="scanline"></div>
@@ -1715,7 +1672,7 @@
                 </div>
                 <div class="term-body" id="termBody">
                     <span class="term-line">
-                        <span class="prompt">oxborn3</span><span class="host">@security</span>:<span class="path">~</span>$ <span class="cmd" id="typeTarget"></span><span class="cursor-blink" id="cursor"></span>
+                        <span class="prompt">0xb0rn3</span><span class="host">@security</span>:<span class="path">~</span>$ <span class="cmd" id="typeTarget"></span><span class="cursor-blink" id="cursor"></span>
                     </span>
                 </div>
             </div>
@@ -1723,7 +1680,7 @@
             <div class="avatar-wrap">
                 <div class="avatar-glow"></div>
                 <div class="avatar-ring"></div>
-                <img src="profile.jpg" alt="oxborn3" class="avatar"
+                <img src="profile.jpg" alt="0xb0rn3" class="avatar"
                      onerror="this.src='https://avatars.githubusercontent.com/u/90976991'">
             </div>
 
@@ -1754,7 +1711,7 @@
                 <a href="https://github.com/0xb0rn3" target="_blank" class="btn btn-primary">
                     <i class="fas fa-code"></i>View Projects
                 </a>
-                <a href="https://github.com/oxborn3" target="_blank" class="btn btn-ghost">
+                <a href="https://github.com/0xb0rn3" target="_blank" class="btn btn-ghost">
                     <i class="fab fa-github"></i>GitHub
                 </a>
             </div>
@@ -1812,7 +1769,7 @@
                         <span class="tech-tag">NSS Injection</span>
                         <span class="tech-tag">Chroot Escape</span>
                     </div>
-                    <a href="https://github.com/oxborn3/CVE-2025-32463-EXPLOIT" target="_blank" class="card-link red">
+                    <a href="https://github.com/0xb0rn3/CVE-2025-32463-EXPLOIT" target="_blank" class="card-link red">
                         View Exploit PoC <i class="fas fa-arrow-right"></i>
                     </a>
                 </div>
@@ -1868,7 +1825,7 @@
                         <span class="tech-tag">Kernel Build</span>
                         <span class="tech-tag">ARM64</span>
                     </div>
-                    <a href="https://github.com/oxborn3/NETHUNTER_REDMINOTE7" target="_blank" class="card-link purple">
+                    <a href="https://github.com/0xb0rn3/NETHUNTER_REDMINOTE7" target="_blank" class="card-link purple">
                         View Guide <i class="fas fa-arrow-right"></i>
                     </a>
                 </div>
@@ -1888,7 +1845,7 @@
                         <span class="tech-tag">systemd</span>
                         <span class="tech-tag">Intel P-State</span>
                     </div>
-                    <a href="https://github.com/oxborn3/cpu-governor" target="_blank" class="card-link">
+                    <a href="https://github.com/0xb0rn3/cpu-governor" target="_blank" class="card-link">
                         View Source <i class="fas fa-arrow-right"></i>
                     </a>
                 </div>
@@ -1908,7 +1865,7 @@
                         <span class="tech-tag">Interactive Shell</span>
                         <span class="tech-tag">Modular</span>
                     </div>
-                    <a href="https://github.com/oxborn3" target="_blank" class="card-link red">
+                    <a href="https://github.com/0xb0rn3" target="_blank" class="card-link red">
                         View on GitHub <i class="fas fa-arrow-right"></i>
                     </a>
                 </div>
@@ -1928,7 +1885,7 @@
                         <span class="tech-tag">XFCE4</span>
                         <span class="tech-tag">Pacman</span>
                     </div>
-                    <a href="https://github.com/oxborn3" target="_blank" class="card-link aqua">
+                    <a href="https://github.com/0xb0rn3" target="_blank" class="card-link aqua">
                         View on GitHub <i class="fas fa-arrow-right"></i>
                     </a>
                 </div>
@@ -1950,7 +1907,7 @@
                         <span class="tech-tag">GTFOBins</span>
                     </div>
                     <div style="display:flex;gap:.4rem;flex-wrap:wrap;">
-                        <a href="https://github.com/oxborn3/CTFS" target="_blank" class="card-link red">
+                        <a href="https://github.com/0xb0rn3/CTFS" target="_blank" class="card-link red">
                             View Repo <i class="fas fa-arrow-right"></i>
                         </a>
                         <a href="CTF/rootme.html" class="card-link" style="color:var(--orange);border-color:rgba(254,128,25,.22);background:rgba(254,128,25,.04);">
@@ -1974,7 +1931,7 @@
                         <span class="tech-tag lang-c">C</span>
                         <span class="tech-tag">Cross-Platform</span>
                     </div>
-                    <a href="https://github.com/oxborn3?tab=repositories" target="_blank" class="card-link">
+                    <a href="https://github.com/0xb0rn3?tab=repositories" target="_blank" class="card-link">
                         Browse All Repos <i class="fas fa-arrow-right"></i>
                     </a>
                 </div>
@@ -2155,6 +2112,7 @@
                 <div class="contact-title">Email</div>
                 <div class="contact-val">
                     <a href="mailto:contact@oxborn3.com">contact@oxborn3.com</a>
+                </div>
             </div>
             <div class="contact-card">
                 <div class="contact-icon-wrap" style="background:rgba(131,165,152,.08);border-color:rgba(131,165,152,.22);color:var(--blue);">
@@ -2162,7 +2120,7 @@
                 </div>
                 <div class="contact-title">GitHub</div>
                 <div class="contact-val">
-                    <a href="https://github.com/0xb0rn3" target="_blank">github.com/oxborn3</a>
+                    <a href="https://github.com/0xb0rn3" target="_blank">github.com/0xb0rn3</a>
                 </div>
             </div>
             <div class="contact-card">
@@ -2189,7 +2147,7 @@
     <!-- Footer -->
     <footer class="footer">
         <p class="footer-text">
-            <span>[oxborn3]</span> &middot; All rights reserved 2026 &middot;
+            <span>[0xb0rn3]</span> &middot; All rights reserved 2026 &middot;
             <span>$ echo "hack the planet"</span>
         </p>
     </footer>
@@ -2202,45 +2160,18 @@
     <!-- ══════════════════════════════════
          JAVASCRIPT
     ══════════════════════════════════ -->
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    <script>
     'use strict';
 
-    /* ══════════════════════════════════
-       PERFORMANCE: Faster Custom Smooth Scroll
-       Uses easeOutExpo — reaches target in ~400ms vs browser's ~800ms
-    ══════════════════════════════════ */
-    (() => {
-        const ease = t => t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
-
-        function smoothScroll(target, duration = 500) {
-            const start = window.scrollY;
-            const end = target - 70; // nav offset
-            const dist = end - start;
-            let startTime = null;
-
-            function step(ts) {
-                if (!startTime) startTime = ts;
-                const elapsed = ts - startTime;
-                const progress = Math.min(elapsed / duration, 1);
-                window.scrollTo(0, start + dist * ease(progress));
-                if (progress < 1) requestAnimationFrame(step);
-            }
-            requestAnimationFrame(step);
-        }
-
-        // Hijack all anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(a => {
-            a.addEventListener('click', e => {
-                const href = a.getAttribute('href');
-                if (href === '#') { e.preventDefault(); smoothScroll(0, 400); return; }
-                const el = document.querySelector(href);
-                if (el) { e.preventDefault(); smoothScroll(el.offsetTop, 500); }
-            });
+    /* ── Smooth anchor scrolling (native) ── */
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+        a.addEventListener('click', e => {
+            const href = a.getAttribute('href');
+            if (href === '#') { e.preventDefault(); window.scrollTo({top:0,behavior:'smooth'}); return; }
+            const el = document.querySelector(href);
+            if (el) { e.preventDefault(); el.scrollIntoView({behavior:'smooth',block:'start'}); }
         });
-
-        // Expose for scroll-top button
-        window._fastScroll = smoothScroll;
-    })();
+    });
 
     /* ══════════════════════════════════
        MATRIX RAIN (unchanged logic, minor perf tweak)
@@ -2274,7 +2205,7 @@
                 drops[i]++;
             }
         }
-        setInterval(draw, 50);
+        setInterval(draw, 66);
     })();
 
     /* ══════════════════════════════════
@@ -2284,7 +2215,7 @@
         const c = document.getElementById('particleCanvas');
         const ctx = c.getContext('2d');
         let particles = [];
-        const count = 20;
+        const count = 12;
 
         function resize() {
             c.width = window.innerWidth;
@@ -2471,6 +2402,13 @@
             term.style.transform = `translateY(${sy * .08}px)`;
         }
 
+        // Progress pulse at 100%
+        const pct = sy / h;
+        if (pct >= .99) {
+            scrollProg.classList.add('complete');
+            setTimeout(() => scrollProg.classList.remove('complete'), 600);
+        }
+
         lastScroll = sy;
     }
 
@@ -2482,7 +2420,7 @@
         }
     }, { passive: true });
 
-    scrollTopBtn.addEventListener('click', () => window._fastScroll(0, 400));
+    scrollTopBtn.addEventListener('click', () => window.scrollTo({top:0,behavior:'smooth'}));
 
     /* ══════════════════════════════════
        INTERSECTION OBSERVER — Unified reveal system
@@ -3202,67 +3140,6 @@
     })();
 
     /* ══════════════════════════════════
-       AURORA BACKGROUND — mouse-reactive ambient color
-    ══════════════════════════════════ */
-    (() => {
-        const c = document.getElementById('auroraCanvas');
-        if (!c) return;
-        const ctx = c.getContext('2d');
-        let mouseX = 0.5, mouseY = 0.5;
-        let time = 0;
-
-        function resize() {
-            c.width = window.innerWidth / 4; // render at quarter res for perf
-            c.height = window.innerHeight / 4;
-            c.style.width = '100%';
-            c.style.height = '100%';
-        }
-        resize();
-        window.addEventListener('resize', resize);
-
-        document.addEventListener('mousemove', e => {
-            mouseX = e.clientX / window.innerWidth;
-            mouseY = e.clientY / window.innerHeight;
-        });
-
-        function draw() {
-            time += .003;
-            const w = c.width, h = c.height;
-            ctx.clearRect(0, 0, w, h);
-
-            // Blob 1 — yellow, follows mouse loosely
-            const x1 = w * (.3 + mouseX * .4 + Math.sin(time) * .1);
-            const y1 = h * (.3 + mouseY * .3 + Math.cos(time * .7) * .1);
-            const g1 = ctx.createRadialGradient(x1, y1, 0, x1, y1, w * .4);
-            g1.addColorStop(0, 'rgba(250,189,47,.12)');
-            g1.addColorStop(1, 'transparent');
-            ctx.fillStyle = g1;
-            ctx.fillRect(0, 0, w, h);
-
-            // Blob 2 — aqua, drifts opposite
-            const x2 = w * (.7 - mouseX * .3 + Math.cos(time * 1.3) * .15);
-            const y2 = h * (.6 - mouseY * .2 + Math.sin(time * .9) * .12);
-            const g2 = ctx.createRadialGradient(x2, y2, 0, x2, y2, w * .35);
-            g2.addColorStop(0, 'rgba(142,192,124,.08)');
-            g2.addColorStop(1, 'transparent');
-            ctx.fillStyle = g2;
-            ctx.fillRect(0, 0, w, h);
-
-            // Blob 3 — red/orange, slow drift
-            const x3 = w * (.5 + Math.sin(time * .5) * .3);
-            const y3 = h * (.4 + Math.cos(time * .6) * .25);
-            const g3 = ctx.createRadialGradient(x3, y3, 0, x3, y3, w * .3);
-            g3.addColorStop(0, 'rgba(251,73,52,.05)');
-            g3.addColorStop(1, 'transparent');
-            ctx.fillStyle = g3;
-            ctx.fillRect(0, 0, w, h);
-
-            requestAnimationFrame(draw);
-        }
-        draw();
-    })();
-
-    /* ══════════════════════════════════
        MAGNETIC NAV LINKS
     ══════════════════════════════════ */
     document.querySelectorAll('.nav-link').forEach(link => {
@@ -3307,24 +3184,7 @@
         setInterval(spawnHex, 6000);
     })();
 
-    /* ══════════════════════════════════
-       SCROLL PROGRESS — pulse on 100%
-    ══════════════════════════════════ */
-    (() => {
-        const prog = document.getElementById('scrollProgress');
-        let wasComplete = false;
-        window.addEventListener('scroll', () => {
-            const h = document.documentElement.scrollHeight - window.innerHeight;
-            const pct = window.scrollY / h;
-            if (pct >= .99 && !wasComplete) {
-                prog.classList.add('complete');
-                wasComplete = true;
-                setTimeout(() => prog.classList.remove('complete'), 600);
-            } else if (pct < .95) {
-                wasComplete = false;
-            }
-        }, { passive: true });
-    })();
+
 
     console.log('%c[0xb0rn3] Security portfolio loaded.', 'color:#fabd2f;font-weight:bold;font-size:13px;');
     console.log('%cHack the planet. 🏴‍☠️', 'color:#8ec07c;font-size:11px;');
