@@ -698,7 +698,7 @@
             </p>
             <div class="post-count">
                 <i class="fas fa-flag-checkered"></i>
-                14 rooms pwned
+                15 rooms pwned
             </div>
         </div>
 
@@ -716,6 +716,72 @@
         </div>
 
         <div class="blog-grid" id="blogGrid">
+
+            <!-- Year of the Pig — TryHackMe -->
+            <article class="blog-card" data-platform="thm">
+                <div class="card-stripe" style="background:linear-gradient(90deg,var(--yellow),var(--orange),var(--yellow));"></div>
+                <div class="card-inner">
+                    <div class="card-meta">
+                        <span class="card-date"><i class="fas fa-cube" style="margin-right:4px;font-size:.55rem;color:var(--aqua);"></i>TryHackMe</span>
+                        <span class="card-read"><i class="fas fa-signal"></i>Medium</span>
+                    </div>
+                    <h2 class="card-title">Year of the Pig</h2>
+                    <p class="card-excerpt">
+                        Porco Rosso-themed PHP webapp. Password derived from Savoia S.21 theme lore,
+                        MD5 client-side hashing exploited via API replay, SSH pivot on timed 120s window,
+                        PHP webshell via <code style="font-size:.8em;color:var(--yellow);background:rgba(250,189,47,.08);border:1px solid rgba(250,189,47,.22);border-radius:6px;padding:1px 5px;">web-developers</code> group write,
+                        SUID rootbash for full root. 3 flags captured.
+                    </p>
+                    <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin:.6rem 0 .8rem;">
+                        <span style="display:inline-flex;align-items:center;gap:4px;font-size:.58rem;color:var(--aqua);background:rgba(142,192,124,.07);border:1.5px solid rgba(142,192,124,.22);border-radius:var(--r-pill,999px);padding:2px 8px;font-weight:700;">
+                            <i class="fas fa-flag" style="font-size:.45rem;"></i>3 flags
+                        </span>
+                    </div>
+                    <div class="card-tags">
+                        <span class="card-tag tag-yellow">MD5 Cracking</span>
+                        <span class="card-tag tag-orange">PHP Webshell</span>
+                        <span class="card-tag tag-red">SUID Privesc</span>
+                        <span class="card-tag" style="color:var(--yellow);border-color:rgba(250,189,47,.28);background:rgba(250,189,47,.07);">Medium</span>
+                    </div>
+                    <a href="CTF/year-of-the-pig.html" class="card-link" style="color:var(--yellow);border-color:rgba(250,189,47,.3);background:rgba(250,189,47,.07);">
+                        Read Writeup <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </article>
+
+            <!-- Year of the Pig — TryHackMe -->
+            <article class="blog-card" data-platform="thm">
+                <div class="card-stripe" style="background:linear-gradient(90deg,var(--orange),var(--yellow),var(--orange));"></div>
+                <div class="card-inner">
+                    <div class="card-meta">
+                        <span class="card-date"><i class="fas fa-cube" style="margin-right:4px;font-size:.55rem;color:var(--aqua);"></i>TryHackMe</span>
+                        <span class="card-read"><i class="fas fa-signal"></i>Medium</span>
+                    </div>
+                    <h2 class="card-title">Year of the Pig</h2>
+                    <p class="card-excerpt">
+                        Porco Rosso themed PHP blog — client-side MD5 password hashing cracked via thematic analysis
+                        (<code style="font-size:.8em;color:var(--yellow);background:rgba(250,189,47,.08);border:1px solid rgba(250,189,47,.22);border-radius:6px;padding:1px 5px;">savoia21!</code>),
+                        intermittent SSH triggered by web auth, web shell planted via
+                        <code style="font-size:.8em;color:var(--yellow);background:rgba(250,189,47,.08);border:1px solid rgba(250,189,47,.22);border-radius:6px;padding:1px 5px;">web-developers</code>
+                        group write access, SQLite credential dump, and root via SUID rootbash binary.
+                    </p>
+                    <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin:.6rem 0 .8rem;">
+                        <span style="display:inline-flex;align-items:center;gap:4px;font-size:.58rem;color:var(--aqua);background:rgba(142,192,124,.07);border:1.5px solid rgba(142,192,124,.22);border-radius:var(--r-pill,999px);padding:2px 8px;font-weight:700;">
+                            <i class="fas fa-flag" style="font-size:.45rem;"></i>3 flags
+                        </span>
+                    </div>
+                    <div class="card-tags">
+                        <span class="card-tag tag-orange">MD5 Cracking</span>
+                        <span class="card-tag tag-red">Web Shell</span>
+                        <span class="card-tag tag-yellow">SUID Privesc</span>
+                        <span class="card-tag" style="color:var(--purple);border-color:rgba(211,134,155,.28);background:rgba(211,134,155,.07);">SQLite</span>
+                        <span class="card-tag" style="color:var(--yellow);border-color:rgba(250,189,47,.28);background:rgba(250,189,47,.07);">Medium</span>
+                    </div>
+                    <a href="CTF/year-of-the-pig.html" class="card-link" style="color:var(--orange);border-color:rgba(254,128,25,.3);background:rgba(254,128,25,.07);">
+                        Read Writeup <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </article>
 
             <!-- Snowy ARMageddon — TryHackMe AoC 2023 -->
             <article class="blog-card" data-platform="thm">
@@ -1166,9 +1232,26 @@
     menuToggle.addEventListener('click', toggleMenu);
     mobileOverlay.addEventListener('click', toggleMenu);
 
-    document.querySelectorAll('.mobile-nav-link').forEach(l => {
-        l.addEventListener('click', () => {
-            if (!l.href?.startsWith('http')) toggleMenu();
+    document.querySelectorAll('.mobile-nav-link').forEach(link => {
+        link.addEventListener('click', e => {
+            const href = link.getAttribute('href');
+            const isExternal = link.hasAttribute('target');
+
+            // Always close menu
+            toggleMenu();
+
+            // Same-page hash link: smooth scroll
+            if (href && href.startsWith('#')) {
+                e.preventDefault();
+                const target = document.querySelector(href);
+                if (target) {
+                    setTimeout(() => {
+                        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }, 350); // wait for menu close animation
+                }
+            }
+            // Cross-page link (main.html#section): let browser navigate
+            // External link: let browser handle (target=_blank)
         });
     });
 
