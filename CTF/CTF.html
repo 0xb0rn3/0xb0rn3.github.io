@@ -749,73 +749,6 @@
                 </div>
             </article>
 
-            <!-- Year of the Pig — TryHackMe -->
-            <article class="blog-card" data-platform="thm">
-                <div class="card-stripe" style="background:linear-gradient(90deg,var(--orange),var(--yellow),var(--orange));"></div>
-                <div class="card-inner">
-                    <div class="card-meta">
-                        <span class="card-date"><i class="fas fa-cube" style="margin-right:4px;font-size:.55rem;color:var(--aqua);"></i>TryHackMe</span>
-                        <span class="card-read"><i class="fas fa-signal"></i>Medium</span>
-                    </div>
-                    <h2 class="card-title">Year of the Pig</h2>
-                    <p class="card-excerpt">
-                        Porco Rosso themed PHP blog — client-side MD5 password hashing cracked via thematic analysis
-                        (<code style="font-size:.8em;color:var(--yellow);background:rgba(250,189,47,.08);border:1px solid rgba(250,189,47,.22);border-radius:6px;padding:1px 5px;">savoia21!</code>),
-                        intermittent SSH triggered by web auth, web shell planted via
-                        <code style="font-size:.8em;color:var(--yellow);background:rgba(250,189,47,.08);border:1px solid rgba(250,189,47,.22);border-radius:6px;padding:1px 5px;">web-developers</code>
-                        group write access, SQLite credential dump, and root via SUID rootbash binary.
-                    </p>
-                    <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin:.6rem 0 .8rem;">
-                        <span style="display:inline-flex;align-items:center;gap:4px;font-size:.58rem;color:var(--aqua);background:rgba(142,192,124,.07);border:1.5px solid rgba(142,192,124,.22);border-radius:var(--r-pill,999px);padding:2px 8px;font-weight:700;">
-                            <i class="fas fa-flag" style="font-size:.45rem;"></i>3 flags
-                        </span>
-                    </div>
-                    <div class="card-tags">
-                        <span class="card-tag tag-orange">MD5 Cracking</span>
-                        <span class="card-tag tag-red">Web Shell</span>
-                        <span class="card-tag tag-yellow">SUID Privesc</span>
-                        <span class="card-tag" style="color:var(--purple);border-color:rgba(211,134,155,.28);background:rgba(211,134,155,.07);">SQLite</span>
-                        <span class="card-tag" style="color:var(--yellow);border-color:rgba(250,189,47,.28);background:rgba(250,189,47,.07);">Medium</span>
-                    </div>
-                    <a href="CTF/year-of-the-pig.html" class="card-link" style="color:var(--orange);border-color:rgba(254,128,25,.3);background:rgba(254,128,25,.07);">
-                        Read Writeup <i class="fas fa-arrow-right"></i>
-                    </a>
-                </div>
-            </article>
-
-            <!-- Cheese CTF — TryHackMe -->
-            <article class="blog-card" data-platform="thm">
-                <div class="card-stripe" style="background:linear-gradient(90deg,var(--orange),var(--yellow),var(--orange));"></div>
-                <div class="card-inner">
-                    <div class="card-meta">
-                        <span class="card-date"><i class="fas fa-cube" style="margin-right:4px;font-size:.55rem;color:var(--aqua);"></i>TryHackMe</span>
-                        <span class="card-read"><i class="fas fa-signal"></i>Easy</span>
-                    </div>
-                    <h2 class="card-title">Cheese</h2>
-                    <p class="card-excerpt">
-                        The Cheese Shop &mdash; SQL injection chain (time-based blind + UNION auth bypass),
-                        raw <code style="font-size:.8em;color:var(--yellow);background:rgba(250,189,47,.08);border:1px solid rgba(250,189,47,.22);border-radius:6px;padding:1px 5px;">include()</code> LFI,
-                        PHP filter chain RCE (Synacktiv iconv technique), SSH pivot via world-writable authorized_keys,
-                        systemd timer abuse for SUID xxd privesc.
-                    </p>
-                    <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin:.6rem 0 .8rem;">
-                        <span style="display:inline-flex;align-items:center;gap:4px;font-size:.58rem;color:var(--aqua);background:rgba(142,192,124,.07);border:1.5px solid rgba(142,192,124,.22);border-radius:var(--r-pill,999px);padding:2px 8px;font-weight:700;">
-                            <i class="fas fa-flag" style="font-size:.45rem;"></i>2 flags
-                        </span>
-                    </div>
-                    <div class="card-tags">
-                        <span class="card-tag tag-red">SQLi</span>
-                        <span class="card-tag tag-orange">LFI &rarr; RCE</span>
-                        <span class="card-tag tag-blue">PHP Filter Chain</span>
-                        <span class="card-tag tag-purple">Systemd Abuse</span>
-                        <span class="card-tag" style="color:var(--aqua);border-color:rgba(142,192,124,.28);background:rgba(142,192,124,.07);">Easy</span>
-                    </div>
-                    <a href="CTF/cheese.html" class="card-link" style="color:var(--orange);border-color:rgba(254,128,25,.3);background:rgba(254,128,25,.07);">
-                        Read Writeup <i class="fas fa-arrow-right"></i>
-                    </a>
-                </div>
-            </article>
-
             <!-- Cheese CTF — TryHackMe -->
             <article class="blog-card" data-platform="thm">
                 <div class="card-stripe" style="background:linear-gradient(90deg,var(--red),var(--purple),var(--red));"></div>
@@ -826,10 +759,10 @@
                     </div>
                     <h2 class="card-title">Cheese CTF</h2>
                     <p class="card-excerpt">
-                        The Cheese Shop — SQL injection auth bypass (time-based blind + UNION),
+                        The Cheese Shop &mdash; SQL injection auth bypass (time-based blind + UNION),
                         LFI via raw <code style="font-size:.8em;color:var(--yellow);background:rgba(250,189,47,.08);border:1px solid rgba(250,189,47,.22);border-radius:6px;padding:1px 5px;">include()</code>,
-                        RCE through Synacktiv PHP filter chain (iconv gadgets, no allow_url_include needed),
-                        SSH lateral move via world-writable authorized_keys, privesc via writable systemd timer to SUID xxd.
+                        RCE through Synacktiv PHP filter chain, SSH lateral move via world-writable authorized_keys,
+                        privesc via writable systemd timer to SUID xxd.
                     </p>
                     <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin:.6rem 0 .8rem;">
                         <span style="display:inline-flex;align-items:center;gap:4px;font-size:.58rem;color:var(--aqua);background:rgba(142,192,124,.07);border:1.5px solid rgba(142,192,124,.22);border-radius:var(--r-pill,999px);padding:2px 8px;font-weight:700;">
@@ -838,7 +771,7 @@
                     </div>
                     <div class="card-tags">
                         <span class="card-tag tag-red">SQLi</span>
-                        <span class="card-tag tag-orange">LFI → RCE</span>
+                        <span class="card-tag tag-orange">LFI &rarr; RCE</span>
                         <span class="card-tag tag-purple">PHP Filter Chain</span>
                         <span class="card-tag tag-blue">Systemd Abuse</span>
                         <span class="card-tag" style="color:var(--yellow);border-color:rgba(250,189,47,.28);background:rgba(250,189,47,.07);">Medium</span>
@@ -848,6 +781,7 @@
                     </a>
                 </div>
             </article>
+
 
             <!-- Snowy ARMageddon — TryHackMe AoC 2023 -->
             <article class="blog-card" data-platform="thm">
