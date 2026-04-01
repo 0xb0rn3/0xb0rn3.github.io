@@ -698,7 +698,7 @@
             </p>
             <div class="post-count">
                 <i class="fas fa-flag-checkered"></i>
-                18 rooms pwned
+                22 rooms pwned
             </div>
         </div>
 
@@ -783,6 +783,7 @@
             </article>
 
 
+
             <!-- Relevant — TryHackMe -->
             <article class="blog-card" data-platform="thm">
                 <div class="card-stripe" style="background:linear-gradient(90deg,var(--blue),var(--aqua),var(--blue));"></div>
@@ -792,22 +793,10 @@
                         <span class="card-read"><i class="fas fa-signal"></i>Medium</span>
                     </div>
                     <h2 class="card-title">Relevant</h2>
-                    <p class="card-excerpt">
-                        Windows Server 2016. Anonymous SMB write to IIS webroot, ASPX webshell upload,
-                        SeImpersonatePrivilege escalation via PrintSpoofer to NT AUTHORITY\SYSTEM. Classic Windows attack chain.
-                    </p>
-                    <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin:.6rem 0 .8rem;">
-                        <span style="display:inline-flex;align-items:center;gap:4px;font-size:.58rem;color:var(--aqua);background:rgba(142,192,124,.07);border:1.5px solid rgba(142,192,124,.22);border-radius:var(--r-pill,999px);padding:2px 8px;font-weight:700;"><i class="fas fa-flag" style="font-size:.45rem;"></i>2 flags</span>
-                    </div>
-                    <div class="card-tags">
-                        <span class="card-tag tag-blue">SMB</span>
-                        <span class="card-tag tag-orange">ASPX Webshell</span>
-                        <span class="card-tag tag-red">PrintSpoofer</span>
-                        <span class="card-tag" style="color:var(--purple);border-color:rgba(211,134,155,.28);background:rgba(211,134,155,.07);">Windows</span>
-                    </div>
-                    <a href="CTF/relevant.html" class="card-link" style="color:var(--blue);border-color:rgba(131,165,152,.3);background:rgba(131,165,152,.07);">
-                        Read Writeup <i class="fas fa-arrow-right"></i>
-                    </a>
+                    <p class="card-excerpt">Windows Server 2016. Anonymous SMB write to IIS webroot, ASPX webshell upload, SeImpersonatePrivilege &rarr; PrintSpoofer &rarr; SYSTEM.</p>
+                    <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin:.6rem 0 .8rem;"><span style="display:inline-flex;align-items:center;gap:4px;font-size:.58rem;color:var(--aqua);background:rgba(142,192,124,.07);border:1.5px solid rgba(142,192,124,.22);border-radius:var(--r-pill,999px);padding:2px 8px;font-weight:700;"><i class="fas fa-flag" style="font-size:.45rem;"></i>2 flags</span></div>
+                    <div class="card-tags"><span class="card-tag tag-blue">SMB</span><span class="card-tag tag-orange">ASPX Webshell</span><span class="card-tag tag-red">PrintSpoofer</span><span class="card-tag" style="color:var(--purple);border-color:rgba(211,134,155,.28);background:rgba(211,134,155,.07);">Windows</span></div>
+                    <a href="CTF/relevant.html" class="card-link" style="color:var(--blue);border-color:rgba(131,165,152,.3);background:rgba(131,165,152,.07);">Read Writeup <i class="fas fa-arrow-right"></i></a>
                 </div>
             </article>
 
@@ -820,25 +809,116 @@
                         <span class="card-read"><i class="fas fa-signal"></i>Medium</span>
                     </div>
                     <h2 class="card-title">0day</h2>
+                    <p class="card-excerpt">Shellshock (CVE-2014-6271) via CGI User-Agent &rarr; DirtyCOW (CVE-2016-5195) kernel race &rarr; /etc/passwd overwrite &rarr; root. Fully automated.</p>
+                    <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin:.6rem 0 .8rem;"><span style="display:inline-flex;align-items:center;gap:4px;font-size:.58rem;color:var(--aqua);background:rgba(142,192,124,.07);border:1.5px solid rgba(142,192,124,.22);border-radius:var(--r-pill,999px);padding:2px 8px;font-weight:700;"><i class="fas fa-flag" style="font-size:.45rem;"></i>2 flags</span></div>
+                    <div class="card-tags"><span class="card-tag tag-red">CVE-2014-6271</span><span class="card-tag tag-orange">CVE-2016-5195</span><span class="card-tag tag-yellow">Shellshock</span><span class="card-tag tag-red">DirtyCOW</span></div>
+                    <a href="CTF/0day.html" class="card-link link-red">Read Writeup <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </article>
+
+            <!-- Ghizer — TryHackMe -->
+            <article class="blog-card" data-platform="thm">
+                <div class="card-stripe" style="background:linear-gradient(90deg,var(--red),var(--orange),var(--red));"></div>
+                <div class="card-inner">
+                    <div class="card-meta">
+                        <span class="card-date"><i class="fas fa-cube" style="margin-right:4px;font-size:.55rem;color:var(--aqua);"></i>TryHackMe</span>
+                        <span class="card-read" style="color:var(--red);font-weight:900;"><i class="fas fa-signal"></i>Hard</span>
+                    </div>
+                    <h2 class="card-title">Ghizer</h2>
                     <p class="card-excerpt">
-                        Two legendary CVEs chained: Shellshock (CVE-2014-6271) via CGI User-Agent injection for RCE,
-                        then DirtyCOW (CVE-2016-5195) kernel race condition to overwrite /etc/passwd and escalate to root.
-                        Fully automated Python exploit.
+                        WordPress plugin upload to webshell, JDWP port forwarding + JDB Log4j breakpoint exploitation
+                        on Ghidra process for lateral movement, Python import hijack via sudo for root.
                     </p>
                     <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin:.6rem 0 .8rem;">
                         <span style="display:inline-flex;align-items:center;gap:4px;font-size:.58rem;color:var(--aqua);background:rgba(142,192,124,.07);border:1.5px solid rgba(142,192,124,.22);border-radius:var(--r-pill,999px);padding:2px 8px;font-weight:700;"><i class="fas fa-flag" style="font-size:.45rem;"></i>2 flags</span>
                     </div>
                     <div class="card-tags">
-                        <span class="card-tag tag-red">CVE-2014-6271</span>
-                        <span class="card-tag tag-orange">CVE-2016-5195</span>
-                        <span class="card-tag tag-yellow">Shellshock</span>
-                        <span class="card-tag tag-red">DirtyCOW</span>
+                        <span class="card-tag tag-red">JDWP</span>
+                        <span class="card-tag tag-orange">WordPress RCE</span>
+                        <span class="card-tag tag-yellow">Import Hijack</span>
+                        <span class="card-tag" style="color:var(--red);border-color:rgba(251,73,52,.28);background:rgba(251,73,52,.07);font-weight:900;">Hard</span>
                     </div>
-                    <a href="CTF/0day.html" class="card-link link-red">
-                        Read Writeup <i class="fas fa-arrow-right"></i>
-                    </a>
+                    <a href="CTF/ghizer.html" class="card-link link-red">Read Writeup <i class="fas fa-arrow-right"></i></a>
                 </div>
             </article>
+
+            <!-- Dogcat — TryHackMe -->
+            <article class="blog-card" data-platform="thm">
+                <div class="card-stripe" style="background:linear-gradient(90deg,var(--orange),var(--yellow),var(--orange));"></div>
+                <div class="card-inner">
+                    <div class="card-meta">
+                        <span class="card-date"><i class="fas fa-cube" style="margin-right:4px;font-size:.55rem;color:var(--aqua);"></i>TryHackMe</span>
+                        <span class="card-read"><i class="fas fa-signal"></i>Medium</span>
+                    </div>
+                    <h2 class="card-title">Dogcat</h2>
+                    <p class="card-excerpt">
+                        PHP LFI with ext= bypass, Apache log poisoning for RCE, sudo env root inside Docker,
+                        bind mount cron hijack for host escape. 4 flags across container and host.
+                    </p>
+                    <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin:.6rem 0 .8rem;">
+                        <span style="display:inline-flex;align-items:center;gap:4px;font-size:.58rem;color:var(--aqua);background:rgba(142,192,124,.07);border:1.5px solid rgba(142,192,124,.22);border-radius:var(--r-pill,999px);padding:2px 8px;font-weight:700;"><i class="fas fa-flag" style="font-size:.45rem;"></i>4 flags</span>
+                    </div>
+                    <div class="card-tags">
+                        <span class="card-tag tag-orange">LFI</span>
+                        <span class="card-tag tag-red">Log Poisoning</span>
+                        <span class="card-tag tag-blue">Docker Escape</span>
+                        <span class="card-tag" style="color:var(--yellow);border-color:rgba(250,189,47,.28);background:rgba(250,189,47,.07);">Medium</span>
+                    </div>
+                    <a href="CTF/dogcat.html" class="card-link" style="color:var(--orange);border-color:rgba(254,128,25,.3);background:rgba(254,128,25,.07);">Read Writeup <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </article>
+
+            <!-- Wgel CTF — TryHackMe -->
+            <article class="blog-card" data-platform="thm">
+                <div class="card-stripe" style="background:linear-gradient(90deg,var(--aqua),var(--blue),var(--aqua));"></div>
+                <div class="card-inner">
+                    <div class="card-meta">
+                        <span class="card-date"><i class="fas fa-cube" style="margin-right:4px;font-size:.55rem;color:var(--aqua);"></i>TryHackMe</span>
+                        <span class="card-read"><i class="fas fa-signal"></i>Easy</span>
+                    </div>
+                    <h2 class="card-title">Wgel CTF</h2>
+                    <p class="card-excerpt">
+                        Exposed SSH private key via <code style="font-size:.8em;color:var(--yellow);background:rgba(250,189,47,.08);border:1px solid rgba(250,189,47,.22);border-radius:6px;padding:1px 5px;">/.ssh/id_rsa</code>
+                        in web directory. Sudo wget NOPASSWD &mdash; exfiltrate root files via <code style="font-size:.8em;color:var(--yellow);background:rgba(250,189,47,.08);border:1px solid rgba(250,189,47,.22);border-radius:6px;padding:1px 5px;">--post-file</code>.
+                    </p>
+                    <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin:.6rem 0 .8rem;">
+                        <span style="display:inline-flex;align-items:center;gap:4px;font-size:.58rem;color:var(--aqua);background:rgba(142,192,124,.07);border:1.5px solid rgba(142,192,124,.22);border-radius:var(--r-pill,999px);padding:2px 8px;font-weight:700;"><i class="fas fa-flag" style="font-size:.45rem;"></i>2 flags</span>
+                    </div>
+                    <div class="card-tags">
+                        <span class="card-tag tag-aqua">Exposed SSH Key</span>
+                        <span class="card-tag tag-orange">Sudo wget</span>
+                        <span class="card-tag" style="color:var(--aqua);border-color:rgba(142,192,124,.28);background:rgba(142,192,124,.07);">Easy</span>
+                    </div>
+                    <a href="CTF/wgel.html" class="card-link" style="color:var(--aqua);border-color:rgba(142,192,124,.3);background:rgba(142,192,124,.07);">Read Writeup <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </article>
+
+            <!-- Wonderland — TryHackMe -->
+            <article class="blog-card" data-platform="thm">
+                <div class="card-stripe" style="background:linear-gradient(90deg,var(--purple),var(--blue),var(--purple));"></div>
+                <div class="card-inner">
+                    <div class="card-meta">
+                        <span class="card-date"><i class="fas fa-cube" style="margin-right:4px;font-size:.55rem;color:var(--aqua);"></i>TryHackMe</span>
+                        <span class="card-read"><i class="fas fa-signal"></i>Medium</span>
+                    </div>
+                    <h2 class="card-title">Wonderland</h2>
+                    <p class="card-excerpt">
+                        Reversed flag locations. 4-user lateral chain: hidden web creds &rarr; Python import hijack
+                        &rarr; SUID PATH hijack &rarr; Perl cap_setuid for root. Alice in Wonderland themed.
+                    </p>
+                    <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin:.6rem 0 .8rem;">
+                        <span style="display:inline-flex;align-items:center;gap:4px;font-size:.58rem;color:var(--aqua);background:rgba(142,192,124,.07);border:1.5px solid rgba(142,192,124,.22);border-radius:var(--r-pill,999px);padding:2px 8px;font-weight:700;"><i class="fas fa-flag" style="font-size:.45rem;"></i>2 flags</span>
+                    </div>
+                    <div class="card-tags">
+                        <span class="card-tag tag-purple">Import Hijack</span>
+                        <span class="card-tag tag-orange">PATH Hijack</span>
+                        <span class="card-tag tag-red">cap_setuid</span>
+                        <span class="card-tag" style="color:var(--yellow);border-color:rgba(250,189,47,.28);background:rgba(250,189,47,.07);">Medium</span>
+                    </div>
+                    <a href="CTF/wonderland.html" class="card-link" style="color:var(--purple);border-color:rgba(211,134,155,.3);background:rgba(211,134,155,.07);">Read Writeup <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </article>
+
 
             <!-- Snowy ARMageddon — TryHackMe AoC 2023 -->
             <article class="blog-card" data-platform="thm">
