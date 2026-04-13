@@ -698,27 +698,50 @@
             </p>
             <div class="post-count">
                 <i class="fas fa-flag-checkered"></i>
-                22 rooms pwned
+                23 rooms pwned
             </div>
         </div>
 
-        <!-- Platform Filters -->
-        <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:2rem;align-items:center;">
-            <button class="filter-btn active" data-filter="all" style="padding:.6rem 1.2rem;background:var(--bg-card);color:var(--fg);border:2px solid var(--border-mid);border-radius:var(--r);font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;cursor:pointer;transition:all .22s ease;">
-                All Platforms
-            </button>
-            <button class="filter-btn" data-filter="thm" style="padding:.6rem 1.2rem;background:var(--bg-card);color:var(--aqua);border:2px solid rgba(142,192,124,.28);border-radius:var(--r);font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;cursor:pointer;transition:all .22s ease;">
-                <i class="fas fa-cube" style="margin-right:6px;"></i>TryHackMe
-            </button>
-            <button class="filter-btn" data-filter="htb" style="padding:.6rem 1.2rem;background:var(--bg-card);color:var(--red);border:2px solid rgba(251,73,52,.28);border-radius:var(--r);font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;cursor:pointer;transition:all .22s ease;">
-                <i class="fas fa-cube" style="margin-right:6px;"></i>HackTheBox
-            </button>
+        <!-- Filters -->
+        <div style="display:flex;flex-direction:column;gap:.75rem;margin-bottom:2rem;">
+            <!-- Platform row -->
+            <div style="display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;">
+                <span style="font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--fg-dim);min-width:70px;">Platform</span>
+                <button class="filter-btn platform-btn active" data-platform-filter="all" style="padding:.5rem 1.1rem;background:var(--bg-card);color:var(--fg);border:2px solid var(--border-mid);border-radius:var(--r);font-family:'JetBrains Mono',monospace;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;cursor:pointer;transition:all .22s ease;">
+                    All
+                </button>
+                <button class="filter-btn platform-btn" data-platform-filter="thm" style="padding:.5rem 1.1rem;background:var(--bg-card);color:var(--aqua);border:2px solid rgba(142,192,124,.28);border-radius:var(--r);font-family:'JetBrains Mono',monospace;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;cursor:pointer;transition:all .22s ease;">
+                    <i class="fas fa-cube" style="margin-right:5px;"></i>TryHackMe
+                </button>
+                <button class="filter-btn platform-btn" data-platform-filter="htb" style="padding:.5rem 1.1rem;background:var(--bg-card);color:var(--red);border:2px solid rgba(251,73,52,.28);border-radius:var(--r);font-family:'JetBrains Mono',monospace;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;cursor:pointer;transition:all .22s ease;">
+                    <i class="fas fa-cube" style="margin-right:5px;"></i>HackTheBox
+                </button>
+            </div>
+            <!-- Difficulty row -->
+            <div style="display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;">
+                <span style="font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--fg-dim);min-width:70px;">Difficulty</span>
+                <button class="filter-btn diff-btn active" data-diff-filter="all" style="padding:.5rem 1.1rem;background:var(--bg-card);color:var(--fg);border:2px solid var(--border-mid);border-radius:var(--r);font-family:'JetBrains Mono',monospace;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;cursor:pointer;transition:all .22s ease;">
+                    All
+                </button>
+                <button class="filter-btn diff-btn" data-diff-filter="easy" style="padding:.5rem 1.1rem;background:var(--bg-card);color:var(--aqua);border:2px solid rgba(142,192,124,.28);border-radius:var(--r);font-family:'JetBrains Mono',monospace;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;cursor:pointer;transition:all .22s ease;">
+                    <i class="fas fa-circle" style="margin-right:5px;font-size:.45rem;vertical-align:middle;"></i>Easy
+                </button>
+                <button class="filter-btn diff-btn" data-diff-filter="medium" style="padding:.5rem 1.1rem;background:var(--bg-card);color:var(--yellow);border:2px solid rgba(250,189,47,.28);border-radius:var(--r);font-family:'JetBrains Mono',monospace;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;cursor:pointer;transition:all .22s ease;">
+                    <i class="fas fa-circle" style="margin-right:5px;font-size:.45rem;vertical-align:middle;"></i>Medium
+                </button>
+                <button class="filter-btn diff-btn" data-diff-filter="hard" style="padding:.5rem 1.1rem;background:var(--bg-card);color:var(--orange);border:2px solid rgba(254,128,25,.28);border-radius:var(--r);font-family:'JetBrains Mono',monospace;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;cursor:pointer;transition:all .22s ease;">
+                    <i class="fas fa-circle" style="margin-right:5px;font-size:.45rem;vertical-align:middle;"></i>Hard
+                </button>
+                <button class="filter-btn diff-btn" data-diff-filter="insane" style="padding:.5rem 1.1rem;background:var(--bg-card);color:var(--red);border:2px solid rgba(251,73,52,.28);border-radius:var(--r);font-family:'JetBrains Mono',monospace;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;cursor:pointer;transition:all .22s ease;">
+                    <i class="fas fa-skull" style="margin-right:5px;font-size:.5rem;"></i>Insane
+                </button>
+            </div>
         </div>
 
         <div class="blog-grid" id="blogGrid">
 
             <!-- Year of the Pig — TryHackMe -->
-            <article class="blog-card" data-platform="thm">
+            <article class="blog-card" data-platform="thm" data-difficulty="medium">
                 <div class="card-stripe" style="background:linear-gradient(90deg,var(--yellow),var(--orange),var(--yellow));"></div>
                 <div class="card-inner">
                     <div class="card-meta">
@@ -750,7 +773,7 @@
             </article>
 
             <!-- Cheese CTF — TryHackMe -->
-            <article class="blog-card" data-platform="thm">
+            <article class="blog-card" data-platform="thm" data-difficulty="medium">
                 <div class="card-stripe" style="background:linear-gradient(90deg,var(--red),var(--purple),var(--red));"></div>
                 <div class="card-inner">
                     <div class="card-meta">
@@ -785,7 +808,7 @@
 
 
             <!-- Relevant — TryHackMe -->
-            <article class="blog-card" data-platform="thm">
+            <article class="blog-card" data-platform="thm" data-difficulty="medium">
                 <div class="card-stripe" style="background:linear-gradient(90deg,var(--blue),var(--aqua),var(--blue));"></div>
                 <div class="card-inner">
                     <div class="card-meta">
@@ -801,7 +824,7 @@
             </article>
 
             <!-- 0day — TryHackMe -->
-            <article class="blog-card" data-platform="thm">
+            <article class="blog-card" data-platform="thm" data-difficulty="medium">
                 <div class="card-stripe" style="background:linear-gradient(90deg,var(--red),var(--orange),var(--red));"></div>
                 <div class="card-inner">
                     <div class="card-meta">
@@ -817,7 +840,7 @@
             </article>
 
             <!-- Ghizer — TryHackMe -->
-            <article class="blog-card" data-platform="thm">
+            <article class="blog-card" data-platform="thm" data-difficulty="hard">
                 <div class="card-stripe" style="background:linear-gradient(90deg,var(--red),var(--orange),var(--red));"></div>
                 <div class="card-inner">
                     <div class="card-meta">
@@ -843,7 +866,7 @@
             </article>
 
             <!-- Dogcat — TryHackMe -->
-            <article class="blog-card" data-platform="thm">
+            <article class="blog-card" data-platform="thm" data-difficulty="medium">
                 <div class="card-stripe" style="background:linear-gradient(90deg,var(--orange),var(--yellow),var(--orange));"></div>
                 <div class="card-inner">
                     <div class="card-meta">
@@ -869,7 +892,7 @@
             </article>
 
             <!-- Wgel CTF — TryHackMe -->
-            <article class="blog-card" data-platform="thm">
+            <article class="blog-card" data-platform="thm" data-difficulty="easy">
                 <div class="card-stripe" style="background:linear-gradient(90deg,var(--aqua),var(--blue),var(--aqua));"></div>
                 <div class="card-inner">
                     <div class="card-meta">
@@ -894,7 +917,7 @@
             </article>
 
             <!-- Wonderland — TryHackMe -->
-            <article class="blog-card" data-platform="thm">
+            <article class="blog-card" data-platform="thm" data-difficulty="medium">
                 <div class="card-stripe" style="background:linear-gradient(90deg,var(--purple),var(--blue),var(--purple));"></div>
                 <div class="card-inner">
                     <div class="card-meta">
@@ -921,7 +944,7 @@
 
 
             <!-- Snowy ARMageddon — TryHackMe AoC 2023 -->
-            <article class="blog-card" data-platform="thm">
+            <article class="blog-card" data-platform="thm" data-difficulty="insane">
                 <div class="card-stripe" style="background:linear-gradient(90deg,var(--red),var(--orange),var(--red));"></div>
                 <div class="card-inner">
                     <div class="card-meta">
@@ -954,7 +977,7 @@
             </article>
 
             <!-- VulnNet: Internal — TryHackMe -->
-            <article class="blog-card" data-platform="thm">
+            <article class="blog-card" data-platform="thm" data-difficulty="medium">
                 <div class="card-stripe" style="background:linear-gradient(90deg,var(--orange),var(--yellow));"></div>
                 <div class="card-inner">
                     <div class="card-meta">
@@ -985,7 +1008,7 @@
             </article>
 
             <!-- Pickle Rick — TryHackMe -->
-            <article class="blog-card" data-platform="thm">
+            <article class="blog-card" data-platform="thm" data-difficulty="easy">
                 <div class="card-stripe" style="background:linear-gradient(90deg,var(--aqua),var(--yellow));"></div>
                 <div class="card-inner">
                     <div class="card-meta">
@@ -1012,7 +1035,7 @@
             </article>
 
             <!-- Simple CTF — TryHackMe -->
-            <article class="blog-card" data-platform="thm">
+            <article class="blog-card" data-platform="thm" data-difficulty="easy">
                 <div class="card-stripe" style="background:linear-gradient(90deg,var(--red),var(--purple));"></div>
                 <div class="card-inner">
                     <div class="card-meta">
@@ -1039,7 +1062,7 @@
             </article>
 
             <!-- Bounty Hacker — TryHackMe -->
-            <article class="blog-card" data-platform="thm">
+            <article class="blog-card" data-platform="thm" data-difficulty="easy">
                 <div class="card-stripe" style="background:linear-gradient(90deg,var(--red),var(--yellow));"></div>
                 <div class="card-inner">
                     <div class="card-meta">
@@ -1070,7 +1093,7 @@
             </article>
 
             <!-- W1seGuy — TryHackMe -->
-            <article class="blog-card" data-platform="thm">
+            <article class="blog-card" data-platform="thm" data-difficulty="easy">
                 <div class="card-stripe" style="background:linear-gradient(90deg,var(--purple),var(--blue));"></div>
                 <div class="card-inner">
                     <div class="card-meta">
@@ -1101,7 +1124,7 @@
             </article>
 
             <!-- Agent Sudo — TryHackMe -->
-            <article class="blog-card" data-platform="thm">
+            <article class="blog-card" data-platform="thm" data-difficulty="easy">
                 <div class="card-stripe" style="background:linear-gradient(90deg,var(--green),var(--aqua));"></div>
                 <div class="card-inner">
                     <div class="card-meta">
@@ -1133,7 +1156,7 @@
             </article>
 
             <!-- Chill Hack — TryHackMe -->
-            <article class="blog-card" data-platform="thm">
+            <article class="blog-card" data-platform="thm" data-difficulty="medium">
                 <div class="card-stripe" style="background:linear-gradient(90deg,var(--orange),var(--red));"></div>
                 <div class="card-inner">
                     <div class="card-meta">
@@ -1165,7 +1188,7 @@
             </article>
 
             <!-- Crypto Failures — TryHackMe -->
-            <article class="blog-card" data-platform="thm">
+            <article class="blog-card" data-platform="thm" data-difficulty="medium">
                 <div class="card-stripe" style="background:linear-gradient(90deg,var(--purple),var(--blue));"></div>
                 <div class="card-inner">
                     <div class="card-meta">
@@ -1197,7 +1220,7 @@
             </article>
 
             <!-- Silver Platter — TryHackMe -->
-            <article class="blog-card" data-platform="thm">
+            <article class="blog-card" data-platform="thm" data-difficulty="medium">
                 <div class="card-stripe" style="background:linear-gradient(90deg,var(--fg),var(--aqua));"></div>
                 <div class="card-inner">
                     <div class="card-meta">
@@ -1230,7 +1253,7 @@
             </article>
 
             <!-- Rabbit Store — TryHackMe -->
-            <article class="blog-card" data-platform="thm">
+            <article class="blog-card" data-platform="thm" data-difficulty="medium">
                 <div class="card-stripe" style="background:linear-gradient(90deg,var(--orange),var(--yellow));"></div>
                 <div class="card-inner">
                     <div class="card-meta">
@@ -1262,7 +1285,7 @@
             </article>
 
             <!-- The Sticker Shop — TryHackMe -->
-            <article class="blog-card" data-platform="thm">
+            <article class="blog-card" data-platform="thm" data-difficulty="easy">
                 <div class="card-stripe" style="background:linear-gradient(90deg,var(--green),var(--aqua));"></div>
                 <div class="card-inner">
                     <div class="card-meta">
@@ -1293,7 +1316,7 @@
             </article>
 
             <!-- Hidden Deep Into My Heart — TryHackMe -->
-            <article class="blog-card" data-platform="thm">
+            <article class="blog-card" data-platform="thm" data-difficulty="easy">
                 <div class="card-stripe" style="background:linear-gradient(90deg,var(--red),var(--orange));"></div>
                 <div class="card-inner">
                     <div class="card-meta">
@@ -1317,8 +1340,44 @@
                 </div>
             </article>
 
+            <!-- Blog — TryHackMe -->
+            <article class="blog-card" data-platform="thm" data-difficulty="medium">
+                <div class="card-stripe" style="background:linear-gradient(90deg,var(--orange),var(--red),var(--orange));"></div>
+                <div class="card-inner">
+                    <div class="card-meta">
+                        <span class="card-date"><i class="fas fa-cube" style="margin-right:4px;font-size:.55rem;color:var(--aqua);"></i>TryHackMe</span>
+                        <span class="card-read"><i class="fas fa-signal"></i>Medium</span>
+                    </div>
+                    <h2 class="card-title">Blog</h2>
+                    <p class="card-excerpt">
+                        WordPress 5.0.0. PHP-JPEG polyglot survives GD at 100&times;100 crop only.
+                        <code style="font-size:.8em;color:var(--yellow);background:rgba(250,189,47,.08);border:1px solid rgba(250,189,47,.22);border-radius:6px;padding:1px 5px;">CVE-2019-8943</code>
+                        path traversal drops shell into theme dir;
+                        <code style="font-size:.8em;color:var(--yellow);background:rgba(250,189,47,.08);border:1px solid rgba(250,189,47,.22);border-radius:6px;padding:1px 5px;">CVE-2019-8942</code>
+                        unprotected <code style="font-size:.8em;color:var(--yellow);background:rgba(250,189,47,.08);border:1px solid rgba(250,189,47,.22);border-radius:6px;padding:1px 5px;">save-attachment-compat</code>
+                        sets <code style="font-size:.8em;color:var(--yellow);background:rgba(250,189,47,.08);border:1px solid rgba(250,189,47,.22);border-radius:6px;padding:1px 5px;">_wp_page_template</code> &rarr; RCE.
+                        SUID checker binary with <code style="font-size:.8em;color:var(--yellow);background:rgba(250,189,47,.08);border:1px solid rgba(250,189,47,.22);border-radius:6px;padding:1px 5px;">getenv("admin")</code> privesc. Custom Node.js exploit.
+                    </p>
+                    <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin:.6rem 0 .8rem;">
+                        <span style="display:inline-flex;align-items:center;gap:4px;font-size:.58rem;color:var(--aqua);background:rgba(142,192,124,.07);border:1.5px solid rgba(142,192,124,.22);border-radius:var(--r-pill,999px);padding:2px 8px;font-weight:700;">
+                            <i class="fas fa-flag" style="font-size:.45rem;"></i>2 flags
+                        </span>
+                    </div>
+                    <div class="card-tags">
+                        <span class="card-tag tag-red">CVE-2019-8942</span>
+                        <span class="card-tag tag-orange">CVE-2019-8943</span>
+                        <span class="card-tag tag-yellow">JPEG Polyglot</span>
+                        <span class="card-tag tag-red">SUID Privesc</span>
+                        <span class="card-tag" style="color:var(--orange);border-color:rgba(254,128,25,.28);background:rgba(254,128,25,.07);">Medium</span>
+                    </div>
+                    <a href="CTF/blog.html" class="card-link" style="color:var(--orange);border-color:rgba(254,128,25,.3);background:rgba(254,128,25,.07);">
+                        Read Writeup <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </article>
+
             <!-- RootMe — TryHackMe -->
-            <article class="blog-card" data-platform="thm">
+            <article class="blog-card" data-platform="thm" data-difficulty="easy">
                 <div class="card-stripe" style="background:linear-gradient(90deg,var(--aqua),var(--blue));"></div>
                 <div class="card-inner">
                     <div class="card-meta">
@@ -1412,35 +1471,63 @@
 
     document.querySelectorAll('.blog-card').forEach(el => io.observe(el));
 
-    /* ── CTF Platform Filters ── */
-    const filterBtns = document.querySelectorAll('.filter-btn');
+    /* ── CTF Filters (platform + difficulty, combinable) ── */
     const ctfCards = document.querySelectorAll('.blog-card[data-platform]');
+    let activePlatform = 'all';
+    let activeDiff     = 'all';
 
-    filterBtns.forEach(btn => {
+    function applyFilters() {
+        ctfCards.forEach(card => {
+            const pMatch = activePlatform === 'all' || card.dataset.platform === activePlatform;
+            const dMatch = activeDiff     === 'all' || card.dataset.difficulty === activeDiff;
+            card.style.display = (pMatch && dMatch) ? 'flex' : 'none';
+        });
+    }
+
+    // Platform buttons
+    document.querySelectorAll('.platform-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-            filterBtns.forEach(b => {
+            document.querySelectorAll('.platform-btn').forEach(b => {
                 b.classList.remove('active');
                 b.style.background = 'var(--bg-card)';
                 b.style.borderColor = 'var(--border-mid)';
             });
-
             btn.classList.add('active');
-            const filter = btn.dataset.filter;
-
-            if (filter === 'all') {
-                btn.style.background = 'var(--bg-card)';
+            activePlatform = btn.dataset.platformFilter;
+            if (activePlatform === 'all') {
                 btn.style.borderColor = 'var(--yellow)';
-            } else if (filter === 'thm') {
+            } else if (activePlatform === 'thm') {
                 btn.style.background = 'rgba(142,192,124,.1)';
                 btn.style.borderColor = 'var(--aqua)';
-            } else if (filter === 'htb') {
+            } else if (activePlatform === 'htb') {
                 btn.style.background = 'rgba(251,73,52,.1)';
                 btn.style.borderColor = 'var(--red)';
             }
+            applyFilters();
+        });
+    });
 
-            ctfCards.forEach(card => {
-                card.style.display = (filter === 'all' || card.dataset.platform === filter) ? 'flex' : 'none';
+    // Difficulty buttons
+    document.querySelectorAll('.diff-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.diff-btn').forEach(b => {
+                b.classList.remove('active');
+                b.style.background = 'var(--bg-card)';
+                b.style.borderColor = 'var(--border-mid)';
             });
+            btn.classList.add('active');
+            activeDiff = btn.dataset.diffFilter;
+            const colorMap = {
+                all:    ['var(--yellow)',  'var(--border-mid)'],
+                easy:   ['rgba(142,192,124,.1)', 'var(--aqua)'],
+                medium: ['rgba(250,189,47,.1)',  'var(--yellow)'],
+                hard:   ['rgba(254,128,25,.1)',  'var(--orange)'],
+                insane: ['rgba(251,73,52,.1)',   'var(--red)'],
+            };
+            const [bg, bc] = colorMap[activeDiff] || colorMap.all;
+            btn.style.background  = bg;
+            btn.style.borderColor = bc;
+            applyFilters();
         });
     });
 
