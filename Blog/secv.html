@@ -1,0 +1,1566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SecV zephra — Official Documentation | 0xb0rn3</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --black:      #000000;
+            --bg:         #111010;
+            --bg-card:    #181716;
+            --bg-field:   #1e1c1b;
+            --bg-raised:  #252220;
+            --gray-2:     #504945;
+            --gray-3:     #3c3836;
+            --fg:         #ebdbb2;
+            --fg-muted:   #a89984;
+            --fg-dim:     #665c54;
+            --white:      #ffffff;
+            --yellow:     #fabd2f;
+            --orange:     #fe8019;
+            --aqua:       #8ec07c;
+            --red:        #fb4934;
+            --blue:       #83a598;
+            --purple:     #d3869b;
+            --border:     rgba(235,219,178,.13);
+            --border-mid: rgba(235,219,178,.28);
+            --border-hi:  rgba(235,219,178,.6);
+            --r-xs:  8px;
+            --r-sm:  14px;
+            --r:     20px;
+            --r-lg:  28px;
+            --r-pill:999px;
+            --acc:        #83a598;
+            --acc-dim:    rgba(131,165,152,.1);
+            --acc-border: rgba(131,165,152,.3);
+        }
+
+        *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--black);
+            color: var(--fg);
+            line-height: 1.8;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed; inset: 0; z-index: 0;
+            pointer-events: none; opacity: .028;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            background-size: 200px;
+        }
+        body::after {
+            content: '';
+            position: fixed; inset: 0; z-index: 0; pointer-events: none;
+            background-image: radial-gradient(circle, rgba(131,165,152,.04) 1px, transparent 1px);
+            background-size: 32px 32px;
+            animation: gridDrift 30s linear infinite;
+        }
+        @keyframes gridDrift { from { background-position:0 0; } to { background-position:32px 32px; } }
+
+        .rainbow-bar {
+            position: fixed; top:0; left:0; right:0; height:3px;
+            background: linear-gradient(90deg,var(--blue),var(--aqua),var(--yellow),var(--orange));
+            z-index: 9999;
+        }
+
+        .nav {
+            position: fixed; top:3px; left:0; right:0; z-index:1000;
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            background: rgba(0,0,0,.88);
+            border-bottom: 2px solid var(--border);
+            transition: border-color .3s;
+        }
+        .nav.scrolled { border-bottom-color: var(--border-mid); }
+        .nav-content {
+            max-width: 1200px; margin: 0 auto;
+            padding: .9rem 2rem;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .nav-logo {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.1rem; font-weight: 900;
+            color: var(--yellow); text-decoration: none;
+            display: flex; align-items: center; gap: .6rem;
+            letter-spacing: 2px; transition: color .2s;
+        }
+        .nav-logo:hover { color: var(--orange); }
+        .nav-back {
+            display: flex; align-items: center; gap: .6rem;
+            font-size: clamp(.6rem,1.5vw,.7rem); font-weight: 700;
+            color: var(--fg-muted); text-decoration: none;
+            text-transform: uppercase; letter-spacing: 1.2px;
+            padding: .4rem 1rem;
+            border-radius: var(--r-pill);
+            border: 1.5px solid var(--border-mid);
+            background: var(--bg-card);
+            box-shadow: 2px 2px 0 var(--gray-3);
+            transition: all .22s ease;
+        }
+        .nav-back:hover {
+            color: var(--blue);
+            border-color: var(--acc-border);
+            background: var(--acc-dim);
+            transform: translate(-2px,-1px);
+            box-shadow: 3px 3px 0 var(--gray-2);
+        }
+
+        .page {
+            position: relative; z-index: 10;
+            max-width: 820px; margin: 0 auto;
+            padding: clamp(5.5rem,11vh,8rem) clamp(1rem,4vw,2rem) clamp(3rem,7vh,5rem);
+            animation: riseIn .9s cubic-bezier(.16,1,.3,1) .1s both;
+        }
+        @keyframes riseIn {
+            from { opacity:0; transform:translateY(28px); }
+            to   { opacity:1; transform:translateY(0); }
+        }
+
+        .post-header { margin-bottom: clamp(2rem,5vh,3rem); }
+        .post-meta-row {
+            display: flex; align-items: center;
+            flex-wrap: wrap; gap: .6rem;
+            margin-bottom: 1.2rem;
+        }
+        .meta-pill {
+            display: inline-flex; align-items: center; gap: 5px;
+            padding: 3px 11px;
+            border-radius: var(--r-pill);
+            font-size: clamp(.5rem,1.3vw,.58rem); font-weight: 700;
+            text-transform: uppercase; letter-spacing: 1px;
+            border: 1.5px solid;
+        }
+        .pill-blue   { color:var(--blue);   border-color:rgba(131,165,152,.3); background:rgba(131,165,152,.08); }
+        .pill-yellow { color:var(--yellow); border-color:rgba(250,189,47,.3);  background:rgba(250,189,47,.08); }
+        .pill-orange { color:var(--orange); border-color:rgba(254,128,25,.3);  background:rgba(254,128,25,.08); }
+        .pill-aqua   { color:var(--aqua);   border-color:rgba(142,192,124,.3); background:rgba(142,192,124,.08); }
+        .pill-red    { color:var(--red);    border-color:rgba(251,73,52,.3);   background:rgba(251,73,52,.08); }
+        .pill-purple { color:var(--purple); border-color:rgba(211,134,155,.3); background:rgba(211,134,155,.08); }
+        .pill-dim    { color:var(--fg-dim); border-color:var(--border);        background:var(--bg-field); }
+
+        .post-title {
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(1.5rem,5vw,2.6rem);
+            font-weight: 900; color: var(--white);
+            line-height: 1.15; letter-spacing: .04em;
+            text-shadow: 4px 4px 0 var(--gray-3), 8px 8px 0 rgba(0,0,0,.5);
+            margin-bottom: 1.2rem;
+        }
+        .post-desc {
+            font-size: clamp(.78rem,2vw,.9rem);
+            color: var(--fg-muted); line-height: 1.75;
+            padding-left: 1rem;
+            border-left: 3px solid var(--blue);
+        }
+        .divider {
+            height: 1px; margin: clamp(1.5rem,4vh,2.5rem) 0;
+            background: linear-gradient(90deg,transparent,var(--border-mid),transparent);
+        }
+
+        /* ── PROSE ── */
+        .prose { display: flex; flex-direction: column; gap: 0; }
+
+        .prose h2 {
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(1rem,2.8vw,1.3rem);
+            font-weight: 700; color: var(--white);
+            text-transform: uppercase; letter-spacing: 1.5px;
+            margin-top: clamp(2rem,5vh,3rem); margin-bottom: .9rem;
+            display: flex; align-items: center; gap: .65rem;
+        }
+        .prose h2::before {
+            content: '';
+            display: block; flex-shrink: 0;
+            width: 3px; height: 1.1em;
+            background: var(--blue); border-radius: 2px;
+        }
+        .prose h3 {
+            font-size: clamp(.8rem,2.2vw,.96rem);
+            font-weight: 700; color: var(--yellow);
+            margin-top: clamp(1.4rem,3vh,2rem); margin-bottom: .5rem;
+            letter-spacing: .5px;
+        }
+
+        .prose p {
+            font-size: clamp(.76rem,2vw,.88rem);
+            color: var(--fg-muted); line-height: 1.85;
+            margin-bottom: clamp(.9rem,2.5vh,1.3rem);
+        }
+        .prose strong { color: var(--fg); font-weight: 600; }
+        .prose em { color: var(--blue); font-style: italic; }
+
+        .prose ul, .prose ol {
+            margin: .4rem 0 clamp(.9rem,2.5vh,1.4rem) 0;
+            padding-left: 0; list-style: none;
+            display: flex; flex-direction: column; gap: .5rem;
+        }
+        .prose li {
+            font-size: clamp(.74rem,1.9vw,.86rem);
+            color: var(--fg-muted); line-height: 1.7;
+            display: flex; align-items: flex-start; gap: .65rem;
+            padding: .55rem .9rem;
+            background: var(--bg-field);
+            border: 1.5px solid var(--border);
+            border-radius: var(--r-sm);
+        }
+        .prose ul li::before { content:'›'; color:var(--blue); font-weight:700; font-size:1rem; line-height:1.5; flex-shrink:0; }
+        .prose ol { counter-reset: ol-c; }
+        .prose ol li { counter-increment: ol-c; }
+        .prose ol li::before { content:counter(ol-c, decimal-leading-zero); color:var(--blue); font-weight:700; font-size:.7rem; line-height:1.9; flex-shrink:0; letter-spacing:.5px; }
+        .prose li strong { color: var(--fg); }
+        .prose li code { font-size:.85em; }
+
+        .prose code {
+            font-family: 'JetBrains Mono', monospace; font-size:.88em;
+            color: var(--yellow);
+            background: rgba(250,189,47,.08);
+            border: 1px solid rgba(250,189,47,.22);
+            border-radius: var(--r-xs);
+            padding: 1px 7px;
+        }
+
+        /* ── CMD BLOCK ── */
+        .cmd-block {
+            background: var(--bg-field);
+            border: 2px solid var(--border-mid);
+            border-radius: var(--r);
+            overflow: hidden;
+            margin: clamp(.8rem,2.5vh,1.4rem) 0;
+            box-shadow: 4px 4px 0 var(--gray-3);
+        }
+        .cmd-bar {
+            display: flex; align-items: center; gap: 7px;
+            padding: .6rem 1rem;
+            background: var(--bg-raised);
+            border-bottom: 1.5px solid var(--border);
+        }
+        .cmd-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+        .cmd-dot.r { background:#ff5f57; }
+        .cmd-dot.y { background:#febc2e; }
+        .cmd-dot.g { background:var(--blue); }
+        .cmd-bar-title { font-size:clamp(.52rem,1.3vw,.6rem); color:var(--fg-dim); letter-spacing:1.2px; text-transform:uppercase; flex:1; }
+        .cmd-bar-lang { font-size:clamp(.5rem,1.2vw,.57rem); font-weight:700; color:var(--blue); letter-spacing:.8px; text-transform:uppercase; }
+        .cmd-body {
+            padding: clamp(.9rem,2vw,1.2rem) clamp(1rem,2.5vw,1.4rem);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(.68rem,1.8vw,.8rem);
+            color: var(--blue); line-height: 1.75;
+            overflow-x: auto;
+        }
+        .cmd-prompt  { color:var(--yellow); font-weight:700; margin-right:.4rem; }
+        .cmd-comment { color:var(--fg-dim); font-style:italic; }
+        .cmd-green   { color:var(--aqua); }
+        .cmd-orange  { color:var(--orange); }
+        .cmd-red     { color:var(--red); }
+        .cmd-white   { color:var(--fg); }
+        .cmd-cyan    { color:var(--blue); }
+        .cmd-yellow  { color:var(--yellow); }
+        .cmd-dim     { color:var(--fg-dim); }
+        .cmd-bold    { font-weight:700; }
+
+        /* ── CALLOUT ── */
+        .callout {
+            background: var(--bg-card);
+            border: 2px solid var(--border-mid);
+            border-radius: var(--r-lg);
+            overflow: hidden;
+            margin: clamp(1rem,3vh,2rem) 0;
+            box-shadow: 4px 4px 0 var(--gray-3);
+        }
+        .callout-stripe { height:3px; background:linear-gradient(90deg,var(--blue),var(--aqua)); }
+        .callout-inner { padding: clamp(1rem,3vw,1.5rem); }
+        .callout-head {
+            display: flex; align-items: center; gap:8px;
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(.65rem,1.7vw,.76rem); font-weight:700;
+            color: var(--white); text-transform:uppercase; letter-spacing:1.5px;
+            margin-bottom: .75rem;
+        }
+        .callout-head i         { color: var(--blue);   font-size:.8rem; }
+        .callout-head i.warn    { color: var(--red);    }
+        .callout-head i.tip     { color: var(--yellow); }
+        .callout-head i.success { color: var(--aqua);   }
+
+        /* ── STAT GRID ── */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: .8rem;
+            margin: clamp(1rem,3vh,1.8rem) 0;
+        }
+        .stat-card {
+            background: var(--bg-field);
+            border: 2px solid var(--border);
+            border-radius: var(--r);
+            padding: 1rem 1.2rem;
+            text-align: center;
+            box-shadow: 3px 3px 0 var(--gray-3);
+            transition: all .22s ease;
+        }
+        .stat-card:hover {
+            border-color: var(--acc-border);
+            transform: translate(-2px,-2px);
+            box-shadow: 5px 5px 0 var(--gray-2);
+        }
+        .stat-val { font-family:'Orbitron',monospace; font-size:clamp(1.1rem,4vw,1.7rem); font-weight:900; line-height:1; margin-bottom:.3rem; }
+        .stat-lbl { font-size:clamp(.52rem,1.3vw,.6rem); color:var(--fg-dim); text-transform:uppercase; letter-spacing:1px; }
+        .val-blue   { color:var(--blue); }
+        .val-yellow { color:var(--yellow); }
+        .val-aqua   { color:var(--aqua); }
+        .val-orange { color:var(--orange); }
+        .val-red    { color:var(--red); }
+
+        /* ── REF TABLE ── */
+        .ref-table {
+            width:100%; border-collapse:collapse;
+            margin: clamp(.8rem,2.5vh,1.4rem) 0;
+            font-size:clamp(.67rem,1.7vw,.77rem);
+        }
+        .ref-table th {
+            font-family:'Orbitron',monospace;
+            font-size:clamp(.52rem,1.3vw,.6rem);
+            color:var(--fg-dim); text-transform:uppercase; letter-spacing:1.2px;
+            padding:.55rem .9rem; border-bottom:2px solid var(--border-mid); text-align:left;
+        }
+        .ref-table td { padding:.5rem .9rem; color:var(--fg-muted); border-bottom:1px solid var(--border); }
+        .ref-table tr:hover td { background:var(--bg-field); }
+        .ref-table td:first-child { color:var(--yellow); font-weight:600; white-space:nowrap; }
+        .ref-table td:last-child  { color:var(--fg-dim); font-size:.9em; }
+
+        /* ── POST NAV ── */
+        .post-nav {
+            display: flex; align-items: center;
+            justify-content: space-between; flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: clamp(2.5rem,6vh,4rem);
+            padding-top: clamp(1.5rem,3vh,2rem);
+            border-top: 2px solid var(--border);
+        }
+        .post-nav-btn {
+            display: inline-flex; align-items: center; gap: .6rem;
+            font-size: clamp(.6rem,1.5vw,.7rem); font-weight: 700;
+            color: var(--fg-muted); text-decoration: none;
+            text-transform: uppercase; letter-spacing: 1.2px;
+            padding: .5rem 1.2rem;
+            border-radius: var(--r-pill);
+            border: 1.5px solid var(--border-mid);
+            background: var(--bg-card);
+            box-shadow: 2px 2px 0 var(--gray-3);
+            transition: all .22s ease;
+        }
+        .post-nav-btn:hover {
+            color: var(--blue);
+            border-color: var(--acc-border);
+            background: var(--acc-dim);
+            transform: translate(-2px,-1px);
+            box-shadow: 3px 3px 0 var(--gray-2);
+        }
+
+        ::-webkit-scrollbar { width:8px; }
+        ::-webkit-scrollbar-track { background:var(--black); }
+        ::-webkit-scrollbar-thumb { background:var(--gray-2); border-radius:var(--r-pill); }
+        ::-webkit-scrollbar-thumb:hover { background:var(--blue); }
+
+        @media (max-width: 600px) {
+            .post-title { font-size:1.4rem; }
+            .cmd-body   { font-size:.65rem; }
+            .stat-grid  { grid-template-columns:repeat(2,1fr); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="rainbow-bar" aria-hidden="true"></div>
+
+<nav class="nav" id="navbar">
+    <div class="nav-content">
+        <a href="../main.html" class="nav-logo"><i class="fas fa-terminal"></i>0xb0rn3</a>
+        <div style="display:flex;gap:.5rem;align-items:center;">
+            <a href="../main.html#about" class="nav-back" style="padding:.3rem .8rem;font-size:.62rem;"><i class="fas fa-home"></i></a>
+            <a href="../blog.html"       class="nav-back" style="padding:.3rem .8rem;font-size:.62rem;"><i class="fas fa-blog"></i></a>
+            <a href="../CTF.html"        class="nav-back" style="padding:.3rem .8rem;font-size:.62rem;"><i class="fas fa-trophy"></i></a>
+            <a href="../blog.html"       class="nav-back"><i class="fas fa-arrow-left"></i>Back to Blog</a>
+        </div>
+    </div>
+</nav>
+
+<main class="page">
+
+    <!-- ── HEADER ── -->
+    <header class="post-header">
+        <div class="post-meta-row">
+            <span class="meta-pill pill-dim"><i class="fas fa-calendar-alt"></i>April 2026</span>
+            <span class="meta-pill pill-dim"><i class="fas fa-clock"></i>~30 min read</span>
+            <span class="meta-pill pill-blue">Tools</span>
+            <span class="meta-pill pill-yellow">SecV</span>
+            <span class="meta-pill pill-orange">zephra</span>
+        </div>
+        <h1 class="post-title">SecV zephra — Official Documentation</h1>
+        <p class="post-desc">
+            The complete reference manual for SecV — a compiled Go shell that runs security modules
+            written in any language. Covers installation, every command, every module, the module
+            architecture, writing your own tools, and the update system.
+        </p>
+        <div class="post-meta-row" style="margin-top:.9rem;">
+            <span class="meta-pill pill-blue">SecV</span>
+            <span class="meta-pill pill-aqua">Go</span>
+            <span class="meta-pill pill-yellow">Python</span>
+            <span class="meta-pill pill-orange">Android</span>
+            <span class="meta-pill pill-red">iOS</span>
+            <span class="meta-pill pill-purple">Network</span>
+        </div>
+    </header>
+
+    <div class="divider"></div>
+
+    <div class="prose">
+
+        <!-- ── INTRO ── -->
+        <h2>The Problem With Security Frameworks</h2>
+        <p>
+            Every security framework has the same disease. They ship with a dependency tree the size of a small city,
+            demand you write tools in their language of choice, and bury your actual payloads under three layers
+            of abstraction that don't do anything except make the framework look impressive.
+            Metasploit is Ruby. Empire is PowerShell. Covenant is C#. If your best reconnaissance script is
+            Python and your fastest port scanner is a Bash one-liner, you're either rewriting them from scratch
+            or maintaining a separate workflow outside the framework entirely.
+        </p>
+        <p>
+            After years of this, the answer turns out to be stupidly simple: <strong>the shell doesn't need to care
+            what language your module is written in.</strong> It just needs to pass context to a process and stream
+            the output. JSON in on stdin. Results out on stdout. Everything else is your problem to solve in
+            whatever language you're best at.
+        </p>
+        <p>
+            That's SecV. This is how it works, how to use it, and how to build on top of it.
+            This release is codenamed <strong>zephra</strong>.
+        </p>
+
+        <div class="stat-grid">
+            <div class="stat-card">
+                <div class="stat-val val-blue">8ms</div>
+                <div class="stat-lbl">startup</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-val val-yellow">12MB</div>
+                <div class="stat-lbl">memory</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-val val-aqua">2.7MB</div>
+                <div class="stat-lbl">binary</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-val val-orange">any</div>
+                <div class="stat-lbl">language</div>
+            </div>
+        </div>
+
+        <!-- ── INSTALLATION ── -->
+        <h2>Installation</h2>
+        <p>
+            SecV requires Go 1.21+ to compile. The installer handles everything else — it detects your
+            distribution, installs missing tools, resolves Go module dependencies, compiles the binary,
+            and asks if you want a system-wide install. You do not need to install Go before running the installer;
+            it will prompt you and point you in the right direction if it's missing.
+        </p>
+
+        <div class="cmd-block">
+            <div class="cmd-bar">
+                <span class="cmd-dot r"></span>
+                <span class="cmd-dot y"></span>
+                <span class="cmd-dot g"></span>
+                <span class="cmd-bar-title">clone and install</span>
+                <span class="cmd-bar-lang">Bash</span>
+            </div>
+            <div class="cmd-body">
+<span class="cmd-prompt">$</span><span class="cmd-white"> git clone https://github.com/SecVulnHub/SecV.git</span>
+<span class="cmd-prompt">$</span><span class="cmd-white"> cd SecV</span>
+<span class="cmd-prompt">$</span><span class="cmd-white"> chmod +x install.sh && ./install.sh</span>
+            </div>
+        </div>
+
+        <p>
+            The installer runs in twelve steps. It checks Python, Java, Android RE tools (aapt, apktool, jadx),
+            the Go compiler, pip, Python dependencies, masscan, then compiles the binary and sets permissions.
+            On Arch Linux it will use yay (or paru/trizen) for AUR packages automatically.
+            At the end it asks whether to symlink the binary into <code>/usr/local/bin/secV</code>
+            so you can run it from anywhere.
+        </p>
+
+        <p>
+            To compile manually if you already have Go and have cloned the repo:
+        </p>
+
+        <div class="cmd-block">
+            <div class="cmd-bar">
+                <span class="cmd-dot r"></span>
+                <span class="cmd-dot y"></span>
+                <span class="cmd-dot g"></span>
+                <span class="cmd-bar-title">manual compilation</span>
+                <span class="cmd-bar-lang">Bash</span>
+            </div>
+            <div class="cmd-body">
+<span class="cmd-prompt">$</span><span class="cmd-white"> cd SecV</span>
+<span class="cmd-prompt">$</span><span class="cmd-white"> go mod tidy</span>
+<span class="cmd-prompt">$</span><span class="cmd-white"> go build -ldflags="-s -w" -o secV .</span>
+<span class="cmd-prompt">$</span><span class="cmd-white"> chmod +x secV</span>
+            </div>
+        </div>
+
+        <!-- ── FIRST LAUNCH ── -->
+        <h2>First Launch</h2>
+        <p>
+            Run <code>./secV</code> (or just <code>secV</code> if installed system-wide).
+            The screen clears, the ASCII banner drops, and SecV walks its <code>tools/</code> directory
+            looking for <code>module.json</code> files. Each one it finds becomes a loadable module.
+            The detected OS is printed below the banner — on Arch you'll see the distribution name and
+            the AUR helper it found (yay, paru, or trizen). This is used later for automatic dependency installation.
+        </p>
+
+        <div class="cmd-block">
+            <div class="cmd-bar">
+                <span class="cmd-dot r"></span>
+                <span class="cmd-dot y"></span>
+                <span class="cmd-dot g"></span>
+                <span class="cmd-bar-title">startup — Arch Linux with yay</span>
+                <span class="cmd-bar-lang">SecV</span>
+            </div>
+            <div class="cmd-body">
+<span class="cmd-cyan">╔═══════════════════════════════════════════════════════════════════╗
+║   ███████╗███████╗ ██████╗██╗   ██╗                             ║
+║   ██╔════╝██╔════╝██╔════╝██║   ██║                             ║
+║   ███████╗█████╗  ██║     ██║   ██║                             ║
+║   ╚════██║██╔══╝  ██║     ╚██╗ ██╔╝                             ║
+║   ███████║███████╗╚██████╗ ╚████╔╝                              ║
+║   ╚══════╝╚══════╝ ╚═════╝  ╚═══╝                               ║
+╚═══════════════════════════════════════════════════════════════════╝</span>
+<span class="cmd-dim">   v2.3.1</span>
+
+<span class="cmd-dim">  os   cachyos (yay)
+  path /home/user/SecV</span>
+
+<span class="cmd-green">✓</span> <span class="cmd-white">4 modules</span>  <span class="cmd-dim">type 'help' for commands</span>
+
+<span class="cmd-cyan cmd-bold">secV</span> <span class="cmd-white">❯</span>
+            </div>
+        </div>
+
+        <!-- ── THE PROMPT ── -->
+        <h2>The Prompt</h2>
+        <p>
+            The prompt changes state based on whether a module is loaded.
+            Without a module it shows <code>secV ❯</code>. Once you load a module with <code>use</code>,
+            it becomes <code>secV (modulename) ❯</code>. This tells you at a glance what context you're in,
+            and it updates immediately — no need to run any command to refresh it.
+        </p>
+        <p>
+            Tab completion is active at all times. At the base prompt, Tab shows every available command.
+            After typing <code>use</code> or <code>info</code> followed by a space, Tab shows all loaded module names.
+            After <code>show</code>, Tab completes to <code>modules</code> or <code>options</code>.
+            Command history is saved to <code>.cache/.history</code> and persists between sessions —
+            use the up arrow to recall previous commands.
+        </p>
+
+        <!-- ── COMMAND REFERENCE ── -->
+        <h2>Command Reference</h2>
+        <p>
+            Every command SecV understands, what it does, and when to use it.
+        </p>
+
+        <h3>use &lt;module&gt;</h3>
+        <p>
+            Loads a module by name. SecV finds the matching <code>module.json</code>, sets it as the
+            active context, clears any previously set parameters, and prints the module's category and version.
+            Immediately after loading, SecV checks every binary listed in the module's <code>dependencies</code>
+            field using <code>which</code>. If any are missing, it prints them and asks whether to install them
+            automatically using your system's package manager.
+        </p>
+
+        <div class="cmd-block">
+            <div class="cmd-bar">
+                <span class="cmd-dot r"></span>
+                <span class="cmd-dot y"></span>
+                <span class="cmd-dot g"></span>
+                <span class="cmd-bar-title">loading a module — dependency check on Arch</span>
+                <span class="cmd-bar-lang">SecV</span>
+            </div>
+            <div class="cmd-body">
+<span class="cmd-cyan cmd-bold">secV</span> <span class="cmd-white">❯ use android_pentest</span>
+<span class="cmd-green">✓</span> <span class="cmd-white">android_pentest</span>
+  <span class="cmd-dim">category  mobile</span>
+  <span class="cmd-dim">version   1.0.0</span>
+<span class="cmd-yellow">⚠ missing: adb</span>
+<span class="cmd-cyan">Install with pacman? [y/N]</span> <span class="cmd-white">y</span>
+  <span class="cmd-dim">installing android-tools...</span>
+<span class="cmd-green">✓  adb</span>
+<span class="cmd-cyan cmd-bold">secV</span> <span class="cmd-white">(android_pentest) ❯</span>
+            </div>
+        </div>
+
+        <p>
+            Module names are case-insensitive. The dependency installer maps binary names to their correct
+            package names per distro — typing <code>adb</code> in the module manifest installs
+            <code>android-tools</code> on Arch, <code>adb</code> on Debian/Ubuntu, and
+            <code>android-platform-tools</code> via Homebrew on macOS. You never need to know the package name,
+            only the binary name.
+        </p>
+
+        <h3>back</h3>
+        <p>
+            Unloads the current module and clears all set parameters. Returns the prompt to the base
+            <code>secV ❯</code> state. Use this when you're done with a module and want to load a different one,
+            or just to return to the top level. If no module is loaded, it prints a warning and does nothing.
+        </p>
+
+        <div class="cmd-block">
+            <div class="cmd-bar">
+                <span class="cmd-dot r"></span>
+                <span class="cmd-dot y"></span>
+                <span class="cmd-dot g"></span>
+                <span class="cmd-bar-title">unloading a module</span>
+                <span class="cmd-bar-lang">SecV</span>
+            </div>
+            <div class="cmd-body">
+<span class="cmd-cyan cmd-bold">secV</span> <span class="cmd-white">(netrecon) ❯ back</span>
+<span class="cmd-cyan cmd-bold">secV</span> <span class="cmd-white">❯</span>
+            </div>
+        </div>
+
+        <h3>set &lt;param&gt; &lt;value&gt;</h3>
+        <p>
+            Sets a parameter for the currently loaded module. Parameters are passed to the module as part
+            of the JSON context under the <code>params</code> key when you run it. Parameter names and values
+            are both strings — the module is responsible for parsing types. Values containing spaces are
+            supported: everything after the parameter name is treated as the value.
+            A module must be loaded before you can set parameters.
+        </p>
+
+        <div class="cmd-block">
+            <div class="cmd-bar">
+                <span class="cmd-dot r"></span>
+                <span class="cmd-dot y"></span>
+                <span class="cmd-dot g"></span>
+                <span class="cmd-bar-title">setting parameters</span>
+                <span class="cmd-bar-lang">SecV</span>
+            </div>
+            <div class="cmd-body">
+<span class="cmd-cyan cmd-bold">secV</span> <span class="cmd-white">(android_pentest) ❯ set operation app_scan</span>
+  <span class="cmd-white">operation</span> <span class="cmd-dim">→</span> <span class="cmd-yellow">app_scan</span>
+<span class="cmd-cyan cmd-bold">secV</span> <span class="cmd-white">(android_pentest) ❯ set package com.target.app</span>
+  <span class="cmd-white">package</span> <span class="cmd-dim">→</span> <span class="cmd-yellow">com.target.app</span>
+            </div>
+        </div>
+
+        <h3>unset &lt;param&gt;</h3>
+        <p>
+            Removes a previously set parameter. If the parameter name doesn't exist in the current parameter map,
+            it prints a warning. A module must be loaded. Use <code>show options</code> to see what's currently set.
+        </p>
+
+        <h3>run &lt;target&gt;</h3>
+        <p>
+            Executes the loaded module against the specified target. SecV builds a JSON object with
+            <code>"target"</code> set to your argument and <code>"params"</code> containing all parameters
+            you've set, writes it to the module's stdin, and streams stdout/stderr directly to your terminal.
+            The module's working directory is set to its own folder (where its files live), so relative paths
+            inside the module work correctly. When the module exits, SecV prints the elapsed time.
+        </p>
+
+        <div class="cmd-block">
+            <div class="cmd-bar">
+                <span class="cmd-dot r"></span>
+                <span class="cmd-dot y"></span>
+                <span class="cmd-dot g"></span>
+                <span class="cmd-bar-title">what gets sent to the module on stdin</span>
+                <span class="cmd-bar-lang">JSON</span>
+            </div>
+            <div class="cmd-body">
+<span class="cmd-dim">{</span>
+  <span class="cmd-yellow">"target"</span><span class="cmd-dim">:</span>  <span class="cmd-green">"device"</span><span class="cmd-dim">,</span>
+  <span class="cmd-yellow">"params"</span><span class="cmd-dim">: {</span>
+    <span class="cmd-yellow">"operation"</span><span class="cmd-dim">:</span> <span class="cmd-green">"app_scan"</span><span class="cmd-dim">,</span>
+    <span class="cmd-yellow">"package"</span><span class="cmd-dim">:</span>   <span class="cmd-green">"com.target.app"</span>
+  <span class="cmd-dim">}</span>
+<span class="cmd-dim">}</span>
+            </div>
+        </div>
+
+        <h3>show modules</h3>
+        <p>
+            Lists all discovered modules, grouped by category. Prints the module name and description for each.
+            Run <code>reload</code> first if you've added new modules since launching SecV.
+        </p>
+
+        <div class="cmd-block">
+            <div class="cmd-bar">
+                <span class="cmd-dot r"></span>
+                <span class="cmd-dot y"></span>
+                <span class="cmd-dot g"></span>
+                <span class="cmd-bar-title">listing all modules</span>
+                <span class="cmd-bar-lang">SecV</span>
+            </div>
+            <div class="cmd-body">
+<span class="cmd-cyan cmd-bold">secV</span> <span class="cmd-white">❯ show modules</span>
+
+<span class="cmd-dim">────────────────────────────────────────────────────────────</span>
+ <span class="cmd-white cmd-bold">modules</span>
+<span class="cmd-dim">────────────────────────────────────────────────────────────</span>
+
+<span class="cmd-yellow cmd-bold">mobile</span>
+<span class="cmd-dim">────────────────────────────────────────────────────────────</span>
+  <span class="cmd-cyan">android_pentest       </span> <span class="cmd-dim">Complete Android penetration testing suite...</span>
+  <span class="cmd-cyan">ios_pentest           </span> <span class="cmd-dim">iOS device security assessment via libimobil...</span>
+
+<span class="cmd-yellow cmd-bold">network</span>
+<span class="cmd-dim">────────────────────────────────────────────────────────────</span>
+  <span class="cmd-cyan">mac_spoof             </span> <span class="cmd-dim">MAC address spoofing and rotation</span>
+  <span class="cmd-cyan">netrecon              </span> <span class="cmd-dim">Concurrent multi-engine network profiling</span>
+
+<span class="cmd-dim">4 modules</span>
+            </div>
+        </div>
+
+        <h3>show options</h3>
+        <p>
+            Displays the currently loaded module's parameters — both what you've already set and what parameters
+            the module supports (from its <code>inputs</code> manifest). Required parameters are marked with
+            an asterisk. A module must be loaded.
+        </p>
+
+        <div class="cmd-block">
+            <div class="cmd-bar">
+                <span class="cmd-dot r"></span>
+                <span class="cmd-dot y"></span>
+                <span class="cmd-dot g"></span>
+                <span class="cmd-bar-title">checking current options</span>
+                <span class="cmd-bar-lang">SecV</span>
+            </div>
+            <div class="cmd-body">
+<span class="cmd-cyan cmd-bold">secV</span> <span class="cmd-white">(android_pentest) ❯ show options</span>
+
+<span class="cmd-dim">────────────────────────────────────────────────────────────</span>
+ <span class="cmd-white cmd-bold">android_pentest options</span>
+<span class="cmd-dim">────────────────────────────────────────────────────────────</span>
+<span class="cmd-dim">Complete Android penetration testing suite...</span>
+
+<span class="cmd-dim">params</span>
+  <span class="cmd-white">operation             </span> <span class="cmd-yellow">app_scan</span>
+  <span class="cmd-white">package               </span> <span class="cmd-yellow">com.target.app</span>
+
+<span class="cmd-dim">available</span>
+  <span class="cmd-white cmd-bold">operation</span>  <span class="cmd-dim">(string)</span>
+    <span class="cmd-dim">recon, app_scan, vuln_scan, exploit, network, forensics, full</span>
+  <span class="cmd-white cmd-bold">device</span>     <span class="cmd-dim">(string)</span>
+    <span class="cmd-dim">Android device serial (auto-detected if empty)</span>
+  <span class="cmd-white cmd-bold">package</span>    <span class="cmd-dim">(string)</span>
+    <span class="cmd-dim">Target package name for app-specific operations</span>
+            </div>
+        </div>
+
+        <h3>info [module]</h3>
+        <p>
+            Shows detailed information about a module — category, version, path, author, description,
+            dependency list, and which dependencies are currently missing on your system. If you run
+            <code>info</code> without an argument while a module is loaded, it shows info for the current module.
+            Pass a module name to inspect any module without loading it first.
+        </p>
+
+        <h3>search &lt;keyword&gt;</h3>
+        <p>
+            Searches all loaded modules by name, description, and category. Case-insensitive.
+            Useful when you have many modules and can't remember the exact name.
+        </p>
+
+        <div class="cmd-block">
+            <div class="cmd-bar">
+                <span class="cmd-dot r"></span>
+                <span class="cmd-dot y"></span>
+                <span class="cmd-dot g"></span>
+                <span class="cmd-bar-title">searching for modules</span>
+                <span class="cmd-bar-lang">SecV</span>
+            </div>
+            <div class="cmd-body">
+<span class="cmd-cyan cmd-bold">secV</span> <span class="cmd-white">❯ search android</span>
+  <span class="cmd-cyan">android_pentest</span>  <span class="cmd-dim">[mobile]</span>
+    <span class="cmd-dim">Complete Android penetration testing suite with device...</span>
+
+<span class="cmd-cyan cmd-bold">secV</span> <span class="cmd-white">❯ search network</span>
+  <span class="cmd-cyan">netrecon</span>  <span class="cmd-dim">[network]</span>
+    <span class="cmd-dim">Concurrent multi-engine network profiling</span>
+  <span class="cmd-cyan">mac_spoof</span>  <span class="cmd-dim">[network]</span>
+    <span class="cmd-dim">MAC address spoofing and rotation</span>
+            </div>
+        </div>
+
+        <h3>help</h3>
+        <p>
+            Prints the full command reference with a short description of each command,
+            grouped by function. Also shows the note about tab completion being active.
+        </p>
+
+        <h3>help module</h3>
+        <p>
+            Shows help for the currently loaded module. SecV first tries to run the module with
+            <code>--help</code> and checks whether the output contains a formatted help block
+            (identified by the <code>╔</code> character). If so, it passes that output through directly.
+            If not, it reads the <code>help</code> section from <code>module.json</code> and renders it:
+            description, parameters, examples, features, and notes. A module must be loaded.
+        </p>
+
+        <h3>reload</h3>
+        <p>
+            Re-scans the <code>tools/</code> directory for <code>module.json</code> files and rebuilds
+            the module list. Use this after adding new modules or after pulling an update.
+            After reloading, the tab completer is rebuilt immediately — new module names become
+            available in the <code>use</code> completion list without restarting SecV.
+        </p>
+
+        <h3>update</h3>
+        <p>
+            Launches the Python-based update system (<code>update.py</code>), which pulls the latest
+            changes from <code>https://github.com/secvulnhub/SecV.git</code>. If the repo isn't initialised
+            as a git repository, the updater initialises it and adds the remote automatically.
+            See the Update System section for the full update workflow.
+        </p>
+
+        <h3>clear</h3>
+        <p>
+            Clears the terminal screen. That's it. Does not change any state, does not unload any module.
+            The prompt reappears at the top of a clean screen.
+        </p>
+
+        <h3>exit &nbsp;/&nbsp; quit</h3>
+        <p>
+            Exits SecV. The readline library's EOF signal (Ctrl-D) also exits cleanly.
+            No confirmation required. Any set parameters and the loaded module are discarded —
+            SecV does not save session state between runs.
+        </p>
+
+        <!-- ── NETRECON ── -->
+        <h2>Module: netrecon</h2>
+        <p>
+            Network reconnaissance using four concurrent scan engines. nmap handles service detection
+            and OS fingerprinting. masscan handles raw port discovery at high rates. rustscan combines
+            fast discovery with nmap service detection. arp-scan handles local layer-2 discovery.
+            All four run simultaneously using goroutines; their results are merged into a single
+            host profile per IP address.
+        </p>
+        <p>
+            After scanning, open services are matched against a built-in CVE database. Matched CVEs are
+            enriched in real time via the NVD REST API v2 — pulling live CVSS scores, severity ratings,
+            and descriptions rather than relying solely on static data. Without an API key, NVD requests
+            are rate-limited to 5 per 30 seconds (6.5 second delay between requests). Set the
+            <code>NVDAPIKEY</code> environment variable to raise this to 50 per 30 seconds.
+        </p>
+
+        <h3>Apple and iOS Device Detection</h3>
+        <p>
+            iOS devices randomise their MAC address starting from iOS 14 (Private WiFi Address feature),
+            so OUI vendor lookup is unreliable for identifying iPhones. Port 62078 is the lockdownd daemon —
+            it only exists on iOS and macOS devices, and it's open whenever the device is on the network
+            and unlocked. SecV includes port 62078 in every scan preset, so any iPhone or iPad on the
+            network is identified automatically. When port 62078 is open, the host profile is tagged with
+            <code>device_type: iPhone/iPad</code> and <code>os_family: iOS</code>.
+        </p>
+        <p>
+            In parallel with port scanning, SecV probes mDNS via <code>avahi-browse</code> to pull Bonjour
+            hostnames and confirm device types from service records — useful for getting the device's actual
+            hostname even when DNS reverse lookup returns nothing.
+        </p>
+
+        <h3>Port Presets</h3>
+        <p>
+            The <code>ports</code> parameter accepts a preset name or a custom port spec.
+            All presets include port 62078 so Apple/iOS devices are always detected.
+        </p>
+
+        <table class="ref-table">
+            <thead>
+                <tr><th>Preset</th><th>Ports</th><th>Use For</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>quick</td><td>21,22,23,25,53,80,443,445,3389,62078</td><td>Fast first-look at any target</td></tr>
+                <tr><td>top-100</td><td>Top 100 most common + 62078</td><td>General network mapping</td></tr>
+                <tr><td>top-1000</td><td>Top 1000 most common + 62078</td><td>Thorough subnet sweep</td></tr>
+                <tr><td>common</td><td>Key services + 62078</td><td>Explicit common port list</td></tr>
+                <tr><td>web</td><td>80,443,8000–8443,9000–9200,3000</td><td>Web application discovery</td></tr>
+                <tr><td>database</td><td>MySQL,MSSQL,PostgreSQL,Redis,Mongo,etc.</td><td>Database exposure check</td></tr>
+                <tr><td>ios</td><td>62078,5000,7000,548,3689,49152,88,5353</td><td>Apple/iOS focused scan</td></tr>
+                <tr><td>all</td><td>1–65535</td><td>Full port sweep (slow)</td></tr>
+            </tbody>
+        </table>
+
+        <h3>Scan Modes</h3>
+        <table class="ref-table">
+            <thead>
+                <tr><th>Mode</th><th>What It Does</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>network</td><td>Full subnet scan — host discovery + port scan + service detection + CVE correlation</td></tr>
+                <tr><td>quick</td><td>Fast sweep with shorter timeouts, fewer ports, no script scanning</td></tr>
+                <tr><td>passive</td><td>Passive recon only — DNS, WHOIS, ASN, Shodan — no active port scans</td></tr>
+                <tr><td>single</td><td>Deep scan of one IP — service version detection, optional Nmap scripts</td></tr>
+            </tbody>
+        </table>
+
+        <div class="cmd-block">
+            <div class="cmd-bar">
+                <span class="cmd-dot r"></span>
+                <span class="cmd-dot y"></span>
+                <span class="cmd-dot g"></span>
+                <span class="cmd-bar-title">scanning a local network — finding an iPhone</span>
+                <span class="cmd-bar-lang">SecV</span>
+            </div>
+            <div class="cmd-body">
+<span class="cmd-cyan cmd-bold">secV</span> <span class="cmd-white">❯ use netrecon</span>
+<span class="cmd-green">✓</span> <span class="cmd-white">netrecon</span>
+<span class="cmd-cyan cmd-bold">secV</span> <span class="cmd-white">(netrecon) ❯ set mode network</span>
+<span class="cmd-cyan cmd-bold">secV</span> <span class="cmd-white">(netrecon) ❯ set ports top-100</span>
+<span class="cmd-cyan cmd-bold">secV</span> <span class="cmd-white">(netrecon) ❯ run 192.168.1.0/24</span>
+
+<span class="cmd-dim">scanning 192.168.1.0/24...</span>
+
+<span class="cmd-green">192.168.1.107</span>  <span class="cmd-white">iPhone/iPad</span>        <span class="cmd-dim">iOS · port 62078</span>
+<span class="cmd-green">192.168.1.1  </span>  <span class="cmd-white">router        </span>    <span class="cmd-dim">Linux · OpenWRT</span>
+<span class="cmd-green">192.168.1.241</span>  <span class="cmd-white">VM            </span>    <span class="cmd-dim">Linux · Kali</span>
+
+<span class="cmd-dim">CVE findings:</span>
+  <span class="cmd-red">CVE-2019-0708</span>  <span class="cmd-white">192.168.1.2:3389</span>  <span class="cmd-dim">CVSS 9.8  BlueKeep RDP pre-auth RCE</span>
+
+<span class="cmd-green">✓</span> <span class="cmd-dim">23.4s</span>
+            </div>
+        </div>
+
+        <h3>Additional Parameters</h3>
+        <table class="ref-table">
+            <thead><tr><th>Parameter</th><th>Value</th><th>Effect</th></tr></thead>
+            <tbody>
+                <tr><td>scripts</td><td>true / false</td><td>Run nmap vuln scripts (slower, more findings)</td></tr>
+                <tr><td>shodan_key</td><td>API key string</td><td>Enrich results with Shodan data</td></tr>
+                <tr><td>timeout</td><td>seconds (int)</td><td>Per-host scan timeout</td></tr>
+                <tr><td>rate</td><td>packets/sec</td><td>masscan transmission rate</td></tr>
+                <tr><td>passive</td><td>true / false</td><td>Disable active probes entirely</td></tr>
+                <tr><td>nvd_api_key</td><td>API key string</td><td>Higher NVD rate limit for CVE enrichment</td></tr>
+            </tbody>
+        </table>
+
+        <!-- ── ANDROID ── -->
+        <h2>Module: android_pentest</h2>
+        <p>
+            A complete Android security assessment suite. It operates in seven modes covering the full
+            OWASP Mobile Top 10. The module uses ADB for device interaction and apktool/aapt for static
+            APK analysis. CVE checks pull live data from NVD when triggered. Non-ADB attack surface
+            mapping (Bluetooth, NFC, WiFi P2P, network services, WebView, tapjacking) runs without
+            requiring any specific app to be targeted.
+        </p>
+
+        <div class="callout">
+            <div class="callout-stripe"></div>
+            <div class="callout-inner">
+                <div class="callout-head"><i class="fas fa-mobile-alt"></i>Prerequisites</div>
+                <ul style="margin:0;">
+                    <li><strong>USB debugging enabled</strong> — Settings → Developer Options → USB Debugging</li>
+                    <li><strong>adb installed</strong> — SecV installs <code>android-tools</code> automatically on first use</li>
+                    <li><strong>Authorization accepted</strong> — Tap "Allow" on the device when the ADB authorization dialog appears</li>
+                    <li><strong>apktool + aapt</strong> — Required for <code>app_scan</code> operation; SecV prompts to install if missing</li>
+                </ul>
+            </div>
+        </div>
+
+        <h3>Operations</h3>
+        <table class="ref-table">
+            <thead><tr><th>Operation</th><th>What It Does</th></tr></thead>
+            <tbody>
+                <tr><td>recon</td><td>Device fingerprint — model, SDK level, security patch date, root status, bootloader, SELinux, screen lock, developer mode, USB debugging, ADB over network, kernel version, build ID</td></tr>
+                <tr><td>app_scan</td><td>Static APK analysis — pulls APK from device, decodes manifest, scans permissions (50+ dangerous flags), exported components, WebView config, cleartext traffic, backup flag, debuggable flag, certificate analysis, security score 0–100, secret scanning in decompiled smali</td></tr>
+                <tr><td>vuln_scan</td><td>Full vulnerability scan — device config weaknesses, 14+ CVE checks with NVD enrichment, installed app inventory for known-vulnerable apps, network service exposure on ports 5555/27042/27043/8080</td></tr>
+                <tr><td>exploit</td><td>Non-destructive exploitation tests — intent injection, SQL injection in content providers, path traversal, exported component manipulation, activity launching attacks</td></tr>
+                <tr><td>network</td><td>Network traffic analysis — tcpdump capture (requires root), protocol breakdown, HTTP/HTTPS detection, DNS query monitoring, insecure connection identification</td></tr>
+                <tr><td>forensics</td><td>Data extraction — system config files, app databases, SharedPreferences, system logs (main/system/crash), SMS/contacts (requires root), PII detection in logs</td></tr>
+                <tr><td>full</td><td>Runs all operations in sequence — complete penetration test report</td></tr>
+            </tbody>
+        </table>
+
+        <h3>CVE Database (2016–2026)</h3>
+        <p>
+            The CVE check compares the device's Android SDK level and security patch date against a list
+            of known vulnerabilities. Any CVE that the device's version and patch level is susceptible to
+            triggers a live NVD lookup — the result includes the real CVSS v3 score, severity, description,
+            and published date from NVD rather than the static description in the codebase.
+        </p>
+
+        <table class="ref-table">
+            <thead><tr><th>CVE</th><th>Severity</th><th>Vulnerability</th><th>Fix</th></tr></thead>
+            <tbody>
+                <tr><td>CVE-2025-27363</td><td style="color:var(--red)">CRITICAL</td><td>FreeType OOB write, exploited in the wild</td><td>2025-03 patch</td></tr>
+                <tr><td>CVE-2024-45569</td><td style="color:var(--red)">CRITICAL</td><td>Qualcomm WLAN OOB write, remote, CVSS 9.8</td><td>2024-10 patch</td></tr>
+                <tr><td>CVE-2024-31317</td><td style="color:var(--red)">CRITICAL</td><td>Zygote RCE via ActivityManager</td><td>2024-05 patch</td></tr>
+                <tr><td>CVE-2024-0044</td><td style="color:var(--red)">CRITICAL</td><td>run-as sandbox bypass (Android 12–14)</td><td>2024-03 patch</td></tr>
+                <tr><td>CVE-2024-49415</td><td style="color:var(--orange)">HIGH</td><td>Samsung libsaped pre-auth RCE</td><td>2024-12 patch</td></tr>
+                <tr><td>CVE-2024-44068</td><td style="color:var(--orange)">HIGH</td><td>Samsung m2m scaler priv esc, ITW</td><td>2024-10 patch</td></tr>
+                <tr><td>CVE-2024-43047</td><td style="color:var(--orange)">HIGH</td><td>Qualcomm DSP UAF, exploited in the wild</td><td>2024-10 patch</td></tr>
+                <tr><td>CVE-2023-40088</td><td style="color:var(--orange)">HIGH</td><td>Bluetooth RCE in Android 11–13</td><td>2023-12 patch</td></tr>
+                <tr><td>CVE-2023-20963</td><td style="color:var(--orange)">HIGH</td><td>WorkSource parcel mismatch priv esc</td><td>2023-03 patch</td></tr>
+                <tr><td>CVE-2021-0954</td><td style="color:var(--red)">CRITICAL</td><td>StrandHogg 2.0 task hijack</td><td>Android 11+</td></tr>
+                <tr><td>CVE-2020-0041</td><td style="color:var(--red)">CRITICAL</td><td>Binder priv esc, CVSS 9.8</td><td>2020-03 patch</td></tr>
+                <tr><td>CVE-2019-2215</td><td style="color:var(--orange)">HIGH</td><td>Binder UAF, exploited ITW</td><td>2019-10 patch</td></tr>
+                <tr><td>CVE-2017-0781</td><td style="color:var(--red)">CRITICAL</td><td>BlueBorne Bluetooth RCE</td><td>2017-09 patch</td></tr>
+                <tr><td>CVE-2016-5195</td><td style="color:var(--red)">CRITICAL</td><td>Dirty COW kernel priv esc</td><td>Kernel ≥4.8.3</td></tr>
+            </tbody>
+        </table>
+
+        <h3>Secret Scanning</h3>
+        <p>
+            During <code>app_scan</code>, SecV decodes the APK twice using a dual-directory strategy.
+            The first pass decodes with <code>-s</code> (skip smali) to get the binary manifest as text XML
+            and resources. The second pass decodes with <code>--no-res</code> (skip resources) to get the
+            smali bytecode for deep secret scanning. Both output directories are scanned.
+            Pattern matching uses context-anchored regexes — bare hex strings and base64 blocks don't trigger;
+            only values in assignment context (<code>key=</code>, <code>secret=</code>, <code>token=</code>, etc.)
+            are flagged. This eliminates thousands of false positives that plague naive implementations.
+        </p>
+
+        <table class="ref-table">
+            <thead><tr><th>Pattern</th><th>Detects</th></tr></thead>
+            <tbody>
+                <tr><td>AWS_KEY</td><td>AKIA... access key IDs</td></tr>
+                <tr><td>PRIVATE_KEY</td><td>PEM private key headers</td></tr>
+                <tr><td>JWT</td><td>JSON Web Tokens (eyJ...)</td></tr>
+                <tr><td>GOOGLE_KEY</td><td>AIza... Google API keys</td></tr>
+                <tr><td>STRIPE_KEY</td><td>sk_live_/pk_live_ Stripe keys</td></tr>
+                <tr><td>GITHUB_TOKEN</td><td>ghp_ GitHub personal access tokens</td></tr>
+                <tr><td>API_KEY</td><td>api_key=, apikey= assignments ≥20 chars</td></tr>
+                <tr><td>PASSWORD</td><td>password=, passwd= assignments ≥8 chars</td></tr>
+                <tr><td>SECRET_TOKEN</td><td>secret=, token=, auth_token= assignments ≥16 chars</td></tr>
+                <tr><td>HARDCODED_KEY</td><td>key=, salt=, iv= with hex value 32–64 chars</td></tr>
+                <tr><td>HARDCODED_B64</td><td>key=, cert= with base64 value ≥44 chars</td></tr>
+                <tr><td>PEM_CERT</td><td>BEGIN CERTIFICATE headers</td></tr>
+            </tbody>
+        </table>
+
+        <div class="cmd-block">
+            <div class="cmd-bar">
+                <span class="cmd-dot r"></span>
+                <span class="cmd-dot y"></span>
+                <span class="cmd-dot g"></span>
+                <span class="cmd-bar-title">full application security scan workflow</span>
+                <span class="cmd-bar-lang">SecV</span>
+            </div>
+            <div class="cmd-body">
+<span class="cmd-cyan cmd-bold">secV</span> <span class="cmd-white">❯ use android_pentest</span>
+<span class="cmd-green">✓</span> <span class="cmd-white">android_pentest</span>
+<span class="cmd-cyan cmd-bold">secV</span> <span class="cmd-white">(android_pentest) ❯ set operation app_scan</span>
+<span class="cmd-cyan cmd-bold">secV</span> <span class="cmd-white">(android_pentest) ❯ set package com.target.app</span>
+<span class="cmd-cyan cmd-bold">secV</span> <span class="cmd-white">(android_pentest) ❯ run device</span>
+
+<span class="cmd-dim">pulling APK from device...</span>
+<span class="cmd-dim">decoding manifest (apktool)...</span>
+<span class="cmd-dim">scanning smali for secrets...</span>
+<span class="cmd-dim">fetching NVD data for triggered CVEs...</span>
+
+<span class="cmd-red">[CRITICAL]</span> <span class="cmd-white">android:debuggable="true" — app is debuggable in production</span>
+<span class="cmd-red">[CRITICAL]</span> <span class="cmd-white">AWS_KEY found in smali: AKIA4EXAMPLE...</span>
+<span class="cmd-yellow">[HIGH]    </span> <span class="cmd-white">android:allowBackup="true" — ADB backup enabled</span>
+<span class="cmd-yellow">[HIGH]    </span> <span class="cmd-white">cleartext traffic allowed (usesCleartextTraffic)</span>
+<span class="cmd-yellow">[HIGH]    </span> <span class="cmd-white">CVE-2024-0044 CVSS 6.7 — run-as sandbox bypass</span>
+<span class="cmd-orange">[MEDIUM]  </span> <span class="cmd-white">17 exported components without permission protection</span>
+
+<span class="cmd-dim">security score: 23/100</span>
+<span class="cmd-green">✓</span> <span class="cmd-dim">84.2s</span>
+            </div>
+        </div>
+
+        <!-- ── iOS ── -->
+        <h2>Module: ios_pentest</h2>
+        <p>
+            iOS security assessment via libimobiledevice — no Xcode, no Mac required.
+            Connects to the device over USB using the Apple lockdown protocol.
+            The module checks device security posture, enumerates installed applications,
+            reads entitlements, checks ATS configuration, and looks for jailbreak indicators.
+            CVE checks compare the device's iOS version against a database of known vulnerabilities,
+            then enriches triggered entries with live NVD data.
+        </p>
+
+        <div class="callout">
+            <div class="callout-stripe"></div>
+            <div class="callout-inner">
+                <div class="callout-head"><i class="fas fa-mobile-alt"></i>Prerequisites</div>
+                <ul style="margin:0;">
+                    <li><strong>libimobiledevice</strong> — Install via pacman: <code>sudo pacman -S libimobiledevice</code></li>
+                    <li><strong>USB connected + trusted</strong> — Plug in the device, tap "Trust This Computer" when prompted</li>
+                    <li><strong>Developer Mode (iOS 16+)</strong> — Settings → Privacy &amp; Security → Developer Mode</li>
+                    <li><strong>ideviceinfo working</strong> — Run <code>ideviceinfo</code> to verify the connection before starting</li>
+                </ul>
+            </div>
+        </div>
+
+        <h3>Operations</h3>
+        <table class="ref-table">
+            <thead><tr><th>Operation</th><th>What It Does</th></tr></thead>
+            <tbody>
+                <tr><td>recon</td><td>Device identification — model, iOS version, build, architecture, ECID, serial, WiFi/BT MAC, activation state, developer mode status</td></tr>
+                <tr><td>security</td><td>Security posture — passcode/biometric status, encryption, lock screen timeout, developer mode, jailbreak check, security recommendations</td></tr>
+                <tr><td>apps</td><td>App inventory — bundle IDs, display names, versions, entitlements (dangerous entitlements flagged), ATS configuration per app</td></tr>
+                <tr><td>vuln_scan</td><td>CVE checks against iOS version + live NVD enrichment + jailbreak exploitation paths</td></tr>
+                <tr><td>full</td><td>All of the above in sequence</td></tr>
+            </tbody>
+        </table>
+
+        <h3>Jailbreak Detection</h3>
+        <p>
+            The jailbreak check looks for file system indicators that exist only on jailbroken devices:
+            Cydia (<code>/Applications/Cydia.app</code>), Sileo, Zebra, Filza, checkra1n artifacts,
+            unc0ver markers, palera1n artifacts, and custom dyld cache locations. It also checks for
+            non-standard <code>sshd</code> and <code>dropbear</code> processes and non-AppStore executable
+            paths. These checks run even on non-jailbroken devices — the purpose is to determine
+            <em>whether</em> the device is jailbroken, not to require that it is.
+        </p>
+        <p>
+            When a jailbreak is detected, the module documents the additional exploitation paths available:
+            SSH access over USB (port 22 via usbmuxd), full filesystem access, runtime patching via Frida,
+            SSL pinning bypass with objection, and access to the app container filesystem.
+        </p>
+
+        <h3>iOS 26 and Calendar Versioning</h3>
+        <p>
+            Apple moved to calendar-year versioning starting in 2026. iOS 26 = 2026.
+            All static CVEs in the database have fix versions up to iOS 18.4.1 — they correctly
+            do not trigger on iOS 26 because the fixed version (e.g. <code>(18, 5)</code>) is numerically
+            below the running version (26). For iOS 26 and later, the module automatically runs a live
+            NVD keyword search for <code>"iOS 26 kernel"</code> to catch post-cutoff CVEs with CVSS ≥ 7.0.
+        </p>
+
+        <h3>CVE Database</h3>
+        <table class="ref-table">
+            <thead><tr><th>CVE</th><th>Severity</th><th>Vulnerability</th><th>Fixed In</th></tr></thead>
+            <tbody>
+                <tr><td>CVE-2025-31200</td><td style="color:var(--red)">CRITICAL 9.8</td><td>CoreAudio memory corruption, zero-click RCE, ITW</td><td>iOS 18.4.1</td></tr>
+                <tr><td>CVE-2025-31201</td><td style="color:var(--red)">CRITICAL</td><td>RPAC pointer authentication bypass, ITW</td><td>iOS 18.4.1</td></tr>
+                <tr><td>CVE-2025-24085</td><td style="color:var(--red)">CRITICAL 10.0</td><td>CoreMedia UAF, arbitrary code execution, ITW</td><td>iOS 18.3</td></tr>
+                <tr><td>CVE-2025-24201</td><td style="color:var(--red)">CRITICAL</td><td>WebKit OOB write, sandbox escape, ITW</td><td>iOS 18.3.2</td></tr>
+                <tr><td>CVE-2025-24206</td><td style="color:var(--orange)">HIGH 7.7</td><td>Authentication bypass</td><td>iOS 18.4</td></tr>
+                <tr><td>CVE-2025-30456</td><td style="color:var(--orange)">HIGH 7.8</td><td>Path traversal → root priv esc</td><td>iOS 18.4</td></tr>
+                <tr><td>CVE-2024-23296</td><td style="color:var(--red)">CRITICAL</td><td>RTKit OOB write, exploited ITW</td><td>iOS 17.4</td></tr>
+                <tr><td>CVE-2024-23225</td><td style="color:var(--red)">CRITICAL</td><td>Kernel memory corruption</td><td>iOS 17.4</td></tr>
+                <tr><td>CVE-2024-23222</td><td style="color:var(--red)">CRITICAL</td><td>JavaScriptCore type confusion, RCE</td><td>iOS 17.3</td></tr>
+                <tr><td>CVE-2023-42917</td><td style="color:var(--red)">CRITICAL</td><td>WebKit memory corruption, ITW</td><td>iOS 17.1.2</td></tr>
+                <tr><td>CVE-2023-42824</td><td style="color:var(--orange)">HIGH</td><td>XNU kernel priv esc, ITW</td><td>iOS 17.0.3</td></tr>
+                <tr><td>CVE-2023-32434</td><td style="color:var(--red)">CRITICAL</td><td>Integer overflow in kernel, ITW</td><td>iOS 16.5.1</td></tr>
+            </tbody>
+        </table>
+
+        <div class="cmd-block">
+            <div class="cmd-bar">
+                <span class="cmd-dot r"></span>
+                <span class="cmd-dot y"></span>
+                <span class="cmd-dot g"></span>
+                <span class="cmd-bar-title">full iOS assessment workflow</span>
+                <span class="cmd-bar-lang">SecV</span>
+            </div>
+            <div class="cmd-body">
+<span class="cmd-cyan cmd-bold">secV</span> <span class="cmd-white">❯ use ios_pentest</span>
+<span class="cmd-green">✓</span> <span class="cmd-white">ios_pentest</span>
+<span class="cmd-cyan cmd-bold">secV</span> <span class="cmd-white">(ios_pentest) ❯ set operation full</span>
+<span class="cmd-cyan cmd-bold">secV</span> <span class="cmd-white">(ios_pentest) ❯ run device</span>
+
+<span class="cmd-dim">connecting to device...</span>
+<span class="cmd-white">iPhone 11 (iPhone12,1) — iOS 26.3.1 — arm64e (A13)</span>
+<span class="cmd-dim">developer mode: enabled</span>
+<span class="cmd-dim">jailbreak check: no indicators found</span>
+<span class="cmd-dim">checking iOS 26 CVEs via NVD live search...</span>
+
+<span class="cmd-red">[CRITICAL 9.8]</span> <span class="cmd-white">CVE-2025-31200 — CoreAudio RCE (NVD live)</span>
+<span class="cmd-dim">                   Published: 2025-05-01  CVSS: 9.8</span>
+
+<span class="cmd-dim">apps enumerated: 47</span>
+<span class="cmd-orange">[HIGH]</span> <span class="cmd-white">com.example.app — com.apple.security.get-task-allow entitlement</span>
+<span class="cmd-orange">[HIGH]</span> <span class="cmd-white">com.another.app — ATS disabled (NSAllowsArbitraryLoads: true)</span>
+<span class="cmd-green">✓</span> <span class="cmd-dim">43.1s</span>
+            </div>
+        </div>
+
+        <!-- ── MAC SPOOF ── -->
+        <h2>Module: mac_spoof</h2>
+        <p>
+            MAC address spoofing and rotation for network interfaces. Generates locally-administered
+            unicast addresses (bit 1 set, bit 0 clear in the first byte), applies them to the
+            specified interface, and optionally runs a background daemon that rotates the address
+            at a configured interval. State is persisted so the original MAC can always be restored.
+            Requires root.
+        </p>
+
+        <div class="cmd-block">
+            <div class="cmd-bar">
+                <span class="cmd-dot r"></span>
+                <span class="cmd-dot y"></span>
+                <span class="cmd-dot g"></span>
+                <span class="cmd-bar-title">MAC rotation every 5 minutes on wlan0</span>
+                <span class="cmd-bar-lang">SecV</span>
+            </div>
+            <div class="cmd-body">
+<span class="cmd-prompt">$</span><span class="cmd-white"> sudo secV</span>
+<span class="cmd-cyan cmd-bold">secV</span> <span class="cmd-white">❯ use mac_spoof</span>
+<span class="cmd-cyan cmd-bold">secV</span> <span class="cmd-white">(mac_spoof) ❯ set iface wlan0</span>
+<span class="cmd-cyan cmd-bold">secV</span> <span class="cmd-white">(mac_spoof) ❯ set interval 300</span>
+<span class="cmd-cyan cmd-bold">secV</span> <span class="cmd-white">(mac_spoof) ❯ run localhost</span>
+            </div>
+        </div>
+
+        <!-- ── MODULE ARCHITECTURE ── -->
+        <h2>Module Architecture</h2>
+        <p>
+            Every module is a self-contained directory inside <code>tools/</code>. SecV discovers them by
+            walking the directory tree and finding every <code>module.json</code> file.
+            The directory structure is entirely up to you — SecV doesn't care about nesting depth.
+            A module at <code>tools/mobile/android/android_pentest/module.json</code> is the same as one at
+            <code>tools/my_tool/module.json</code>. The <code>module.json</code> defines the name, not the path.
+        </p>
+
+        <h3>module.json — All Fields</h3>
+        <table class="ref-table">
+            <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+            <tbody>
+                <tr><td>name</td><td>string</td><td>yes</td><td>Unique module identifier. Used in <code>use</code> and tab completion.</td></tr>
+                <tr><td>version</td><td>string</td><td>yes</td><td>Semantic version string.</td></tr>
+                <tr><td>category</td><td>string</td><td>yes</td><td>Groups modules in <code>show modules</code>.</td></tr>
+                <tr><td>description</td><td>string</td><td>yes</td><td>One-line description shown in module listings.</td></tr>
+                <tr><td>author</td><td>string</td><td>no</td><td>Shown in <code>info</code>.</td></tr>
+                <tr><td>executable</td><td>string</td><td>yes</td><td>Shell command to run the module. Examples: <code>python3 main.py</code>, <code>./scanner</code>, <code>bash run.sh</code></td></tr>
+                <tr><td>dependencies</td><td>array</td><td>no</td><td>Binary names to check with <code>which</code>. SecV maps them to correct package names per distro.</td></tr>
+                <tr><td>optional_dependencies</td><td>object</td><td>no</td><td>Map of binary → description string. Shown in <code>info</code> but not checked at load time.</td></tr>
+                <tr><td>inputs</td><td>object</td><td>no</td><td>Parameter schema. Each key is a param name; value has <code>type</code>, <code>description</code>, <code>required</code>, <code>default</code>. Shown in <code>show options</code>.</td></tr>
+                <tr><td>outputs</td><td>object</td><td>no</td><td>Output field descriptions. Documentation only.</td></tr>
+                <tr><td>timeout</td><td>integer</td><td>no</td><td>Not enforced by the loader in this version — handled by the module itself.</td></tr>
+                <tr><td>help</td><td>object</td><td>no</td><td>Rendered by <code>help module</code> — contains <code>description</code>, <code>parameters</code>, <code>examples</code>, <code>features</code>, <code>notes</code>.</td></tr>
+            </tbody>
+        </table>
+
+        <div class="callout">
+            <div class="callout-stripe" style="background:linear-gradient(90deg,var(--yellow),var(--orange));"></div>
+            <div class="callout-inner">
+                <div class="callout-head"><i class="fas fa-lightbulb tip"></i>Dependency naming</div>
+                <p style="font-size:clamp(.74rem,1.9vw,.84rem);color:var(--fg-muted);margin:0;">
+                    Always list <strong>binary names</strong> in <code>dependencies</code>, not package names.
+                    <code>"adb"</code> — not <code>"android-tools"</code> and not <code>"android-tools-adb"</code>.
+                    SecV's built-in mapping translates binary names to the correct package for each distro.
+                    If your binary isn't in the mapping, it falls back to using the binary name as the package name,
+                    which works for most tools with consistent naming across distros.
+                </p>
+            </div>
+        </div>
+
+        <!-- ── WRITING A MODULE ── -->
+        <h2>Writing a Module</h2>
+        <p>
+            The contract is minimal. SecV writes a JSON object to your module's stdin, then streams
+            your stdout to the terminal. Your module reads, processes, and outputs. That's it.
+            There's no SDK, no import, no base class. Write it in whatever language runs on the machine.
+        </p>
+
+        <h3>Python Example</h3>
+
+        <div class="cmd-block">
+            <div class="cmd-bar">
+                <span class="cmd-dot r"></span>
+                <span class="cmd-dot y"></span>
+                <span class="cmd-dot g"></span>
+                <span class="cmd-bar-title">tools/scanning/my-scanner/scanner.py</span>
+                <span class="cmd-bar-lang">Python</span>
+            </div>
+            <div class="cmd-body">
+<span class="cmd-comment">#!/usr/bin/env python3</span>
+<span class="cmd-white">import json, sys</span>
+
+<span class="cmd-white">ctx    = json.loads(sys.stdin.read())</span>
+<span class="cmd-white">target = ctx[</span><span class="cmd-green">"target"</span><span class="cmd-white">]</span>
+<span class="cmd-white">params = ctx.get(</span><span class="cmd-green">"params"</span><span class="cmd-white">, {})</span>
+<span class="cmd-white">ports  = params.get(</span><span class="cmd-green">"ports"</span><span class="cmd-white">, </span><span class="cmd-green">"1-1000"</span><span class="cmd-white">)</span>
+
+<span class="cmd-comment"># your logic here</span>
+
+<span class="cmd-white">print(json.dumps({</span>
+    <span class="cmd-green">"success"</span><span class="cmd-white">: </span><span class="cmd-orange">True</span><span class="cmd-white">,</span>
+    <span class="cmd-green">"data"</span><span class="cmd-white">:    {</span><span class="cmd-green">"target"</span><span class="cmd-white">: target, </span><span class="cmd-green">"ports"</span><span class="cmd-white">: ports}</span>
+<span class="cmd-white">}))</span>
+            </div>
+        </div>
+
+        <h3>Bash Example</h3>
+
+        <div class="cmd-block">
+            <div class="cmd-bar">
+                <span class="cmd-dot r"></span>
+                <span class="cmd-dot y"></span>
+                <span class="cmd-dot g"></span>
+                <span class="cmd-bar-title">tools/network/my-tool/run.sh</span>
+                <span class="cmd-bar-lang">Bash</span>
+            </div>
+            <div class="cmd-body">
+<span class="cmd-comment">#!/usr/bin/env bash</span>
+<span class="cmd-white">input=$(cat)                                              </span><span class="cmd-comment"># read stdin</span>
+<span class="cmd-white">target=$(echo "$input" | jq -r '.target')</span>
+<span class="cmd-white">ports=$(echo "$input"  | jq -r '.params.ports // "top-100"')</span>
+
+<span class="cmd-comment"># your logic</span>
+<span class="cmd-white">nmap -p "$ports" "$target"</span>
+
+<span class="cmd-comment"># optional JSON result</span>
+<span class="cmd-white">jq -n --arg t "$target" '{success: true, data: {target: $t}}'</span>
+            </div>
+        </div>
+
+        <h3>The module.json for the above</h3>
+
+        <div class="cmd-block">
+            <div class="cmd-bar">
+                <span class="cmd-dot r"></span>
+                <span class="cmd-dot y"></span>
+                <span class="cmd-dot g"></span>
+                <span class="cmd-bar-title">tools/scanning/my-scanner/module.json</span>
+                <span class="cmd-bar-lang">JSON</span>
+            </div>
+            <div class="cmd-body">
+<span class="cmd-dim">{</span>
+  <span class="cmd-yellow">"name"</span><span class="cmd-dim">:</span>        <span class="cmd-green">"my-scanner"</span><span class="cmd-dim">,</span>
+  <span class="cmd-yellow">"version"</span><span class="cmd-dim">:</span>     <span class="cmd-green">"1.0.0"</span><span class="cmd-dim">,</span>
+  <span class="cmd-yellow">"category"</span><span class="cmd-dim">:</span>    <span class="cmd-green">"scanning"</span><span class="cmd-dim">,</span>
+  <span class="cmd-yellow">"description"</span><span class="cmd-dim">:</span> <span class="cmd-green">"Brief description"</span><span class="cmd-dim">,</span>
+  <span class="cmd-yellow">"author"</span><span class="cmd-dim">:</span>      <span class="cmd-green">"you"</span><span class="cmd-dim">,</span>
+  <span class="cmd-yellow">"executable"</span><span class="cmd-dim">:</span>  <span class="cmd-green">"python3 scanner.py"</span><span class="cmd-dim">,</span>
+  <span class="cmd-yellow">"dependencies"</span><span class="cmd-dim">:</span> [<span class="cmd-green">"python3"</span><span class="cmd-dim">,</span> <span class="cmd-green">"nmap"</span>]<span class="cmd-dim">,</span>
+  <span class="cmd-yellow">"inputs"</span><span class="cmd-dim">: {</span>
+    <span class="cmd-yellow">"ports"</span><span class="cmd-dim">: {</span>
+      <span class="cmd-yellow">"type"</span><span class="cmd-dim">:</span>        <span class="cmd-green">"string"</span><span class="cmd-dim">,</span>
+      <span class="cmd-yellow">"description"</span><span class="cmd-dim">:</span> <span class="cmd-green">"Port range or preset"</span><span class="cmd-dim">,</span>
+      <span class="cmd-yellow">"default"</span><span class="cmd-dim">:</span>     <span class="cmd-green">"top-100"</span>
+    <span class="cmd-dim">}</span>
+  <span class="cmd-dim">},</span>
+  <span class="cmd-yellow">"timeout"</span><span class="cmd-dim">:</span> <span class="cmd-orange">120</span>
+<span class="cmd-dim">}</span>
+            </div>
+        </div>
+
+        <h3>Graceful Degradation</h3>
+        <p>
+            The golden rule: your module must not crash with an unhandled exception printed to stdout.
+            SecV streams your stdout directly to the terminal. If an exception stack trace lands there,
+            the output is broken and the run looks like a failure even if partial results exist.
+            Send errors to stderr. Catch exceptions. If an optional dependency is missing, skip that
+            check and continue. The module that runs quietly with reduced functionality is always
+            better than the one that aborts with a traceback.
+        </p>
+
+        <div class="cmd-block">
+            <div class="cmd-bar">
+                <span class="cmd-dot r"></span>
+                <span class="cmd-dot y"></span>
+                <span class="cmd-dot g"></span>
+                <span class="cmd-bar-title">graceful optional dependency pattern</span>
+                <span class="cmd-bar-lang">Python</span>
+            </div>
+            <div class="cmd-body">
+<span class="cmd-white">try:</span>
+<span class="cmd-white">    import scapy.all as scapy</span>
+<span class="cmd-white">    HAS_SCAPY = </span><span class="cmd-orange">True</span>
+<span class="cmd-white">except ImportError:</span>
+<span class="cmd-white">    HAS_SCAPY = </span><span class="cmd-orange">False</span>
+<span class="cmd-white">    print(</span><span class="cmd-green">"[INFO] scapy not available — using TCP connect mode"</span><span class="cmd-white">, file=sys.stderr)</span>
+
+<span class="cmd-white">def scan(target):</span>
+<span class="cmd-white">    if HAS_SCAPY:</span>
+<span class="cmd-white">        return syn_scan(target)        </span><span class="cmd-comment"># fast, stealth</span>
+<span class="cmd-white">    return connect_scan(target)        </span><span class="cmd-comment"># stdlib fallback</span>
+            </div>
+        </div>
+
+        <h3>Testing a New Module</h3>
+        <div class="cmd-block">
+            <div class="cmd-bar">
+                <span class="cmd-dot r"></span>
+                <span class="cmd-dot y"></span>
+                <span class="cmd-dot g"></span>
+                <span class="cmd-bar-title">drop it in, reload, run it</span>
+                <span class="cmd-bar-lang">SecV</span>
+            </div>
+            <div class="cmd-body">
+<span class="cmd-comment"># 1. Create the module directory and files</span>
+<span class="cmd-prompt">$</span><span class="cmd-white"> mkdir -p tools/scanning/my-scanner</span>
+<span class="cmd-comment"># ... add scanner.py and module.json ...</span>
+
+<span class="cmd-comment"># 2. Inside SecV — reload and use</span>
+<span class="cmd-cyan cmd-bold">secV</span> <span class="cmd-white">❯ reload</span>
+<span class="cmd-green">✓</span> <span class="cmd-white">5 modules</span>
+
+<span class="cmd-cyan cmd-bold">secV</span> <span class="cmd-white">❯ use my-scanner</span>
+<span class="cmd-cyan cmd-bold">secV</span> <span class="cmd-white">(my-scanner) ❯ set ports top-100</span>
+<span class="cmd-cyan cmd-bold">secV</span> <span class="cmd-white">(my-scanner) ❯ run example.com</span>
+            </div>
+        </div>
+
+        <!-- ── UPDATE SYSTEM ── -->
+        <h2>Update System</h2>
+        <p>
+            SecV's update system lives in <code>update.py</code>. It handles git, backup, compilation,
+            and dependency installation in one flow. The system pulls from
+            <code>https://github.com/secvulnhub/SecV.git</code>. If the local repo isn't initialised
+            as a git repository at all (e.g. you extracted an archive instead of cloning), the updater
+            initialises git, adds the remote, and fetches automatically. If the remote URL is different,
+            it updates the remote URL.
+        </p>
+        <p>
+            The update command inside SecV (<code>update</code>) launches <code>update.py</code> in interactive mode.
+            You can also run it directly from the terminal for more control.
+        </p>
+
+        <h3>What Happens During an Update</h3>
+        <ol>
+            <li><strong>Backup</strong> — Critical files (binary, main.go, install.sh, requirements.txt, update.py) are copied to <code>.cache/.backup/YYYYMMDD_HHMMSS/</code>. Five backups are kept; older ones are pruned.</li>
+            <li><strong>Local changes check</strong> — If you have uncommitted changes, you're asked to stash, discard, or cancel.</li>
+            <li><strong>Git pull</strong> — Fast-forward pull from origin/main.</li>
+            <li><strong>Restore stash</strong> — If changes were stashed, they're popped back. Merge conflicts are flagged.</li>
+            <li><strong>Obsolete file cleanup</strong> — Files listed in the obsolete database for the target version are removed.</li>
+            <li><strong>Binary recompilation</strong> — Runs only if <code>main.go</code> changed. Runs <code>go mod tidy</code> first, then <code>go build -ldflags="-s -w" -o secV .</code></li>
+            <li><strong>Dependency update</strong> — Runs only if <code>requirements.txt</code> changed.</li>
+            <li><strong>Version info</strong> — Component hashes updated in <code>.cache/.version_info</code>.</li>
+        </ol>
+
+        <div class="cmd-block">
+            <div class="cmd-bar">
+                <span class="cmd-dot r"></span>
+                <span class="cmd-dot y"></span>
+                <span class="cmd-dot g"></span>
+                <span class="cmd-bar-title">update.py command-line flags</span>
+                <span class="cmd-bar-lang">Bash</span>
+            </div>
+            <div class="cmd-body">
+<span class="cmd-prompt">$</span><span class="cmd-white"> python3 update.py               </span><span class="cmd-comment"># check and apply update</span>
+<span class="cmd-prompt">$</span><span class="cmd-white"> python3 update.py --force       </span><span class="cmd-comment"># force check regardless of interval</span>
+<span class="cmd-prompt">$</span><span class="cmd-white"> python3 update.py --status      </span><span class="cmd-comment"># component status + hash check</span>
+<span class="cmd-prompt">$</span><span class="cmd-white"> python3 update.py --verify      </span><span class="cmd-comment"># full integrity check</span>
+<span class="cmd-prompt">$</span><span class="cmd-white"> python3 update.py --repair      </span><span class="cmd-comment"># fix missing dirs, perms, binary</span>
+<span class="cmd-prompt">$</span><span class="cmd-white"> python3 update.py --rollback    </span><span class="cmd-comment"># choose a backup to restore</span>
+<span class="cmd-prompt">$</span><span class="cmd-white"> python3 update.py --list-backups</span><span class="cmd-comment"># see available backups</span>
+<span class="cmd-prompt">$</span><span class="cmd-white"> python3 update.py --list-stashes</span><span class="cmd-comment"># see git stashes</span>
+            </div>
+        </div>
+
+        <!-- ── TROUBLESHOOTING ── -->
+        <h2>Troubleshooting</h2>
+
+        <h3>Module not found after adding it</h3>
+        <p>Run <code>reload</code> inside SecV. The module list is built at startup and when you explicitly reload —
+        dropping files into <code>tools/</code> while SecV is running has no effect until you reload.</p>
+
+        <h3>Permission denied on startup</h3>
+        <div class="cmd-block">
+            <div class="cmd-bar"><span class="cmd-dot r"></span><span class="cmd-dot y"></span><span class="cmd-dot g"></span>
+                <span class="cmd-bar-title">fix executable permissions</span><span class="cmd-bar-lang">Bash</span>
+            </div>
+            <div class="cmd-body">
+<span class="cmd-prompt">$</span><span class="cmd-white"> chmod +x secV install.sh uninstall.sh</span>
+            </div>
+        </div>
+
+        <h3>Go binary won't compile</h3>
+        <div class="cmd-block">
+            <div class="cmd-bar"><span class="cmd-dot r"></span><span class="cmd-dot y"></span><span class="cmd-dot g"></span>
+                <span class="cmd-bar-title">install Go and recompile</span><span class="cmd-bar-lang">Bash</span>
+            </div>
+            <div class="cmd-body">
+<span class="cmd-comment"># Arch</span>
+<span class="cmd-prompt">$</span><span class="cmd-white"> sudo pacman -S go</span>
+<span class="cmd-comment"># Debian/Ubuntu</span>
+<span class="cmd-prompt">$</span><span class="cmd-white"> sudo apt install golang</span>
+<span class="cmd-comment"># macOS</span>
+<span class="cmd-prompt">$</span><span class="cmd-white"> brew install go</span>
+
+<span class="cmd-prompt">$</span><span class="cmd-white"> cd /path/to/SecV</span>
+<span class="cmd-prompt">$</span><span class="cmd-white"> go mod tidy && go build -ldflags="-s -w" -o secV .</span>
+            </div>
+        </div>
+
+        <h3>adb: device not found</h3>
+        <p>
+            Check that USB debugging is enabled and that you've accepted the "Allow USB Debugging"
+            dialog on the device. Verify with <code>adb devices</code> before running SecV.
+            If the device shows as "unauthorized", unplug, replug, and accept the dialog again.
+        </p>
+
+        <h3>ideviceinfo returns nothing (iOS)</h3>
+        <p>
+            Verify the device is plugged in, unlocked, and has tapped "Trust This Computer".
+            On iOS 16+, Developer Mode must be enabled (Settings → Privacy &amp; Security → Developer Mode).
+            Run <code>idevicepair validate</code> — if it returns an error, run <code>idevicepair pair</code>
+            and unlock the device to approve.
+        </p>
+
+        <h3>Update fails with merge conflict</h3>
+        <div class="cmd-block">
+            <div class="cmd-bar"><span class="cmd-dot r"></span><span class="cmd-dot y"></span><span class="cmd-dot g"></span>
+                <span class="cmd-bar-title">manual conflict resolution or rollback</span><span class="cmd-bar-lang">Bash</span>
+            </div>
+            <div class="cmd-body">
+<span class="cmd-comment"># option 1: resolve manually</span>
+<span class="cmd-prompt">$</span><span class="cmd-white"> git stash && git pull && git stash pop</span>
+
+<span class="cmd-comment"># option 2: restore from backup</span>
+<span class="cmd-prompt">$</span><span class="cmd-white"> python3 update.py --rollback</span>
+            </div>
+        </div>
+
+        <h3>NVD requests timing out</h3>
+        <p>
+            Without an API key, NVD limits to 5 requests per 30 seconds. The module waits 6.5 seconds
+            between requests to stay under the limit. For faster enrichment, set the environment variable
+            <code>NVDAPIKEY</code> to your NVD API key — this raises the limit to 50 per 30 seconds.
+            Keys are free at <code>nvd.nist.gov/developers/request-an-api-key</code>.
+        </p>
+
+        <!-- ── LEGAL ── -->
+        <div class="callout">
+            <div class="callout-stripe" style="background:linear-gradient(90deg,var(--red),var(--orange));"></div>
+            <div class="callout-inner">
+                <div class="callout-head"><i class="fas fa-exclamation-triangle warn"></i>Authorization</div>
+                <p style="font-size:clamp(.74rem,1.9vw,.84rem);color:var(--fg-muted);margin:0;">
+                    SecV is for <strong>authorized security testing only.</strong> You must have explicit
+                    written permission before scanning, probing, or testing any system you do not own.
+                    Unauthorized use may violate computer fraud statutes in your jurisdiction.
+                    Use it on systems you own, your own lab, or systems you have written authorization to test.
+                    The authors accept no liability for misuse.
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+    <nav class="post-nav" aria-label="Post navigation">
+        <a href="../blog.html" class="post-nav-btn">
+            <i class="fas fa-arrow-left"></i>All Posts
+        </a>
+        <div style="display:flex;gap:.6rem;flex-wrap:wrap;">
+            <span class="meta-pill pill-blue">SecV</span>
+            <span class="meta-pill pill-aqua">zephra</span>
+            <span class="meta-pill pill-yellow">Go</span>
+            <span class="meta-pill pill-orange">Android</span>
+            <span class="meta-pill pill-red">iOS</span>
+        </div>
+    </nav>
+
+</main>
+
+<script>
+'use strict';
+window.addEventListener('scroll', () => {
+    document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 60);
+}, { passive: true });
+</script>
+</body>
+</html>
