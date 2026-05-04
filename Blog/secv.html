@@ -1432,6 +1432,73 @@
             </div>
         </div>
 
+        <!-- wifi_monitor -->
+        <h2>Module: wifi_monitor</h2>
+        <p>
+            LAN host discovery, async port scanning, device fingerprinting, and CVE lookup for the hosts on your network.
+            Uses ARP via scapy when root is available, falls back to TCP-ping when it isn't.
+            Open ports get banner-grabbed and matched against known service signatures to identify device type and OS.
+            CVEs are pulled from the CIRCL API based on the service banners and cached locally for 24 hours.
+            Threat flags go up for exposed databases, cleartext protocols, and legacy SSH versions.
+        </p>
+
+        <h3>Parameters</h3>
+        <table class="ref-table">
+            <thead><tr><th>Parameter</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+            <tbody>
+                <tr><td>mode</td><td>string</td><td>scan</td><td><code>scan</code> — discover hosts then port-scan. <code>discover</code> — host discovery only.</td></tr>
+                <tr><td>ports</td><td>string</td><td>default</td><td>Comma-separated ports or range (<code>22,80,443</code> or <code>1-1024</code>). <code>default</code> uses a 23-port common set.</td></tr>
+                <tr><td>port_scan</td><td>boolean</td><td>true</td><td>Run port scan on each discovered host. Set to <code>false</code> for discovery-only.</td></tr>
+                <tr><td>cve_lookup</td><td>boolean</td><td>true</td><td>Look up CVEs via CIRCL API from banner data. Requires internet.</td></tr>
+                <tr><td>timeout</td><td>float</td><td>3.0</td><td>ARP or TCP probe timeout per host in seconds.</td></tr>
+                <tr><td>concurrency</td><td>integer</td><td>100</td><td>Concurrent port probe workers per host.</td></tr>
+            </tbody>
+        </table>
+
+        <p>
+            Target is the CIDR or single IP passed to <code>run</code>. WiFi interface is not required — wifi_monitor works on
+            any network reachable from the machine. For ARP discovery the process needs root; without it the module falls back to
+            TCP-ping and still finds most hosts.
+        </p>
+
+        <div class="cmd-block">
+            <div class="cmd-bar">
+                <span class="cmd-dot r"></span>
+                <span class="cmd-dot y"></span>
+                <span class="cmd-dot g"></span>
+                <span class="cmd-bar-title">full scan — discover, port-scan, CVE lookup</span>
+                <span class="cmd-bar-lang">SecV</span>
+            </div>
+            <div class="cmd-body">
+<span class="cmd-prompt">$</span><span class="cmd-white"> sudo secV</span>
+<span class="cmd-cyan cmd-bold">secV</span> <span class="cmd-white">❯ use wifi_monitor</span>
+<span class="cmd-cyan cmd-bold">secV</span> <span class="cmd-white">(wifi_monitor) ❯ run 192.168.1.0/24</span>
+<span class="cmd-dim">[*] ARP discovery on 192.168.1.0/24...</span>
+<span class="cmd-green">[+] 192.168.1.1   — router (Cisco OUI)  ports: 22/SSH-OpenSSH_8.9, 80/HTTP-nginx/1.24</span>
+<span class="cmd-green">[+] 192.168.1.42  — NAS                 ports: 445/SMB, 5000/HTTP-DSM-7.2</span>
+<span class="cmd-yellow">[!] 192.168.1.42:22 — legacy SSH banner (OpenSSH &lt;7.4)</span>
+<span class="cmd-yellow">[!] 192.168.1.42:445 — SMB exposed on LAN</span>
+<span class="cmd-dim">[CVE] CVE-2023-38408 — OpenSSH &lt;9.3p2 remote code execution (CVSS 9.8)</span>
+            </div>
+        </div>
+
+        <div class="cmd-block">
+            <div class="cmd-bar">
+                <span class="cmd-dot r"></span>
+                <span class="cmd-dot y"></span>
+                <span class="cmd-dot g"></span>
+                <span class="cmd-bar-title">quick discovery only — no port scan</span>
+                <span class="cmd-bar-lang">SecV</span>
+            </div>
+            <div class="cmd-body">
+<span class="cmd-cyan cmd-bold">secV</span> <span class="cmd-white">(wifi_monitor) ❯ set port_scan false</span>
+<span class="cmd-cyan cmd-bold">secV</span> <span class="cmd-white">(wifi_monitor) ❯ run 10.0.0.0/24</span>
+<span class="cmd-dim">[*] TCP-ping discovery on 10.0.0.0/24...</span>
+<span class="cmd-green">[+] 10 hosts up</span>
+<span class="cmd-green">    10.0.0.1  10.0.0.5  10.0.0.10  10.0.0.15  ...</span>
+            </div>
+        </div>
+
         <!-- ── ADVANCED OPERATIONS ── -->
         <h2 id="advanced-operations">Advanced Operations — android_pentest</h2>
         <p>
